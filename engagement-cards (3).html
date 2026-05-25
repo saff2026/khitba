@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خِطبة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+:root {
+  --bg: #110a0a;
+  --surface: #1f1212;
+  --card1: #2a1020;
+  --card2: #1e1015;
+  --card3: #2a1010;
+  --card4: #2e1020;
+  --accent1: #e8536a;
+  --accent2: #c084fc;
+  --accent3: #f4a261;
+  --accent4: #f472b6;
+  --green: #34d399;
+  --text: #fff0f0;
+  --muted: #b59a9a;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px 16px 50px;
+}
+/* SCREENS */
+.screen { display:none; width:100%; max-width:420px; flex-direction:column; align-items:center; gap:14px; }
+.screen.active { display:flex; }
+
+/* LOGO */
+.logo {
+  font-size:2rem; font-weight:800;
+  background:linear-gradient(135deg,#e8536a,#c084fc);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; text-align:center;
+}
+.tagline { font-size:0.85rem; color:var(--muted); text-align:center; }
+
+/* CARD BOX */
+.box {
+  width:100%; background:#1e1515;
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px; padding:20px 18px;
+  display:flex; flex-direction:column; gap:12px;
+}
+.box-title { font-size:0.95rem; font-weight:700; color:var(--accent1); }
+
+/* INPUTS */
+input.field {
+  width:100%; background:var(--surface);
+  border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:13px 15px;
+  color:var(--text); font-family:'Tajawal',sans-serif;
+  font-size:1rem; outline:none; direction:rtl;
+}
+input.field:focus { border-color:var(--accent2); }
+input.field::placeholder { color:var(--muted); }
+
+/* BUTTONS */
+.btn {
+  width:100%; padding:14px; border-radius:13px;
+  border:none; font-family:'Tajawal',sans-serif;
+  font-size:1rem; font-weight:700; cursor:pointer;
+  transition:opacity 0.2s, transform 0.1s;
+}
+.btn:active { transform:scale(0.97); opacity:0.9; }
+.btn-red { background:linear-gradient(135deg,#e8536a,#9b4dca); color:#fff; }
+.btn-purple { background:linear-gradient(135deg,#a78bfa,#7c3aed); color:#fff; }
+.btn-green { background:linear-gradient(135deg,#34d399,#059669); color:#fff; }
+.btn-orange { background:linear-gradient(135deg,#f59e6b,#ef4444); color:#fff; }
+.btn-grad { background:linear-gradient(135deg,#e8536a,#c084fc); color:#fff; }
+.btn:disabled { background:#2a1a1a !important; color:var(--muted) !important; cursor:default; transform:none; }
+.btn-icon {
+  width:50px; height:50px; border-radius:13px;
+  border:1.5px solid rgba(255,255,255,0.1);
+  background:var(--surface); color:var(--muted);
+  font-size:1.2rem; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.btn-icon:hover { border-color:var(--accent1); color:var(--accent1); }
+
+.divider {
+  display:flex; align-items:center; gap:10px;
+  color:var(--muted); font-size:0.82rem;
+}
+.divider::before,.divider::after {
+  content:''; flex:1; height:1px; background:rgba(255,255,255,0.08);
+}
+
+.err { font-size:0.82rem; color:var(--accent4); text-align:center; min-height:18px; }
+
+/* WAITING */
+.code-box {
+  width:100%; background:linear-gradient(135deg,rgba(232,83,106,0.08),rgba(192,132,252,0.08));
+  border:1px solid rgba(192,132,252,0.2); border-radius:16px;
+  padding:20px; text-align:center; cursor:pointer;
+}
+.code-label { font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+.code-num { font-size:2.4rem; font-weight:800; letter-spacing:8px; color:var(--accent2); }
+.code-hint { font-size:0.72rem; color:var(--muted); margin-top:6px; }
+
+.player-item {
+  width:100%; display:flex; align-items:center; gap:12px;
+  background:var(--surface); border-radius:12px;
+  padding:12px 15px; border:1px solid rgba(255,255,255,0.05);
+}
+.avatar {
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:1rem; flex-shrink:0;
+}
+.avatar.p1 { background:rgba(232,83,106,0.2); color:var(--accent1); }
+.avatar.p2 { background:rgba(192,132,252,0.2); color:var(--accent2); }
+.p-name { font-weight:600; flex:1; }
+.p-status { font-size:0.75rem; color:var(--muted); }
+.waiting-note { font-size:0.8rem; color:var(--muted); text-align:center; }
+
+/* GAME */
+.scores { display:flex; gap:10px; width:100%; }
+.score-card {
+  flex:1; background:var(--surface); border-radius:13px;
+  padding:12px 14px; text-align:center;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.score-card.me { border-color:rgba(232,83,106,0.3); }
+.score-card.them { border-color:rgba(192,132,252,0.3); }
+.score-name { font-size:0.75rem; color:var(--muted); margin-bottom:3px; }
+.score-pts { font-size:1.6rem; font-weight:800; }
+.score-card.me .score-pts { color:var(--accent1); }
+.score-card.them .score-pts { color:var(--accent2); }
+.score-unit { font-size:0.62rem; color:var(--muted); }
+
+/* CATS */
+.cats { display:flex; gap:7px; flex-wrap:wrap; justify-content:center; width:100%; }
+.cat-btn {
+  padding:5px 12px; border-radius:18px;
+  border:1.5px solid rgba(255,255,255,0.08);
+  background:var(--surface); color:var(--muted);
+  font-family:'Tajawal',sans-serif; font-size:0.78rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.cat-btn.active { border-color:var(--accent1); color:var(--accent1); }
+
+/* CARD */
+.card-wrap { width:100%; min-height:210px; position:relative; }
+.card {
+  width:100%; min-height:210px; border-radius:20px;
+  padding:22px 20px; display:flex; flex-direction:column;
+  justify-content:space-between; transition:all 0.3s;
+}
+.card.cat-شخصية { background:linear-gradient(145deg,#2a1020,#3d1535); border:1px solid rgba(232,83,106,0.25); }
+.card.cat-زواج   { background:linear-gradient(145deg,#1e1015,#2e1520); border:1px solid rgba(192,132,252,0.25); }
+.card.cat-هوايات { background:linear-gradient(145deg,#2a1010,#3a1515); border:1px solid rgba(244,162,97,0.25); }
+.card.cat-خفيف   { background:linear-gradient(145deg,#2e1020,#3d1030); border:1px solid rgba(244,114,182,0.25); }
+.card.cat-مضاف   { background:linear-gradient(145deg,#1a1520,#251020); border:1px solid rgba(232,83,106,0.2); }
+.card.cat-default { background:linear-gradient(145deg,#2a1020,#3d1535); border:1px solid rgba(232,83,106,0.25); }
+.card-badge {
+  display:inline-flex; align-items:center;
+  padding:3px 10px; border-radius:10px;
+  font-size:0.72rem; font-weight:600; width:fit-content;
+  background:rgba(232,83,106,0.15); color:var(--accent1);
+  margin-bottom:10px;
+}
+.card-q {
+  font-size:1.18rem; font-weight:700; line-height:1.7;
+  flex:1; display:flex; align-items:center;
+}
+.card-meta { font-size:0.72rem; color:rgba(255,255,255,0.35); margin-top:8px; }
+
+@keyframes flipIn {
+  from { transform:rotateY(-70deg) scale(0.92); opacity:0; }
+  to   { transform:rotateY(0) scale(1); opacity:1; }
+}
+.flip-in { animation:flipIn 0.3s ease; }
+
+/* ANSWER SECTION */
+.ans-section {
+  width:100%; background:#1e1515;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px; padding:16px 14px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.ans-title { font-size:0.82rem; color:var(--muted); text-align:center; font-weight:600; }
+.ans-players { display:flex; gap:10px; }
+.ans-player {
+  flex:1; background:var(--surface); border-radius:12px;
+  padding:12px 10px; text-align:center;
+  border:1.5px solid rgba(255,255,255,0.05);
+  transition:all 0.3s;
+}
+.ans-player.active { border-color:var(--accent1); background:rgba(232,83,106,0.07); }
+.ans-player.done   { border-color:var(--green); background:rgba(52,211,153,0.07); }
+.ans-pname { font-size:0.75rem; color:var(--muted); margin-bottom:4px; }
+.ans-time  { font-size:1.5rem; font-weight:800; }
+.ans-player.active .ans-time { color:var(--accent1); }
+.ans-player.done   .ans-time { color:var(--green); }
+.ans-pts { font-size:0.7rem; color:var(--green); margin-top:3px; font-weight:600; min-height:14px; }
+
+/* CONTROLS */
+.controls { display:flex; gap:10px; width:100%; }
+.counter { font-size:0.8rem; color:var(--muted); text-align:center; width:100%; }
+.counter span { color:var(--accent1); font-weight:700; }
+.progress { width:100%; height:3px; background:var(--surface); border-radius:2px; margin-top:6px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--accent1),var(--accent2)); border-radius:2px; transition:width 0.4s; }
+
+/* MODAL */
+.overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.75); backdrop-filter:blur(5px);
+  z-index:100; align-items:flex-end; justify-content:center;
+}
+.overlay.show { display:flex; }
+.modal {
+  background:#1e1515; border:1px solid rgba(255,255,255,0.08);
+  border-radius:22px 22px 0 0; padding:24px 20px 38px;
+  width:100%; max-width:480px;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { transform:translateY(100%); opacity:0; }
+  to   { transform:translateY(0); opacity:1; }
+}
+.modal-head {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px;
+}
+.modal-title { font-size:1rem; font-weight:700; }
+.modal-close {
+  background:none; border:none; color:var(--muted);
+  font-size:1.1rem; cursor:pointer; padding:4px;
+}
+.modal label { display:block; font-size:0.8rem; color:var(--muted); margin-bottom:7px; }
+.modal textarea {
+  width:100%; background:var(--surface);
+  border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:13px 14px;
+  color:var(--text); font-family:'Tajawal',sans-serif;
+  font-size:1rem; resize:none; outline:none;
+  margin-bottom:14px; direction:rtl;
+}
+.modal textarea:focus { border-color:var(--accent2); }
+.modal-cats { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:16px; }
+.modal-cat {
+  padding:5px 12px; border-radius:16px;
+  border:1.5px solid rgba(255,255,255,0.1);
+  background:var(--surface); color:var(--muted);
+  font-family:'Tajawal',sans-serif; font-size:0.8rem; cursor:pointer;
+}
+.modal-cat.sel { border-color:var(--accent2); color:var(--accent2); background:rgba(192,132,252,0.1); }
+.modal-msg { font-size:0.75rem; color:var(--green); text-align:center; margin-top:10px; min-height:18px; }
+
+/* DONE */
+.done-box {
+  width:100%; background:#1e1515;
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px; padding:26px 18px;
+  text-align:center; display:flex; flex-direction:column;
+  gap:14px; align-items:center;
+}
+.done-trophy { font-size:3rem; }
+.done-title { font-size:1.3rem; font-weight:800; color:var(--accent1); }
+.final-scores { display:flex; gap:10px; width:100%; }
+.final-card {
+  flex:1; background:var(--surface); border-radius:13px;
+  padding:14px 10px; text-align:center;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.final-card.winner { border-color:var(--accent1); background:rgba(232,83,106,0.08); }
+.final-name { font-size:0.78rem; color:var(--muted); margin-bottom:5px; }
+.final-pts { font-size:2rem; font-weight:800; }
+.final-card.winner .final-pts { color:var(--accent1); }
+.final-unit { font-size:0.65rem; color:var(--muted); }
+.done-msg { font-size:0.88rem; color:var(--muted); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  background:#2a1515; border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px; padding:11px 20px;
+  font-size:0.88rem; font-weight:600;
+  opacity:0; transition:opacity 0.3s; z-index:200;
+  white-space:nowrap; pointer-events:none;
+}
+.toast.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOBBY ===== -->
+<div class="screen active" id="sLobby">
+  <div style="margin:8px 0 4px">
+    <div class="logo">🎴 خِطبة</div>
+    <div class="tagline">رحلة العمر تبدأ بخِطبة</div>
+  </div>
+  <div class="box">
+    <div class="box-title">👤 اسمك</div>
+    <input class="field" id="inName" placeholder="اكتب اسمك..." maxlength="20">
+    <button class="btn btn-red" id="btnCreate">🏠 أنشئ غرفة جديدة</button>
+    <div class="divider">أو انضم لغرفة موجودة</div>
+    <input class="field" id="inCode" placeholder="كود الغرفة (4 أرقام)" maxlength="4"
+      style="text-align:center;letter-spacing:6px;font-size:1.3rem;font-weight:700">
+    <button class="btn btn-purple" id="btnJoin">🔗 انضم للغرفة</button>
+  </div>
+  <div class="err" id="lobbyErr"></div>
+</div>
+
+<!-- ===== WAITING ===== -->
+<div class="screen" id="sWait">
+  <div class="logo" style="font-size:1.4rem">⏳ في انتظار اللاعب الثاني</div>
+  <div class="code-box" id="codeBox">
+    <div class="code-label">شارك هذا الكود مع خطيبتك</div>
+    <div class="code-num" id="codeNum">----</div>
+    <div class="code-hint">اضغط لنسخه 📋</div>
+  </div>
+  <div id="playersList" style="width:100%;display:flex;flex-direction:column;gap:8px"></div>
+  <div class="waiting-note" id="waitNote">في انتظار انضمام اللاعب الثاني...</div>
+</div>
+
+<!-- ===== GAME ===== -->
+<div class="screen" id="sGame">
+  <div class="scores">
+    <div class="score-card me">
+      <div class="score-name" id="myName2">أنا</div>
+      <div class="score-pts" id="myPts">0</div>
+      <div class="score-unit">نقطة</div>
+    </div>
+    <div class="score-card them">
+      <div class="score-name" id="themName2">هي</div>
+      <div class="score-pts" id="themPts">0</div>
+      <div class="score-unit">نقطة</div>
+    </div>
+  </div>
+
+  <div class="cats">
+    <button class="cat-btn active" data-cat="all">الكل</button>
+    <button class="cat-btn" data-cat="شخصية">🧠 شخصية</button>
+    <button class="cat-btn" data-cat="زواج">💍 زواج</button>
+    <button class="cat-btn" data-cat="هوايات">🎨 هوايات</button>
+    <button class="cat-btn" data-cat="خفيف">😄 خفيف</button>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card cat-شخصية" id="mainCard">
+      <div>
+        <div class="card-badge" id="cardCat">🧠 شخصية</div>
+        <div class="card-q" id="cardQ">اضغط "كرت جديد" لتبدأ 🎴</div>
+      </div>
+      <div class="card-meta" id="cardMeta"></div>
+    </div>
+  </div>
+
+  <div class="ans-section">
+    <div class="ans-title">⏱️ وقت الإجابة</div>
+    <div class="ans-players">
+      <div class="ans-player" id="myAns">
+        <div class="ans-pname" id="myAnsName">أنا</div>
+        <div class="ans-time" id="myTime">--</div>
+        <div class="ans-pts" id="myAnsPts"></div>
+      </div>
+      <div class="ans-player" id="themAns">
+        <div class="ans-pname" id="themAnsName">هي</div>
+        <div class="ans-time" id="themTime">--</div>
+        <div class="ans-pts" id="themAnsPts"></div>
+      </div>
+    </div>
+    <button class="btn btn-green" id="btnAnswer" disabled>ابدأ الإجابة ▶</button>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-grad" id="btnNext" disabled style="flex:1">كرت جديد ✨</button>
+    <button class="btn-icon" id="btnAdd" title="أضف سؤال">＋</button>
+  </div>
+
+  <div class="counter">
+    بقي <span id="remaining">-</span> كرت
+    <div class="progress"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ===== DONE ===== -->
+<div class="screen" id="sDone">
+  <div class="done-box">
+    <div class="done-trophy">🏆</div>
+    <div class="done-title">انتهت الجلسة!</div>
+    <div class="final-scores">
+      <div class="final-card" id="finalMe">
+        <div class="final-name" id="finalMyName">أنا</div>
+        <div class="final-pts" id="finalMyPts">0</div>
+        <div class="final-unit">نقطة</div>
+      </div>
+      <div class="final-card" id="finalThem">
+        <div class="final-name" id="finalThemName">هي</div>
+        <div class="final-pts" id="finalThemPts">0</div>
+        <div class="final-unit">نقطة</div>
+      </div>
+    </div>
+    <div class="done-msg" id="doneMsg">ماشاء الله 🤍</div>
+    <button class="btn btn-grad" id="btnAgain">جولة جديدة 🔄</button>
+  </div>
+</div>
+
+<!-- ===== ADD MODAL ===== -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">✏️ أضف سؤال (+5 نقاط)</div>
+      <button class="modal-close" id="btnModalClose">✕</button>
+    </div>
+    <label>السؤال</label>
+    <textarea id="newQ" rows="3" placeholder="اكتب سؤالك هنا..."></textarea>
+    <label>الفئة</label>
+    <div class="modal-cats">
+      <button class="modal-cat sel" data-mcat="شخصية">🧠 شخصية</button>
+      <button class="modal-cat" data-mcat="زواج">💍 زواج</button>
+      <button class="modal-cat" data-mcat="هوايات">🎨 هوايات</button>
+      <button class="modal-cat" data-mcat="خفيف">😄 خفيف</button>
+    </div>
+    <button class="btn btn-grad" id="btnSave">حفظ الكرت 🎴</button>
+    <div class="modal-msg" id="modalMsg"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== FIREBASE =====
+firebase.initializeApp({
+  apiKey: "AIzaSyD4tyQotZeMeh86s5yq9EbRIoXoev10Ajk",
+  authDomain: "engagement-cards.firebaseapp.com",
+  databaseURL: "https://engagement-cards-default-rtdb.firebaseio.com",
+  projectId: "engagement-cards",
+  storageBucket: "engagement-cards.firebasestorage.app",
+  messagingSenderId: "277478223891",
+  appId: "1:277478223891:web:12165a3b3826c436954fe6"
+});
+var db = firebase.database();
+
+// ===== CARDS =====
+var CARDS = [
+  {q:"لو غلطتِ في شي، كيف تتعاملين معه؟ تعترفين مباشرة أو تحتاجين وقت؟",cat:"شخصية"},
+  {q:"لو انتقدك أحد، تاخذينه بصدر رحب أو ينكسر خاطرك؟",cat:"شخصية"},
+  {q:"لو زعلتِ من أحد قريب منك، تقولين أو تسكتين وتنتظرين؟",cat:"شخصية"},
+  {q:"قراراتك تاخذينها بالعقل أو بالحس؟",cat:"شخصية"},
+  {q:"لو غلط عليك أحد، تسامحين بسرعة أو تاخذين وقت؟",cat:"شخصية"},
+  {q:"أكثر شي يسبب لك ضغط في العلاقات مع الناس؟",cat:"شخصية"},
+  {q:"لو فيه مشكلة مع أحد، تحلينها مباشرة أو تتجنبين المواجهة؟",cat:"شخصية"},
+  {q:"كيف تعرفين إنك غلطانة وما بس الثاني هو اللي غلط؟",cat:"شخصية"},
+  {q:"أولوياتك في الحياة كيف ترتبينها؟ العائلة، الأصحاب، نفسك؟",cat:"شخصية"},
+  {q:"كيف تصفين نفسك في ٥ صفات؟",cat:"شخصية"},
+  {q:"متى بتنضغطين أو تتعصبين؟",cat:"شخصية"},
+  {q:"صفة مابتحبيها في الناس؟",cat:"شخصية"},
+  {q:"أفضل ٥ صفات فيكِ وأسوأ ٥؟",cat:"شخصية"},
+  {q:"بتسلكين كثير ولا بتحبين تقنعين الشخص؟",cat:"شخصية"},
+  {q:"كيف تتوقعين الحياة الزوجية اليومية؟",cat:"زواج"},
+  {q:"متى تبين الأولاد وكم؟",cat:"زواج"},
+  {q:"إذا اختلفنا، كيف نحل الاختلاف؟",cat:"زواج"},
+  {q:"إيش أهم صفة للزواج الناجح؟",cat:"زواج"},
+  {q:"إيش اللي تبينه في زوجك؟ وإيش اللي ما تبينه؟",cat:"زواج"},
+  {q:"البيت مسؤولية مشتركة - أوافق أو ما أوافق؟",cat:"زواج"},
+  {q:"لو أحد من أهلي تدخل في بيتنا، تقولين لي مباشرة أو تتحملين؟",cat:"زواج"},
+  {q:"لو عندنا مشكلة، تحلينها في نفس اليوم أو تنامون عليها؟",cat:"زواج"},
+  {q:"أهل الزوج مسؤولية الزوج وأهلي مسؤوليتي - أوافق؟",cat:"زواج"},
+  {q:"السفر كل سنة ضروري للعلاقة - أوافق أو ما أوافق؟",cat:"زواج"},
+  {q:"الزوجين لازم عندهم وقت خاص بعيد عن الأهل - أوافق؟",cat:"زواج"},
+  {q:"لو اختلفنا على قرار كبير، نتشاور مع أحد ثالث أو نحله لحالنا؟",cat:"زواج"},
+  {q:"نظرتك عن التربية كيف؟ صارمة أو مرنة؟",cat:"زواج"},
+  {q:"تتوقعين تطبخين كل يوم؟ وأنا أعشق الأكل والحلويات 😂",cat:"زواج"},
+  {q:"الرسم، كيف بدأ معك؟ فيه أحد حببك فيه؟",cat:"هوايات"},
+  {q:"مصادر ثقافتك؟ مين بتتابعين؟",cat:"هوايات"},
+  {q:"إيش وضع القرآن في حياتك؟ فيه وقت ثابت؟",cat:"هوايات"},
+  {q:"فيه فعاليات رياضية عندك؟",cat:"هوايات"},
+  {q:"كيف الأعياد عندكم؟ وين بتجتمعون؟",cat:"هوايات"},
+  {q:"الرسم، فكرتِ تخليه بزنس يوم من الأيام؟",cat:"هوايات"},
+  {q:"يومك المثالي كيف يكون؟ من الصبح للليل 🌅",cat:"خفيف"},
+  {q:"لو البيت صار فوضى، ينزعجك أو ما تهتمين؟",cat:"خفيف"},
+  {q:"الضيوف عندك تفرحين فيهم أو يتعبونك؟ 😄",cat:"خفيف"},
+  {q:"لو طبختِ وما طلع زين، تقولين أو تخبينها عليّ؟ 😂",cat:"خفيف"},
+  {q:"نومك خفيف أو ما يصحيك شي؟",cat:"خفيف"},
+  {q:"تنسين المناسبات أو تذكرينها كلها؟",cat:"خفيف"},
+  {q:"تحبين الهدايا المفاجئة أو تختارين بنفسك؟",cat:"خفيف"},
+  {q:"لو زارنا ضيوف فجأة، تفرحين أو تنهارين؟ 😄",cat:"خفيف"},
+  {q:"صباحية أو سهرانة؟",cat:"خفيف"},
+  {q:"لو مريتِ بيوم صعب، تبين تحكين أو تنعزلين شوي؟",cat:"خفيف"},
+  {q:"بيت هادي أو ضيوف دايمين؟",cat:"خفيف"},
+  {q:"تخططين مسبقاً أو ارتجال؟",cat:"خفيف"}
+];
+
+var CAT_ICONS = {شخصية:"🧠",زواج:"💍",هوايات:"🎨",خفيف:"😄",مضاف:"✏️"};
+
+// ===== STATE =====
+var roomCode=null, myId=null, myName='', roomRef=null, gameState=null;
+var currentFilter='all', deck=[], deckIdx=0;
+var timerIv=null, timerStart=null, isAnswering=false;
+var selCat='شخصية';
+
+// ===== HELPERS =====
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById(id).classList.add('active');}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+function err(msg){document.getElementById('lobbyErr').textContent=msg;}
+function other(){return myId==='p1'?'p2':'p1';}
+function genCode(){return String(Math.floor(1000+Math.random()*9000));}
+
+function buildDeck(filter){
+  var cards=filter==='all'?CARDS.slice():CARDS.filter(function(c){return c.cat===filter;});
+  if(gameState&&gameState.customCards){
+    var custom=Object.values(gameState.customCards);
+    var cf=filter==='all'?custom:custom.filter(function(c){return c.originalCat===filter;});
+    cards=cards.concat(cf);
+  }
+  return cards.sort(function(){return Math.random()-0.5;});
+}
+
+// ===== LOBBY =====
+document.getElementById('btnCreate').addEventListener('click', function(){
+  var name=document.getElementById('inName').value.trim();
+  if(!name){err('اكتب اسمك أولاً');return;}
+  err('جاري الاتصال...');
+  var code=genCode();
+  roomCode=code; myId='p1'; myName=name;
+  roomRef=db.ref('rooms/'+code);
+  roomRef.set({
+    status:'waiting',
+    p1:{name:name,score:0,timerSec:0,answering:false,done:false},
+    p2:{name:'',score:0,timerSec:0,answering:false,done:false},
+    currentCard:null,cardIndex:0
+  }).then(function(){
+    document.getElementById('codeNum').textContent=code;
+    show('sWait');
+    listenRoom();
+  }).catch(function(e){err('خطأ: '+e.message);});
+});
+
+document.getElementById('btnJoin').addEventListener('click', function(){
+  var name=document.getElementById('inName').value.trim();
+  var code=document.getElementById('inCode').value.trim();
+  if(!name){err('اكتب اسمك أولاً');return;}
+  if(code.length!==4){err('الكود 4 أرقام');return;}
+  err('جاري الاتصال...');
+  db.ref('rooms/'+code).once('value').then(function(snap){
+    if(!snap.exists()){err('الغرفة مو موجودة');return;}
+    var data=snap.val();
+    if(data.p2&&data.p2.name){err('الغرفة ممتلئة');return;}
+    roomCode=code; myId='p2'; myName=name;
+    roomRef=db.ref('rooms/'+code);
+    return roomRef.update({'p2/name':name,'p2/score':0,'p2/timerSec':0,'p2/answering':false,'p2/done':false,'status':'ready'});
+  }).then(function(){
+    if(roomRef){
+      document.getElementById('codeNum').textContent=code;
+      show('sWait');
+      listenRoom();
+    }
+  }).catch(function(e){err('خطأ: '+e.message);});
+});
+
+document.getElementById('codeBox').addEventListener('click', function(){
+  if(roomCode){
+    navigator.clipboard&&navigator.clipboard.writeText(roomCode);
+    toast('تم نسخ الكود 📋');
+  }
+});
+
+// ===== ROOM LISTENER =====
+function listenRoom(){
+  roomRef.on('value', function(snap){
+    if(!snap.exists())return;
+    gameState=snap.val();
+    updateWaitUI();
+    if(gameState.status==='ready'||gameState.status==='playing'){
+      if(!document.getElementById('sGame').classList.contains('active')){
+        initGame();
+      }else{
+        updateGameUI();
+      }
+    }
+    if(gameState.status==='done'){showDone();}
+  });
+}
+
+// ===== WAIT UI =====
+function updateWaitUI(){
+  var list=document.getElementById('playersList');
+  list.innerHTML='';
+  ['p1','p2'].forEach(function(pid){
+    var p=gameState[pid];
+    if(!p||!p.name)return;
+    var d=document.createElement('div');
+    d.className='player-item';
+    d.innerHTML='<div class="avatar '+pid+'">'+p.name[0]+'</div>'+
+      '<div class="p-name">'+p.name+(pid===myId?' (أنت)':'')+'</div>'+
+      '<div class="p-status">'+(pid==='p1'?'👑 صاحب الغرفة':'✅ انضم')+'</div>';
+    list.appendChild(d);
+  });
+  if(gameState.p2&&gameState.p2.name){
+    document.getElementById('waitNote').textContent='✅ كلاكم جاهزين! اللعبة ستبدأ...';
+  }
+}
+
+// ===== GAME INIT =====
+function initGame(){
+  show('sGame');
+  var me=gameState[myId], them=gameState[other()];
+  document.getElementById('myName2').textContent=me.name;
+  document.getElementById('themName2').textContent=them.name||'...';
+  document.getElementById('myAnsName').textContent=me.name;
+  document.getElementById('themAnsName').textContent=them.name||'...';
+  document.getElementById('finalMyName').textContent=me.name;
+  document.getElementById('finalThemName').textContent=them.name||'...';
+  deck=buildDeck(currentFilter);
+  deckIdx=gameState.cardIndex||0;
+  updateCounter();
+  document.getElementById('btnNext').disabled=(myId!=='p1');
+  updateGameUI();
+}
+
+// ===== GAME UI =====
+function updateGameUI(){
+  if(!gameState)return;
+  var me=gameState[myId], them=gameState[other()];
+  if(!me||!them)return;
+
+  // scores
+  document.getElementById('myPts').textContent=me.score||0;
+  document.getElementById('themPts').textContent=them.score||0;
+
+  // card
+  if(gameState.currentCard){
+    var c=gameState.currentCard;
+    var cat=c.cat||'شخصية';
+    var card=document.getElementById('mainCard');
+    card.className='card cat-'+cat;
+    document.getElementById('cardCat').textContent=(CAT_ICONS[cat]||'✏️')+' '+cat;
+    document.getElementById('cardQ').textContent=c.q;
+    document.getElementById('cardMeta').textContent=c.custom?'✏️ سؤال مضاف':'';
+  }
+
+  // answerers
+  renderAns('myAns','myTime','myAnsPts',me);
+  renderAns('themAns','themTime','themAnsPts',them);
+
+  // answer btn
+  var ab=document.getElementById('btnAnswer');
+  if(!gameState.currentCard){
+    ab.disabled=true; ab.textContent='ابدأ الإجابة ▶'; ab.className='btn btn-green';
+  } else if(me.done){
+    ab.disabled=true; ab.textContent='✅ انتهيت'; ab.className='btn btn-green';
+    if(isAnswering)stopTimer();
+  } else if(isAnswering){
+    ab.disabled=false; ab.textContent='انتهيت ⏹'; ab.className='btn btn-orange';
+  } else {
+    ab.disabled=false; ab.textContent='ابدأ الإجابة ▶'; ab.className='btn btn-green';
+  }
+
+  // next btn - p1 only, both done
+  var both=me.done&&them.done;
+  document.getElementById('btnNext').disabled=!(myId==='p1'&&both);
+}
+
+function renderAns(boxId,timeId,ptsId,player){
+  var box=document.getElementById(boxId);
+  var sec=player.timerSec||0;
+  document.getElementById(timeId).textContent=sec>0?sec+'ث':'--';
+  if(player.done){
+    box.className='ans-player done';
+    document.getElementById(ptsId).textContent='+'+sec+' نقطة';
+  } else if(player.answering){
+    box.className='ans-player active';
+    document.getElementById(ptsId).textContent='';
+  } else {
+    box.className='ans-player';
+    document.getElementById(ptsId).textContent='';
+  }
+}
+
+// ===== ANSWER TIMER =====
+document.getElementById('btnAnswer').addEventListener('click', function(){
+  if(!gameState||!gameState.currentCard)return;
+  var me=gameState[myId];
+  if(me&&me.done)return;
+  if(!isAnswering){
+    isAnswering=true;
+    timerStart=Date.now();
+    db.ref('rooms/'+roomCode+'/'+myId).update({answering:true,timerSec:0});
+    timerIv=setInterval(function(){
+      var e=Math.floor((Date.now()-timerStart)/1000);
+      document.getElementById('myTime').textContent=e+'ث';
+      db.ref('rooms/'+roomCode+'/'+myId).update({timerSec:e});
+    },1000);
+  } else {
+    stopTimer();
+  }
+});
+
+function stopTimer(){
+  if(!isAnswering)return;
+  clearInterval(timerIv); timerIv=null; isAnswering=false;
+  var e=Math.floor((Date.now()-timerStart)/1000);
+  var cur=(gameState&&gameState[myId]&&gameState[myId].score)||0;
+  db.ref('rooms/'+roomCode+'/'+myId).update({answering:false,done:true,timerSec:e,score:cur+e});
+  toast('✅ سجلت '+e+' نقطة!');
+}
+
+// ===== NEXT CARD =====
+document.getElementById('btnNext').addEventListener('click', function(){
+  if(myId!=='p1')return;
+  if(deckIdx>=deck.length){roomRef.update({status:'done'});return;}
+  var card=deck[deckIdx]; deckIdx++;
+  updateCounter();
+  isAnswering=false; clearInterval(timerIv);
+  roomRef.update({
+    currentCard:card, cardIndex:deckIdx,
+    'p1/answering':false,'p1/done':false,'p1/timerSec':0,
+    'p2/answering':false,'p2/done':false,'p2/timerSec':0
+  });
+  var el=document.getElementById('mainCard');
+  el.classList.remove('flip-in'); void el.offsetWidth; el.classList.add('flip-in');
+});
+
+function updateCounter(){
+  var rem=Math.max(0,deck.length-deckIdx);
+  document.getElementById('remaining').textContent=rem;
+  var pct=deck.length>0?(deckIdx/deck.length*100):0;
+  document.getElementById('progFill').style.width=pct+'%';
+}
+
+// ===== CAT FILTER =====
+document.querySelectorAll('.cat-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    if(myId!=='p1')return;
+    document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    currentFilter=btn.dataset.cat;
+    deck=buildDeck(currentFilter);
+    deckIdx=0; updateCounter();
+  });
+});
+
+// ===== DONE =====
+function showDone(){
+  show('sDone');
+  if(!gameState)return;
+  var me=gameState[myId], them=gameState[other()];
+  var mp=(me&&me.score)||0, tp=(them&&them.score)||0;
+  document.getElementById('finalMyPts').textContent=mp;
+  document.getElementById('finalThemPts').textContent=tp;
+  document.getElementById('finalMe').classList.remove('winner');
+  document.getElementById('finalThem').classList.remove('winner');
+  if(mp>tp){document.getElementById('finalMe').classList.add('winner');document.getElementById('doneMsg').textContent='مبروك '+me.name+'! 🏆';}
+  else if(tp>mp){document.getElementById('finalThem').classList.add('winner');document.getElementById('doneMsg').textContent='مبروك '+them.name+'! 🏆';}
+  else{document.getElementById('doneMsg').textContent='تعادل! كلاكم رائع 🤍';}
+}
+
+document.getElementById('btnAgain').addEventListener('click',function(){
+  if(myId!=='p1'){toast('فقط صاحب الغرفة يبدأ جولة جديدة');return;}
+  deck=buildDeck(currentFilter); deckIdx=0;
+  isAnswering=false; clearInterval(timerIv);
+  roomRef.update({status:'playing',currentCard:null,cardIndex:0,
+    'p1/score':0,'p1/timerSec':0,'p1/answering':false,'p1/done':false,
+    'p2/score':0,'p2/timerSec':0,'p2/answering':false,'p2/done':false});
+  show('sGame'); updateCounter();
+});
+
+// ===== ADD MODAL =====
+document.getElementById('btnAdd').addEventListener('click',function(){
+  document.getElementById('newQ').value='';
+  document.getElementById('modalMsg').textContent='';
+  document.getElementById('overlay').classList.add('show');
+});
+document.getElementById('btnModalClose').addEventListener('click',function(){
+  document.getElementById('overlay').classList.remove('show');
+});
+document.getElementById('overlay').addEventListener('click',function(e){
+  if(e.target===document.getElementById('overlay'))document.getElementById('overlay').classList.remove('show');
+});
+document.querySelectorAll('.modal-cat').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.modal-cat').forEach(function(b){b.classList.remove('sel');});
+    btn.classList.add('sel');
+    selCat=btn.dataset.mcat;
+  });
+});
+document.getElementById('btnSave').addEventListener('click',function(){
+  var q=document.getElementById('newQ').value.trim();
+  if(!q){document.getElementById('newQ').style.borderColor='#f472b6';setTimeout(function(){document.getElementById('newQ').style.borderColor='';},1000);return;}
+  var card={q:q,cat:'مضاف',originalCat:selCat,custom:true,addedBy:myName};
+  db.ref('rooms/'+roomCode+'/customCards').push(card).then(function(){
+    var cur=(gameState&&gameState[myId]&&gameState[myId].score)||0;
+    return db.ref('rooms/'+roomCode+'/'+myId).update({score:cur+5});
+  }).then(function(){
+    deck=buildDeck(currentFilter); updateCounter();
+    document.getElementById('modalMsg').textContent='✅ تم إضافة الكرت! +5 نقاط 🎉';
+    document.getElementById('newQ').value='';
+    setTimeout(function(){document.getElementById('overlay').classList.remove('show');},1800);
+    toast('+5 نقاط! 🎉');
+  });
+});
+</script>
+</body>
+</html>
