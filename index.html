@@ -138,6 +138,8 @@ input.field::placeholder{color:var(--muted);}
 .q-del{color:#ff5252;}
 .manage-empty{color:var(--muted);font-size:.85rem;text-align:center;padding:24px;}
 .manage-count{font-size:.78rem;color:var(--muted);text-align:center;}
+.q-item.answered{opacity:.5;}
+.q-badge-done{display:inline-block;font-size:.68rem;font-weight:700;color:var(--green);background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:2px 8px;}
 </style>
 </head>
 <body>
@@ -767,13 +769,16 @@ function renderManage(){
   list.innerHTML='';
   var qs=(gameState&&gameState.questions)?gameState.questions:{};
   var ids=Object.keys(qs);
-  document.getElementById('manageCount').textContent='عدد الأسئلة: '+ids.length;
+  var doneCount=ids.filter(function(id){return isAnswered(id);}).length;
+  document.getElementById('manageCount').textContent='عدد الأسئلة: '+ids.length+' • المُجاب: '+doneCount;
   if(!ids.length){list.innerHTML='<div class="manage-empty">لا توجد أسئلة بعد</div>';return;}
   ids.forEach(function(id){
     var item=qs[id]; if(!item)return;
     var cat=item.cat||'';
-    var div=document.createElement('div');div.className='q-item';
-    var c=document.createElement('div');c.className='q-item-cat';c.textContent=(CAT_ICONS[cat]||'')+' '+cat;
+    var answered=isAnswered(id);
+    var div=document.createElement('div');div.className='q-item'+(answered?' answered':'');
+    var c=document.createElement('div');c.className='q-item-cat';c.textContent=(CAT_ICONS[cat]||'')+' '+cat+' ';
+    if(answered){var bdg=document.createElement('span');bdg.className='q-badge-done';bdg.textContent='✅ مُجاب';c.appendChild(bdg);}
     var t=document.createElement('div');t.className='q-item-text';t.textContent=item.q;
     var act=document.createElement('div');act.className='q-item-actions';
     var be=document.createElement('button');be.className='q-edit';be.textContent='✏️ تعديل';
