@@ -389,40 +389,35 @@ try{
 }catch(e){}
 
 // ===== ENTER GAME =====
+// Fixed mapping: محمد is always p1 (host), أمل is always p2.
 function enterGame(){
-  // Check current game state to assign slot
+  mySlot = (myName==='محمد') ? 'p1' : 'p2';
   GAME_REF.once('value').then(function(snap){
-    if(!snap.exists()){
-      // First ever - create game as p1
-      mySlot='p1';
+    var g = snap.exists() ? snap.val() : null;
+    if(!g){
+      // First ever - create the shared game with my slot filled in
       return GAME_REF.set({
-        p1:{name:myName,score:0,timerSec:0,answering:false,done:false,online:true},
-        p2:{name:'',score:0,timerSec:0,answering:false,done:false,online:false},
+        p1:{name:(myName==='محمد'?myName:''),score:0,timerSec:0,answering:false,done:false,online:(myName==='محمد')},
+        p2:{name:(myName==='أمل'?myName:''),score:0,timerSec:0,answering:false,done:false,online:(myName==='أمل')},
         currentCard:null,
         deckIdx:0,
         deckSeed:Date.now(),
         status:'waiting'
       });
     }
-    var g=snap.val();
-    // Check if this name matches p1 or p2
-    if(g.p1&&g.p1.name===myName){
-      mySlot='p1';
-      return GAME_REF.child('p1').update({online:true,name:myName});
-    } else if(g.p2&&g.p2.name===myName){
-      mySlot='p2';
-      return GAME_REF.child('p2').update({online:true,name:myName});
-    } else if(!g.p2||!g.p2.name){
-      // Slot p2 is free
-      mySlot='p2';
-      return GAME_REF.child('p2').update({name:myName,score:0,timerSec:0,answering:false,done:false,online:true}).then(function(){
-        if(g.status==='waiting') return GAME_REF.update({status:'playing'});
-      });
-    } else {
-      // Both slots taken by other names
-      document.getElementById('loginErr').textContent='الغرفة ممتلئة بأسماء أخرى. غيّر اسمك أو تواصل مع الطرف الثاني.';
-      return Promise.reject('full');
-    }
+    // Claim my slot regardless of previous state
+    var upd={};
+    upd[mySlot+'/name']=myName;
+    upd[mySlot+'/online']=true;
+    // Clear stale duplicate: other slot must never hold my own name
+    var otherSlot = (mySlot==='p1') ? 'p2' : 'p1';
+    var otherName = g[otherSlot] && g[otherSlot].name;
+    if(otherName===myName) upd[otherSlot+'/name']='';
+    return GAME_REF.update(upd).then(function(){
+      var p1Name = (mySlot==='p1') ? myName : (otherName===myName?'':otherName);
+      var p2Name = (mySlot==='p2') ? myName : (otherName===myName?'':otherName);
+      if(p1Name&&p2Name&&g.status==='waiting') return GAME_REF.update({status:'playing'});
+    });
   }).then(function(){
     // Mark online presence
     var presRef=GAME_REF.child(mySlot+'/online');
@@ -430,7 +425,8 @@ function enterGame(){
     presRef.onDisconnect().set(false);
     listenGame();
   }).catch(function(e){
-    if(e!=='full')console.error(e);
+    document.getElementById('loginErr').textContent='تعذّر الاتصال بقاعدة البيانات. تأكد من الإنترنت وحدّث الصفحة.';
+    console.error(e);
   });
 }
 
