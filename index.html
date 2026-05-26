@@ -136,8 +136,8 @@ input.field::placeholder{color:var(--muted);}
   </div>
   <div class="box">
     <div class="box-title">👤 من أنت؟</div>
-    <input class="field" id="inName" placeholder="اكتب اسمك..." maxlength="20">
-    <button class="btn btn-red" id="btnLogin">ادخل 🚀</button>
+    <button class="btn btn-red" id="btnLoginM">🤵 محمد</button>
+    <button class="btn btn-grad" id="btnLoginA">👰 أمل</button>
   </div>
   <div class="err" id="loginErr"></div>
 </div>
@@ -373,20 +373,19 @@ function hashStr(s){
 }
 
 // ===== LOGIN =====
-document.getElementById('btnLogin').addEventListener('click', function(){
-  var name=document.getElementById('inName').value.trim();
-  if(!name){document.getElementById('loginErr').textContent='اكتب اسمك أولاً';return;}
+function loginAs(name){
   document.getElementById('loginErr').textContent='';
   myName=name;
-  // Save name locally
   try{localStorage.setItem('khitba_name',name);}catch(e){}
   enterGame();
-});
+}
+document.getElementById('btnLoginM').addEventListener('click',function(){loginAs('محمد');});
+document.getElementById('btnLoginA').addEventListener('click',function(){loginAs('أمل');});
 
-// Restore name if saved
+// Auto-login if name was saved
 try{
   var saved=localStorage.getItem('khitba_name');
-  if(saved)document.getElementById('inName').value=saved;
+  if(saved==='محمد'||saved==='أمل') loginAs(saved);
 }catch(e){}
 
 // ===== ENTER GAME =====
