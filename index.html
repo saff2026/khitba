@@ -70,7 +70,7 @@ input.field::placeholder{color:var(--muted);}
 .card.cat-شخصية{background:linear-gradient(145deg,#2a0808,#3d1010);border:1px solid rgba(229,57,53,.3);}
 .card.cat-زواج{background:linear-gradient(145deg,#1e0505,#2e0a0a);border:1px solid rgba(192,57,43,.35);}
 .card.cat-هوايات{background:linear-gradient(145deg,#280a0a,#380f0f);border:1px solid rgba(239,83,80,.25);}
-.card.cat-خفيف{background:linear-gradient(145deg,#220606,#320c0c);border:1px solid rgba(255,107,107,.3);}
+.card.cat-أخرى{background:linear-gradient(145deg,#220606,#320c0c);border:1px solid rgba(255,107,107,.3);}
 .card.cat-مضاف{background:linear-gradient(145deg,#1c0606,#2a0a0a);border:1px solid rgba(229,57,53,.2);}
 .card-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;width:fit-content;background:rgba(232,83,106,.15);color:var(--accent1);margin-bottom:10px;}
 .card-q{font-size:1.18rem;font-weight:700;line-height:1.7;flex:1;display:flex;align-items:center;}
@@ -187,7 +187,7 @@ input.field::placeholder{color:var(--muted);}
     <button class="cat-btn" data-cat="شخصية">🧠 شخصية</button>
     <button class="cat-btn" data-cat="زواج">💍 زواج</button>
     <button class="cat-btn" data-cat="هوايات">🎨 هوايات</button>
-    <button class="cat-btn" data-cat="خفيف">😄 خفيف</button>
+    <button class="cat-btn" data-cat="أخرى">🗂️ أخرى</button>
   </div>
 
   <div class="card-wrap">
@@ -264,7 +264,7 @@ input.field::placeholder{color:var(--muted);}
       <button class="modal-cat sel" data-mcat="شخصية">🧠 شخصية</button>
       <button class="modal-cat" data-mcat="زواج">💍 زواج</button>
       <button class="modal-cat" data-mcat="هوايات">🎨 هوايات</button>
-      <button class="modal-cat" data-mcat="خفيف">😄 خفيف</button>
+      <button class="modal-cat" data-mcat="أخرى">🗂️ أخرى</button>
     </div>
     <button class="btn btn-grad" id="btnSave">حفظ الكرت 🎴</button>
     <div class="modal-msg" id="modalMsg"></div>
@@ -323,20 +323,20 @@ var CARDS = [
   {q:"فيه فعاليات رياضية عندك؟",cat:"هوايات"},
   {q:"كيف الأعياد عندكم؟ وين بتجتمعون؟",cat:"هوايات"},
   {q:"الرسم، فكرتِ تخليه بزنس يوم من الأيام؟",cat:"هوايات"},
-  {q:"يومك المثالي كيف يكون؟ من الصبح للليل 🌅",cat:"خفيف"},
-  {q:"لو البيت صار فوضى، ينزعجك أو ما تهتمين؟",cat:"خفيف"},
-  {q:"الضيوف عندك تفرحين فيهم أو يتعبونك؟ 😄",cat:"خفيف"},
-  {q:"لو طبختِ وما طلع زين، تقولين أو تخبينها عليّ؟ 😂",cat:"خفيف"},
-  {q:"نومك خفيف أو ما يصحيك شي؟",cat:"خفيف"},
-  {q:"تنسين المناسبات أو تذكرينها كلها؟",cat:"خفيف"},
-  {q:"تحبين الهدايا المفاجئة أو تختارين بنفسك؟",cat:"خفيف"},
-  {q:"لو زارنا ضيوف فجأة، تفرحين أو تنهارين؟ 😄",cat:"خفيف"},
-  {q:"صباحية أو سهرانة؟",cat:"خفيف"},
-  {q:"لو مريتِ بيوم صعب، تبين تحكين أو تنعزلين شوي؟",cat:"خفيف"},
-  {q:"بيت هادي أو ضيوف دايمين؟",cat:"خفيف"},
-  {q:"تخططين مسبقاً أو ارتجال؟",cat:"خفيف"}
+  {q:"يومك المثالي كيف يكون؟ من الصبح للليل 🌅",cat:"أخرى"},
+  {q:"لو البيت صار فوضى، ينزعجك أو ما تهتمين؟",cat:"أخرى"},
+  {q:"الضيوف عندك تفرحين فيهم أو يتعبونك؟ 😄",cat:"أخرى"},
+  {q:"لو طبختِ وما طلع زين، تقولين أو تخبينها عليّ؟ 😂",cat:"أخرى"},
+  {q:"نومك خفيف أو ما يصحيك شي؟",cat:"أخرى"},
+  {q:"تنسين المناسبات أو تذكرينها كلها؟",cat:"أخرى"},
+  {q:"تحبين الهدايا المفاجئة أو تختارين بنفسك؟",cat:"أخرى"},
+  {q:"لو زارنا ضيوف فجأة، تفرحين أو تنهارين؟ 😄",cat:"أخرى"},
+  {q:"صباحية أو سهرانة؟",cat:"أخرى"},
+  {q:"لو مريتِ بيوم صعب، تبين تحكين أو تنعزلين شوي؟",cat:"أخرى"},
+  {q:"بيت هادي أو ضيوف دايمين؟",cat:"أخرى"},
+  {q:"تخططين مسبقاً أو ارتجال؟",cat:"أخرى"}
 ];
-var CAT_ICONS={شخصية:"🧠",زواج:"💍",هوايات:"🎨",خفيف:"😄",مضاف:"✏️"};
+var CAT_ICONS={شخصية:"🧠",زواج:"💍",هوايات:"🎨",أخرى:"🗂️",مضاف:"✏️"};
 
 // ===== STATE =====
 var myName='', mySlot=null; // 'p1' or 'p2'
@@ -445,6 +445,17 @@ function listenGame(){
     if(isHost()&&!gameState.questions){
       GAME_REF.child('questions').set(seedQuestionsObj());
       return;
+    }
+
+    // One-time migration: rename category خفيف -> أخرى (host only)
+    if(isHost()&&gameState.questions){
+      var fixes={};
+      Object.keys(gameState.questions).forEach(function(id){
+        var item=gameState.questions[id];
+        if(item&&item.cat==='خفيف') fixes['questions/'+id+'/cat']='أخرى';
+      });
+      if(gameState.currentFilter==='خفيف') fixes['currentFilter']='أخرى';
+      if(Object.keys(fixes).length){GAME_REF.update(fixes);return;}
     }
 
     // Management screen is sticky for the host until they go back
