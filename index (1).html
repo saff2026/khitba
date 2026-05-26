@@ -416,7 +416,9 @@ function enterGame(){
     } else if(!g.p2||!g.p2.name){
       // Slot p2 is free
       mySlot='p2';
-      return GAME_REF.child('p2').update({name:myName,score:0,timerSec:0,answering:false,done:false,online:true});
+      return GAME_REF.child('p2').update({name:myName,score:0,timerSec:0,answering:false,done:false,online:true}).then(function(){
+        if(g.status==='waiting') return GAME_REF.update({status:'playing'});
+      });
     } else {
       // Both slots taken by other names
       document.getElementById('loginErr').textContent='الغرفة ممتلئة بأسماء أخرى. غيّر اسمك أو تواصل مع الطرف الثاني.';
@@ -442,7 +444,7 @@ function listenGame(){
     if(!me)return;
 
     // Decide which screen
-    if(gameState.status==='waiting'||!them||!them.name){
+    if(!them||!them.name){
       updateWaitScreen();
       show('sWait');
     } else if(gameState.status==='done'){
@@ -468,9 +470,20 @@ function updateWaitScreen(){
 
 document.getElementById('btnCopyLink').addEventListener('click',function(){
   var url=window.location.href;
-  navigator.clipboard&&navigator.clipboard.writeText(url);
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).catch(function(){fallbackCopy(url);});
+  } else {
+    fallbackCopy(url);
+  }
   toast('تم نسخ الرابط 📋');
 });
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+}
 
 // ===== GAME UI INIT (runs once when game starts) =====
 var gameUIInited=false;
@@ -486,6 +499,7 @@ function initGameUI(){
   document.getElementById('finalThemName').textContent=them.name;
 
   // Build deck from saved state
+  if(gameState.currentFilter) currentFilter=gameState.currentFilter;
   deck=buildDeck(currentFilter);
   deckIdx=gameState.deckIdx||0;
   updateCounter();
@@ -501,7 +515,14 @@ function updateGameUI(){
   document.getElementById('myPts').textContent=me.score||0;
   document.getElementById('themPts').textContent=them.score||0;
 
-  // sync deckIdx from firebase
+  // sync deckIdx and filter from firebase
+  if(gameState.currentFilter&&gameState.currentFilter!==currentFilter){
+    currentFilter=gameState.currentFilter;
+    deck=buildDeck(currentFilter);
+    document.querySelectorAll('.cat-btn').forEach(function(b){
+      b.classList.toggle('active',b.dataset.cat===currentFilter);
+    });
+  }
   if(gameState.deckIdx!==undefined&&gameState.deckIdx!==deckIdx){
     deckIdx=gameState.deckIdx;
     updateCounter();
@@ -539,7 +560,7 @@ function updateGameUI(){
   // next button — host only, both done
   var both=me.done&&them.done;
   var nb=document.getElementById('btnNext');
-  nb.disabled=!(isHost()&&both&&gameState.currentCard);
+  nb.disabled=!(isHost()&&(both||!gameState.currentCard));
 }
 
 function renderAns(boxId,timeId,ptsId,player){
@@ -624,14 +645,14 @@ function updateCounter(){
 // ===== CAT FILTER =====
 document.querySelectorAll('.cat-btn').forEach(function(btn){
   btn.addEventListener('click',function(){
-    if(!isHost())return;
+    if(!isHost()){toast('فقط الطرف الأول يغير الفئة');return;}
     document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});
     btn.classList.add('active');
     currentFilter=btn.dataset.cat;
     deck=buildDeck(currentFilter);
     deckIdx=0;
     updateCounter();
-    GAME_REF.update({deckIdx:0,currentCard:null,
+    GAME_REF.update({deckIdx:0,currentCard:null,currentFilter:currentFilter,
       'p1/done':false,'p1/timerSec':0,'p1/answering':false,
       'p2/done':false,'p2/timerSec':0,'p2/answering':false});
   });
