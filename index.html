@@ -373,9 +373,10 @@ function hashStr(s){
   return h;
 }
 
-// Answered questions are "trashed" (never shown again) until a new round/restart.
+// Answered questions are "trashed" globally (by id) and never shown again until restart.
 function isAnswered(id){return !!(gameState&&gameState.answered&&gameState.answered[id]);}
-function unansweredDeck(){return buildDeck(currentFilter).filter(function(c){return !isAnswered(c.id);});}
+function unansweredFor(filter){return buildDeck(filter).filter(function(c){return !isAnswered(c.id);});}
+function unansweredDeck(){return unansweredFor(currentFilter);}
 
 // Whose turn it is to answer the current card (alternates each card via firstTurn).
 function activeAnswerSlot(){
@@ -541,13 +542,11 @@ function updateGameUI(){
   // manage button available to both players
   document.getElementById('btnManage').style.display='block';
 
-  // sync filter from firebase
-  if(gameState.currentFilter&&gameState.currentFilter!==currentFilter){
-    currentFilter=gameState.currentFilter;
-    document.querySelectorAll('.cat-btn').forEach(function(b){
-      b.classList.toggle('active',b.dataset.cat===currentFilter);
-    });
-  }
+  // sync filter from firebase (keep button highlight in sync)
+  if(gameState.currentFilter) currentFilter=gameState.currentFilter;
+  document.querySelectorAll('.cat-btn').forEach(function(b){
+    b.classList.toggle('active',b.dataset.cat===currentFilter);
+  });
   updateCounter();
 
   // card
@@ -625,6 +624,12 @@ document.getElementById('btnAnswer').addEventListener('click',function(){
 document.getElementById('btnNext').addEventListener('click',function(){
   var pool=unansweredDeck();
   if(!pool.length){
+    // current category finished -> keep going with remaining questions from all categories
+    currentFilter='all';
+    pool=unansweredFor('all');
+  }
+  if(!pool.length){
+    // every question in every category is answered
     GAME_REF.update({status:'done'});
     return;
   }
@@ -640,6 +645,7 @@ document.getElementById('btnNext').addEventListener('click',function(){
   GAME_REF.update({
     currentCard:card,
     firstTurn:newFirst,
+    currentFilter:currentFilter,
     'p1/done':false,
     'p2/done':false
   });
