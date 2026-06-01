@@ -34,7 +34,7 @@ ROWS = [
      ("laliga.com", "https://www.laliga.com/en-GB/laliga-hypermotion")],
     ["Spain", "Primera Federacion", 3, "40 (2 groups x 20)", "2", "2", "10.0%", "10", "0", "25.0%",
      ("rfef.es", "https://rfef.es/es/competiciones/primera-federacion")],
-    ["Spain", "Segunda Federacion", 4, "90 (5 groups x 18)", "5", "5", "11.1%", "25", "~2", "~30%",
+    ["Spain", "Segunda Federacion", 4, "90 (5 groups x 18)", "5", "5", "11.1%", "25", "2", "30.0%",
      ("rfef.es", "https://rfef.es/es/noticias/competiciones-masculinas/segunda-federacion")],
     ["Spain", "Tercera Federacion", 5, "~325 (18 groups)", "18", "9", "~8.3%", "~54+", "0", "~17%",
      ("rfef.es", "https://rfef.es/es/competiciones/tercera-federacion")],
@@ -58,16 +58,16 @@ ROWS = [
      ("legapro.it", "https://www.legapro.it/")],
     ["Italy", "Serie D", 4, "~162 (9 groups x 18)", "9", "0", "~5.6%", "~9", "~27 (playout)", "~22%",
      ("lnd.it", "https://seried.lnd.it/it/serie-d")],
-    ["Italy", "Eccellenza", 5, "~474 (~28 groups)", "~28", "~8", "~7.6%", "~2-4/group", "regional", "~12-20%",
+    ["Italy", "Eccellenza", 5, "~474 (~28 groups)", "~28", "~7", "~7.4%", "~2-4/group", "regional", "~12-20%",
      ("lnd.it", "https://www.lnd.it/it/competition")],
     # France
     ["France", "Ligue 1", 1, "18", "—", "—", "—", "2", "1 (barrage)", "11.1-16.7%",
      ("lfp.fr", "https://www.lfp.fr/")],
     ["France", "Ligue 2", 2, "18", "2", "1 (barrage)", "11.1-16.7%", "2", "1 (barrage)", "11.1-16.7%",
      ("lfp.fr", "https://www.lfp.fr/")],
-    ["France", "Championnat National", 3, "18", "2", "1 (barrage)", "11.1-16.7%", "2", "0", "~11.1%",
+    ["France", "Championnat National", 3, "18", "2", "1 (barrage)", "11.1-16.7%", "3", "0", "16.7%",
      ("fff.fr", "https://www.fff.fr/")],
-    ["France", "National 2", 4, "48 (3 groups x 16)", "3", "0", "~6.25%", "~10", "0", "~20.8%",
+    ["France", "National 2", 4, "48 (3 groups x 16)", "3", "0", "~6.25%", "~8 (variable)", "0", "~16.7%",
      ("fff.fr", "https://media.fff.fr/uploads/documents/reglements-des-championnats-n1-et-n2-20252026-ok.pdf")],
     ["France", "National 3", 5, "140 (10 groups x 14)", "10", "0", "~7.1%", "varies", "0", "variable",
      ("fff.fr", "https://www.fff.fr/")],
@@ -78,6 +78,7 @@ FOOTNOTES = [
     "Ranges appear where the count depends on the playoff/barrage outcome, financial licensing, reserve-team eligibility, or ongoing league restructuring (mainly the regionalised lower tiers, whose relegation totals are set annually by regional federations).",
     "Italy: Serie B/C 'playout' and France's 'barrage' are relegation playoffs. Germany's 'Relegation' is a one-place promotion/relegation playoff at each of the top three boundaries.",
     "Sources are the official governing-body / league websites (Premier League, EFL & National League; LaLiga & RFEF; Bundesliga & DFB; Lega Serie A/B, Lega Pro & LND; LFP & FFF).",
+    "All figures triple-checked (3+ independent sources per number). France is mid-transition: Championnat National relegated 3 in 2024-25 (runs at 17 clubs in 2025-26) and National 2 relegations were reduced by an FFF transition decision, so its count is variable (~8).",
 ]
 
 HEADER_FILL = PatternFill("solid", fgColor="1F4E78")
