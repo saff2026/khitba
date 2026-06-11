@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""خريطة شاملة: كل المحافظات + الكلاسترات + أداة قياس المسافة بين أي مدينتين."""
+"""خريطة شاملة: كل المحافظات + المجموعات + أداة قياس المسافة بين أي مدينتين."""
 import json, re
 
 recs = json.load(open("/home/user/khitba/cluster_analysis/governorates_geo.json"))["records"]
@@ -47,7 +47,7 @@ for r in recs:
     points[r["name"]] = {"lat": r["lat"], "lon": r["lon"], "region": r["region"],
                          "cat": r["cat"], "cluster": None}
 
-# ربط الكلاسترات
+# ربط المجموعات
 cluster_members = {cl: [] for cl in ordered}
 for cl in ordered:
     for city_en in clusters[cl]["cities"]:
@@ -55,7 +55,7 @@ for cl in ordered:
         if ar not in points:                      # مدينة كلاستر ليست محافظة مستقلة
             lat, lon = COORDS[city_en]
             points[ar] = {"lat": lat, "lon": lon, "region": clusters[cl]["region"],
-                          "cat": "كلاستر", "cluster": None}
+                          "cat": "مجموعة", "cluster": None}
         cluster_members[cl].append(ar)
 
 # تعداد سكاني تقريبي (بالآلاف) لاختيار أكبر مدينة تكون اسم الكلاستر
@@ -132,13 +132,13 @@ json.dump(P, open("/home/user/khitba/cluster_analysis/points.json", "w", encodin
           ensure_ascii=False)
 print("نقاط على الخريطة:", len(P), "| محافظات الجدول:", len(recs),
       "| مدن كلاستر إضافية:", len(P) - len(recs))
-missing_tbl = [n for n in points if points[n]["cat"] != "كلاستر"]
+missing_tbl = [n for n in points if points[n]["cat"] != "مجموعة"]
 print("كل محافظات الجدول مرسومة:", len(missing_tbl) == len(recs))
 
 HTML = """<!DOCTYPE html>
 <html lang="ar" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>خريطة محافظات المملكة — الكلاسترات وقياس المسافات</title>
+<title>خريطة محافظات المملكة — المجموعات وقياس المسافات</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -168,7 +168,7 @@ HTML = """<!DOCTYPE html>
 </style></head><body>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — الكلاسترات وقياس المسافات</div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات</div>
 
   <div class="sec">
    <h3>📏 قياس المسافة بين مدينتين</h3>
@@ -180,11 +180,11 @@ HTML = """<!DOCTYPE html>
   </div>
 
   <div class="sec">
-   <h3>✏️ تعديل الكلاسترات</h3>
+   <h3>✏️ تعديل المجموعات</h3>
    <select id="ecity"></select>
    <select id="etarget"></select>
-   <button onclick="moveCity()">↪️ نقل المدينة للكلاستر المحدد</button>
-   <div class="res" id="estat">اختر مدينة، ثم كلاستر الوجهة (أو «كلاستر جديد»)، واضغط نقل. كل شيء يتحدّث فورًا.</div>
+   <button onclick="moveCity()">↪️ نقل المدينة للمجموعة المحددة</button>
+   <div class="res" id="estat">اختر مدينة، ثم مجموعة الوجهة (أو «مجموعة جديدة»)، واضغط نقل. كل شيء يتحدّث فورًا.</div>
    <hr style="border-color:#1c3a5e">
    <h3 style="margin-top:4px">✒️ إعادة تسمية مجموعة</h3>
    <select id="rcl"></select>
@@ -196,10 +196,10 @@ HTML = """<!DOCTYPE html>
   <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط الكلاسترات</label>
+   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
   </div>
 
-  <div class="sec"><h3>📋 الكلاسترات (✓ للإظهار · اضغط الصف للتمييز)</h3>
+  <div class="sec"><h3>📋 المجموعات (✓ للإظهار · اضغط الصف للتمييز)</h3>
    <div style="display:flex;gap:6px">
      <button style="flex:1" onclick="showAll(true)">إظهار الكل</button>
      <button style="flex:1" onclick="showAll(false)">إخفاء الكل</button>
@@ -212,7 +212,7 @@ HTML = """<!DOCTYPE html>
    <span style="color:#66bd63">●</span> جيد ·
    <span style="color:#f59e0b">●</span> مراجعة ·
    <span style="color:#d73027">●</span> بعيد<br>
-   <small>كل كلاستر له لون نقاط مميز. النقاط الرمادية = محافظات خارج الكلاسترات.</small>
+   <small>كل مجموعة لها لون نقاط مميز. النقاط الرمادية = محافظات خارج المجموعات.</small>
   </div>
  </div>
  <div id="map"></div>
@@ -255,17 +255,17 @@ function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
 function popupHtml(n){const p=byName[n],id=ptCl[n];
   let s='<div style="direction:rtl;font-family:Tajawal,sans-serif"><b>'+n+'</b><br>المنطقة: '+p.region+'<br>الفئة: '+p.cat;
   if(id&&CL[id]){const st=stats(CL[id].cities);const[v,vc]=verdict(st.mx/60,CL[id].cities.length);
-    s+='<br>الكلاستر: '+id+'<br>التقييم: <b style="color:'+vc+'">'+v+'</b>';}else s+='<br>بدون كلاستر';
+    s+='<br>المجموعة: '+id+'<br>التقييم: <b style="color:'+vc+'">'+v+'</b>';}else s+='<br>بدون مجموعة';
   return s+'</div>';}
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
   m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
   m.on('click',()=>{ec.value=p.n; ec.dispatchEvent(new Event('change'));
-    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد كلاستر الوجهة واضغط نقل';});});
+    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد مجموعة الوجهة واضغط نقل';});});
 function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle({fillColor:colorOf(p.n)});
   if(isVisible(p.n)){if(!map.hasLayer(m))m.addTo(map);}else if(map.hasLayer(m))map.removeLayer(m);});}
 
-// خطوط الكلاسترات
+// خطوط المجموعات
 const lineLayer=L.layerGroup().addTo(map);
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
@@ -281,7 +281,7 @@ function toggleNames(){const on=document.getElementById('names').checked;
     if(on)m.bindTooltip(p.n,{permanent:true,direction:'right',className:'lbl',offset:[6,0]}).openTooltip();
     else{m.unbindTooltip();m.bindTooltip(p.n,{direction:'top'});}});}
 
-// قائمة الكلاسترات
+// قائمة المجموعات
 function renderList(){const cl=document.getElementById('cllist');cl.innerHTML='';
   Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b)).forEach(id=>{const c=CL[id],st=stats(c.cities);
     const[v,vc]=verdict(st.mx/60,c.cities.length);
@@ -321,13 +321,13 @@ pa.onchange=calc;pb.onchange=calc;
 function openGmaps(){const a=byName[pa.value],b=byName[pb.value];if(!a||!b){alert('اختر مدينتين أولاً');return;}
   window.open('https://www.google.com/maps/dir/?api=1&origin='+a.lat+','+a.lon+'&destination='+b.lat+','+b.lon+'&travelmode=driving','_blank');}
 
-// تعديل الكلاسترات
+// تعديل المجموعات
 const ec=document.getElementById('ecity'),et=document.getElementById('etarget'),rcl=document.getElementById('rcl');
 function refreshCity(){const cur=ec.value;ec.innerHTML='<option value="">— اختر مدينة —</option>'+
   names.map(n=>'<option value="'+n+'">'+n+' ('+(ptCl[n]||'بدون')+')</option>').join('');ec.value=cur;}
 function refreshTarget(){et.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b))
   .map(id=>'<option value="'+id+'">'+id+' — '+CL[id].region+'</option>').join('')+
-  '<option value="__none__">— بدون كلاستر —</option><option value="__new__">+ كلاستر جديد</option>';}
+  '<option value="__none__">— بدون مجموعة —</option><option value="__new__">+ مجموعة جديدة</option>';}
 function refreshRcl(){const cur=rcl.value;rcl.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b))
   .map(id=>'<option value="'+id+'">'+id+'</option>').join('');if(CL[cur])rcl.value=cur;}
 function refreshSelectors(){refreshCity();refreshTarget();refreshRcl();}
@@ -344,19 +344,19 @@ function renameCluster(){const old=rcl.value,nn=document.getElementById('rname')
   renderAll();refreshSelectors();rcl.value=nn;
   document.getElementById('estat').innerHTML='✒️ تغيّر الاسم إلى <b>'+nn+'</b>';}
 function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}let tgt=et.value;
-  // 1) أزلها من كل الكلاسترات (يمنع بقاءها في الأول عند تكرار النقل)
+  // 1) أزلها من كل المجموعات (يمنع بقاءها في الأول عند تكرار النقل)
   Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==city);});
   // 2) أضفها للوجهة
   if(tgt==='__none__')ptCl[city]=null;
-  else{if(tgt==='__new__'){newCount++;tgt='كلاستر جديد '+newCount;
+  else{if(tgt==='__new__'){newCount++;tgt='مجموعة جديدة '+newCount;
       CL[tgt]={region:byName[city].region,color:PALETTE[(Object.keys(CL).length+newCount)%PALETTE.length],cities:[]};}
     if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[]};
     CL[tgt].cities.push(city);ptCl[city]=tgt;}
-  // 3) احذف الكلاسترات الفارغة
+  // 3) احذف المجموعات الفارغة
   Object.keys(CL).forEach(id=>{if(CL[id].cities.length===0)delete CL[id];});
   renderAll();refreshSelectors();
-  document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون كلاستر':tgt)+'</b>';}
-function exportCsv(){let rows=[['City','Region','Cluster']];
+  document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون مجموعة':tgt)+'</b>';}
+function exportCsv(){let rows=[['City','Region','Group']];
   DATA.points.forEach(p=>rows.push([p.n,p.region,ptCl[p.n]||'']));
   const csv='﻿'+rows.map(r=>r.map(x=>'"'+x+'"').join(',')).join('\\r\\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
