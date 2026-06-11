@@ -56,8 +56,37 @@ for cl in ordered:
             lat, lon = COORDS[city_en]
             points[ar] = {"lat": lat, "lon": lon, "region": clusters[cl]["region"],
                           "cat": "كلاستر", "cluster": None}
-        points[ar]["cluster"] = cl
         cluster_members[cl].append(ar)
+
+# تعداد سكاني تقريبي (بالآلاف) لاختيار أكبر مدينة تكون اسم الكلاستر
+POP = {
+ "الدمام":1250,"الظهران":240,"الخبر":410,"رأس تنورة":95,"بقيق":50,
+ "الجبيل":470,"القطيف":110,"صيهات":95,"صفوى":50,"الجارودية":20,
+ "الأحساء":660,"المبرز":290,"حفر الباطن":390,"القيصومة":30,"الخفجي":100,
+ "الرياض":7000,"المزاحمية":45,"الخرج":380,"الدلم":40,"حوطة بني تميم":25,
+ "المجمعة":75,"الغاط":20,"الزلفي":70,"القويعية":53,"عفيف":65,"الدوادمي":73,
+ "شقراء":40,"وادي الدواسر":106,"مكة المكرمة":2040,"جدة":4000,"الطائف":690,
+ "القنفذة":78,"الليث":72,"المدينة المنورة":1490,"ينبع":330,"العلا":60,
+ "بريدة":670,"عنيزة":180,"البكيرية":70,"البدائع":50,"الرس":133,"المذنب":60,
+ "الجوا":15,"الخبراء":30,"الأسياح":30,"دخنة":10,"أبها":510,"خميس مشيط":630,
+ "أحد رفيدة":90,"سراة عبيدة":60,"رجال ألمع":60,"محايل عسير":100,"المجاردة":50,
+ "بيشة":110,"تبوك":670,"تيماء":65,"حائل":480,"عرعر":210,"رفحاء":90,"طريف":50,
+ "سكاكا":250,"دومة الجندل":50,"طبرجل":60,"جازان":170,"أبو عريش":160,"صبيا":230,
+ "صامطة":90,"أحد المسارحة":60,"بيش":80,"ضمد":40,"الدائر":30,"الدرب":50,
+ "الشقيق":30,"فيفاء":60,"فرسان":18,"نجران":380,"حبونا":30,"خباش":20,"شرورة":85,
+ "الباحة":110,"العقيق":40,"المندق":30,"المخواة":60,
+}
+def cluster_name(cl):
+    largest = max(cluster_members[cl], key=lambda c: POP.get(c, 0))
+    return "مجموعة " + largest
+NAME = {cl: cluster_name(cl) for cl in ordered}
+assert len(set(NAME.values())) == len(NAME), "أسماء كلاسترات مكررة!"
+
+# اربط النقاط بالاسم الجديد
+for cl in ordered:
+    for ar in cluster_members[cl]:
+        points[ar]["cluster"] = NAME[cl]
+CL_COLOR = {NAME[cl]: PALETTE[i % len(PALETTE)] for i, cl in enumerate(ordered)}
 
 # أزواج الكلاستر بأوقات قوقل (بالأسماء العربية)
 pair_lines = []
@@ -65,15 +94,15 @@ for p in pairs:
     a = EN2AR.get(p["From"], p["From"]); b = EN2AR.get(p["To"], p["To"])
     if a in points and b in points:
         pair_lines.append({"a": a, "b": b, "km": p["Road_km"], "t": p["Drive"],
-                           "cl": p["Cluster"]})
+                           "cl": NAME[p["Cluster"]]})
 
 # تجهيز JSON للواجهة
 P = [{"n": n, "lat": v["lat"], "lon": v["lon"], "region": v["region"],
       "cat": v["cat"], "cl": v["cluster"]} for n, v in points.items()]
 CLUSTERS = []
 for cl in ordered:
-    s = summary[cl]
-    CLUSTERS.append({"id": cl, "region": s["Region"], "color": CL_COLOR[cl],
+    s = summary[cl]; nm = NAME[cl]
+    CLUSTERS.append({"id": nm, "region": s["Region"], "color": CL_COLOR[nm],
                      "verdict": s["Verdict"], "vcolor": VERDICT_COLOR.get(s["Verdict"], "#888"),
                      "maxdrive": s["MaxDrive"], "cities": cluster_members[cl]})
 
