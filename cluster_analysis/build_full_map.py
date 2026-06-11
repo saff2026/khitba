@@ -287,11 +287,11 @@ HTML = """<!DOCTYPE html>
    <div id="cllist"></div></div>
 
   <div class="sec leg"><h3>دليل الألوان</h3>
-   <span style="color:#1a9850">●</span> ممتاز ·
-   <span style="color:#66bd63">●</span> جيد ·
-   <span style="color:#f59e0b">●</span> مراجعة ·
-   <span style="color:#d73027">●</span> بعيد<br>
-   <small>كل مجموعة لها لون نقاط مميز. النقاط الرمادية = محافظات خارج المجموعات.</small>
+   <b>الخطوط (زمن القيادة بين مدينتين):</b><br>
+   <span style="color:#1a9850">▬</span> أخضر: أقل من نص ساعة ·
+   <span style="color:#f5b301">▬</span> أصفر: نص ساعة – ساعة ونص ·
+   <span style="color:#d73027">▬</span> أحمر: أكثر من ساعة ونص<br>
+   <small>الخط المتقطّع = زمن تقديري (لا يتوفر مسار قوقل). النقاط الرمادية = محافظات خارج المجموعات.</small>
   </div>
  </div>
  <div id="map"></div>
@@ -362,11 +362,13 @@ function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle
 
 // خطوط المجموعات
 const lineLayer=L.layerGroup().addTo(map);
+function lineColor(min){return min>90?'#d73027':min>=30?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
     for(let i=0;i<ct.length;i++)for(let j=i+1;j<ct.length;j++){const a=byName[ct[i]],b=byName[ct[j]];if(!a||!b)continue;
       const g=gd(ct[i],ct[j]);const lbl=ct[i]+' ↔ '+ct[j]+': '+g.km+' كم / '+fmt(g.sec/60)+(g.est?' ≈ تقديري':'');
-      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:c.color,weight:1.5,opacity:0.5}).bindTooltip(lbl).addTo(lineLayer);}});
+      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:lineColor(g.sec/60),weight:3,opacity:0.75,
+        dashArray:g.est?'5,5':null}).bindTooltip(lbl).addTo(lineLayer);}});
   document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
 function toggleLines(){document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
 
