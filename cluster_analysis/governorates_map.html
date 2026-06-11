@@ -23,6 +23,7 @@
  .cl{padding:7px 9px;border-radius:6px;margin-bottom:5px;cursor:pointer;background:#16314f;
    border-right:5px solid #888;font-size:12.5px}
  .cl:hover{background:#1d3e63} .cl .v{float:left;font-size:11px;padding:1px 6px;border-radius:10px;color:#fff}
+ .cl .cbx{float:right;width:auto;margin:2px 6px 0 0;cursor:pointer}
  .cl .ct{color:#aac4e0;font-size:11px;margin-top:3px}
  .lbl{font-size:11px;color:#111;font-weight:bold;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
  .leg{background:#16314f;font-size:11.5px;line-height:1.8}
@@ -61,7 +62,13 @@
    <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط الكلاسترات</label>
   </div>
 
-  <div class="sec"><h3>📋 الكلاسترات (اضغط للتمييز)</h3><div id="cllist"></div></div>
+  <div class="sec"><h3>📋 الكلاسترات (✓ للإظهار · اضغط الصف للتمييز)</h3>
+   <div style="display:flex;gap:6px">
+     <button style="flex:1" onclick="showAll(true)">إظهار الكل</button>
+     <button style="flex:1" onclick="showAll(false)">إخفاء الكل</button>
+   </div>
+   <label style="font-size:12px;display:block;margin-bottom:6px"><input type="checkbox" id="vnone" checked onchange="toggleNone()" style="width:auto"> إظهار المحافظات خارج المجموعات</label>
+   <div id="cllist"></div></div>
 
   <div class="sec leg"><h3>دليل الألوان</h3>
    <span style="color:#1a9850">●</span> ممتاز ·
@@ -90,6 +97,10 @@ const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f03
 let CL={}, ptCl={}, newCount=0;
 DATA.clusters.forEach(c=>{CL[c.id]={region:c.region,color:c.color,cities:c.cities.slice()};});
 DATA.points.forEach(p=>{ptCl[p.n]=p.cl;});
+let hidden=new Set(), hideNone=false;
+function isVisible(n){const id=ptCl[n];return id?!hidden.has(id):!hideNone;}
+function showAll(v){if(v)hidden.clear();else hidden=new Set(Object.keys(CL));renderAll();}
+function toggleNone(){hideNone=!document.getElementById('vnone').checked;renderMarkers();}
 
 function getG(a,b){let g=DATA.matrix[a+'|'+b]; if(g===undefined)g=DATA.matrix[b+'|'+a]; return g;}
 function fmt(min){const h=Math.floor(min/60),m=Math.round(min%60);return h?h+'س '+m+'د':m+'د';}
@@ -114,12 +125,13 @@ DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='م
   m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
   m.on('click',()=>{ec.value=p.n; ec.dispatchEvent(new Event('change'));
     document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد كلاستر الوجهة واضغط نقل';});});
-function renderMarkers(){DATA.points.forEach(p=>markers[p.n].setStyle({fillColor:colorOf(p.n)}));}
+function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle({fillColor:colorOf(p.n)});
+  if(isVisible(p.n)){if(!map.hasLayer(m))m.addTo(map);}else if(map.hasLayer(m))map.removeLayer(m);});}
 
 // خطوط الكلاسترات
 const lineLayer=L.layerGroup().addTo(map);
 function renderLines(){lineLayer.clearLayers();
-  Object.keys(CL).forEach(id=>{const c=CL[id],ct=c.cities;
+  Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
     for(let i=0;i<ct.length;i++)for(let j=i+1;j<ct.length;j++){const a=byName[ct[i]],b=byName[ct[j]];if(!a||!b)continue;
       const g=getG(ct[i],ct[j]);const lbl=ct[i]+' ↔ '+ct[j]+': '+(g?g.km+' كم / '+fmt(g.sec/60):'لا يوجد مسار بري');
       L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:c.color,weight:1.5,opacity:0.5}).bindTooltip(lbl).addTo(lineLayer);}});
@@ -137,10 +149,14 @@ function renderList(){const cl=document.getElementById('cllist');cl.innerHTML=''
   Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b)).forEach(id=>{const c=CL[id],st=stats(c.cities);
     const[v,vc]=verdict(st.mx/60,c.cities.length);
     const d=document.createElement('div');d.className='cl';d.style.borderRightColor=c.color;
-    d.innerHTML='<span class="v" style="background:'+vc+'">'+v+'</span><b>'+id+'</b> — '+c.region+
+    const cb=document.createElement('input');cb.type='checkbox';cb.className='cbx';cb.checked=!hidden.has(id);
+    cb.onclick=e=>e.stopPropagation();cb.onchange=()=>toggleCluster(id,cb.checked);
+    const body=document.createElement('div');
+    body.innerHTML='<span class="v" style="background:'+vc+'">'+v+'</span><b>'+id+'</b> — '+c.region+
       '<div class="ct">أقصى زمن: '+(c.cities.length>1?fmt(st.mx/60):'—')+' · '+c.cities.length+' مدن'+
       (st.nr?' · '+st.nr+' بلا طريق':'')+'<br>'+c.cities.join('، ')+'</div>';
-    d.onclick=()=>focusCluster(id);cl.appendChild(d);});}
+    d.appendChild(cb);d.appendChild(body);d.onclick=()=>focusCluster(id);cl.appendChild(d);});}
+function toggleCluster(id,show){if(show)hidden.delete(id);else hidden.add(id);renderMarkers();renderLines();}
 let hi=[];
 function focusCluster(id){hi.forEach(m=>m.setStyle&&m.setStyle({weight:1,radius:m._r0||5.5}));hi=[];const pts=[];
   (CL[id]?CL[id].cities:[]).forEach(n=>{const m=markers[n],p=byName[n];if(!m)return;
