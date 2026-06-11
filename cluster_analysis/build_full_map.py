@@ -136,6 +136,15 @@ HTML = """<!DOCTYPE html>
   </div>
 
   <div class="sec">
+   <h3>✏️ تعديل الكلاسترات</h3>
+   <select id="ecity"></select>
+   <select id="etarget"></select>
+   <button onclick="moveCity()">↪️ نقل المدينة للكلاستر المحدد</button>
+   <div class="res" id="estat">اختر مدينة، ثم كلاستر الوجهة (أو «كلاستر جديد»)، واضغط نقل. كل شيء يتحدّث فورًا.</div>
+   <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
+  </div>
+
+  <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
    <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط الكلاسترات</label>
@@ -159,104 +168,118 @@ const map = L.map('map').setView([24.2,45.5],6);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(map);
 
-const byName = {}; DATA.points.forEach(p=>byName[p.n]=p);
-const markers = {};
-const labelOn = {};
-// رسم النقاط
-DATA.points.forEach(p=>{
-  const col = p.cl ? DATA.cl_color[p.cl] : '#9aa7b4';
-  const r = p.cat==='مقر'?8 : (p.cl?6:4.5);
-  const m = L.circleMarker([p.lat,p.lon],{radius:r,color:'#222',weight:1,
-     fillColor:col,fillOpacity:0.95});
-  let info = '<div style="direction:rtl;font-family:Tahoma"><b>'+p.n+'</b><br>'+
-     'المنطقة: '+p.region+'<br>الفئة: '+p.cat;
-  if(p.cl){const c=DATA.clusters.find(x=>x.id===p.cl);
-     info+='<br>الكلاستر: '+p.cl+'<br>التقييم: <b style="color:'+c.vcolor+'">'+c.verdict+'</b>';}
-  info+='</div>';
-  m.bindPopup(info); m.bindTooltip(p.n,{direction:'top'});
-  m.addTo(map); markers[p.n]=m;
-});
+const byName={}; DATA.points.forEach(p=>byName[p.n]=p);
+const markers={};
+const VC=DATA.vcolor;
+const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f032e6','#bf40bf',
+ '#1f9e89','#d2691e','#2e8b57','#c71585','#1e90ff','#b8860b','#8b008b','#ff4500','#556b2f',
+ '#008b8b','#9932cc','#cd5c5c','#6a5acd','#a0522d','#008b45','#b22222','#4682b4'];
+
+// حالة قابلة للتعديل
+let CL={}, ptCl={}, newCount=0;
+DATA.clusters.forEach(c=>{CL[c.id]={region:c.region,color:c.color,cities:c.cities.slice()};});
+DATA.points.forEach(p=>{ptCl[p.n]=p.cl;});
+
+function getG(a,b){let g=DATA.matrix[a+'|'+b]; if(g===undefined)g=DATA.matrix[b+'|'+a]; return g;}
+function fmt(min){const h=Math.floor(min/60),m=Math.round(min%60);return h?h+'س '+m+'د':m+'د';}
+function haversine(a,b){const R=6371,d=x=>x*Math.PI/180;const dla=d(b.lat-a.lat),dlo=d(b.lon-a.lon);
+  const h=Math.sin(dla/2)**2+Math.cos(d(a.lat))*Math.cos(d(b.lat))*Math.sin(dlo/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+function verdict(min,n){if(n<=1)return['مدينة واحدة',VC['مدينة واحدة']];
+  if(min<=60)return['ممتاز',VC['ممتاز']]; if(min<=90)return['جيد',VC['جيد']];
+  if(min<=150)return['مقبول/مراجعة',VC['مقبول/مراجعة']]; return['بعيد - يُفضّل الفصل',VC['بعيد - يُفضّل الفصل']];}
+function stats(cities){let mx=0,nr=0;for(let i=0;i<cities.length;i++)for(let j=i+1;j<cities.length;j++){
+  const g=getG(cities[i],cities[j]); if(g==null){nr++;continue;} if(g.sec>mx)mx=g.sec;} return{mx,nr};}
+function clKey(id){const m=id.match(/\d+/);return (id.indexOf('جديد')>=0?1000:0)+(m?parseInt(m[0]):9999);}
+
+// النقاط
+function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
+function popupHtml(n){const p=byName[n],id=ptCl[n];
+  let s='<div style="direction:rtl;font-family:Tahoma"><b>'+n+'</b><br>المنطقة: '+p.region+'<br>الفئة: '+p.cat;
+  if(id&&CL[id]){const st=stats(CL[id].cities);const[v,vc]=verdict(st.mx/60,CL[id].cities.length);
+    s+='<br>الكلاستر: '+id+'<br>التقييم: <b style="color:'+vc+'">'+v+'</b>';}else s+='<br>بدون كلاستر';
+  return s+'</div>';}
+DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
+   color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
+  m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;});
+function renderMarkers(){DATA.points.forEach(p=>markers[p.n].setStyle({fillColor:colorOf(p.n)}));}
 
 // خطوط الكلاسترات
-const lineLayer = L.layerGroup().addTo(map);
-DATA.pairs.forEach(pr=>{
-  const a=byName[pr.a],b=byName[pr.b]; if(!a||!b)return;
-  const c=DATA.clusters.find(x=>x.id===pr.cl);
-  L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:c?c.vcolor:'#666',weight:2,opacity:0.5})
-    .bindTooltip(pr.a+' ↔ '+pr.b+': '+pr.km+' كم / '+pr.t).addTo(lineLayer);
-});
-function toggleLines(){document.getElementById('lines').checked?
-  map.addLayer(lineLayer):map.removeLayer(lineLayer);}
+const lineLayer=L.layerGroup().addTo(map);
+function renderLines(){lineLayer.clearLayers();
+  Object.keys(CL).forEach(id=>{const c=CL[id],ct=c.cities;
+    for(let i=0;i<ct.length;i++)for(let j=i+1;j<ct.length;j++){const a=byName[ct[i]],b=byName[ct[j]];if(!a||!b)continue;
+      const g=getG(ct[i],ct[j]);const lbl=ct[i]+' ↔ '+ct[j]+': '+(g?g.km+' كم / '+fmt(g.sec/60):'لا يوجد مسار بري');
+      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:c.color,weight:1.5,opacity:0.5}).bindTooltip(lbl).addTo(lineLayer);}});
+  document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
+function toggleLines(){document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
 
 // أسماء دائمة
 function toggleNames(){const on=document.getElementById('names').checked;
   DATA.points.forEach(p=>{const m=markers[p.n];
-    if(on){m.bindTooltip(p.n,{permanent:true,direction:'right',className:'lbl',offset:[6,0]}).openTooltip();}
-    else{m.unbindTooltip(); m.bindTooltip(p.n,{direction:'top'});}});}
+    if(on)m.bindTooltip(p.n,{permanent:true,direction:'right',className:'lbl',offset:[6,0]}).openTooltip();
+    else{m.unbindTooltip();m.bindTooltip(p.n,{direction:'top'});}});}
 
 // قائمة الكلاسترات
-const cl = document.getElementById('cllist');
-DATA.clusters.forEach(c=>{
-  const d=document.createElement('div'); d.className='cl';
-  d.style.borderRightColor=c.color;
-  d.innerHTML='<span class="v" style="background:'+c.vcolor+'">'+c.verdict+'</span>'+
-    '<b>'+c.id+'</b> — '+c.region+'<div class="ct">أقصى زمن: '+c.maxdrive+
-    ' · '+c.cities.length+' مدن<br>'+c.cities.join('، ')+'</div>';
-  d.onclick=()=>focusCluster(c);
-  cl.appendChild(d);
-});
+function renderList(){const cl=document.getElementById('cllist');cl.innerHTML='';
+  Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b)).forEach(id=>{const c=CL[id],st=stats(c.cities);
+    const[v,vc]=verdict(st.mx/60,c.cities.length);
+    const d=document.createElement('div');d.className='cl';d.style.borderRightColor=c.color;
+    d.innerHTML='<span class="v" style="background:'+vc+'">'+v+'</span><b>'+id+'</b> — '+c.region+
+      '<div class="ct">أقصى زمن: '+(c.cities.length>1?fmt(st.mx/60):'—')+' · '+c.cities.length+' مدن'+
+      (st.nr?' · '+st.nr+' بلا طريق':'')+'<br>'+c.cities.join('، ')+'</div>';
+    d.onclick=()=>focusCluster(id);cl.appendChild(d);});}
 let hi=[];
-function focusCluster(c){
-  hi.forEach(m=>m.setStyle&&m.setStyle({weight:1,radius:m._r0}));
-  hi=[];const pts=[];
-  c.cities.forEach(n=>{const m=markers[n],p=byName[n]; if(!m)return;
-    m._r0=m._r0||m.options.radius; m.setStyle({weight:3,color:'#000',radius:9});
-    hi.push(m); pts.push([p.lat,p.lon]);});
-  if(pts.length>1) map.fitBounds(pts,{padding:[60,60]});
-  else if(pts.length===1) map.setView(pts[0],10);
-}
+function focusCluster(id){hi.forEach(m=>m.setStyle&&m.setStyle({weight:1,radius:m._r0||5.5}));hi=[];const pts=[];
+  (CL[id]?CL[id].cities:[]).forEach(n=>{const m=markers[n],p=byName[n];if(!m)return;
+    m._r0=m._r0||m.options.radius;m.setStyle({weight:3,color:'#000',radius:9});hi.push(m);pts.push([p.lat,p.lon]);});
+  if(pts.length>1)map.fitBounds(pts,{padding:[60,60]});else if(pts.length===1)map.setView(pts[0],10);}
+
+function renderAll(){renderMarkers();renderLines();renderList();}
 
 // أداة المسافة
-const pa=document.getElementById('pa'), pb=document.getElementById('pb');
+const pa=document.getElementById('pa'),pb=document.getElementById('pb');
 const names=DATA.points.map(p=>p.n).sort((a,b)=>a.localeCompare(b,'ar'));
-function fill(sel,ph){sel.innerHTML='<option value="">'+ph+'</option>'+
-  names.map(n=>'<option>'+n+'</option>').join('');}
-fill(pa,'— المدينة الأولى —'); fill(pb,'— المدينة الثانية —');
+function fill(sel,ph){sel.innerHTML='<option value="">'+ph+'</option>'+names.map(n=>'<option>'+n+'</option>').join('');}
+fill(pa,'— المدينة الأولى —');fill(pb,'— المدينة الثانية —');
 let measureLine=null;
-function haversine(a,b){const R=6371,d=x=>x*Math.PI/180;
-  const dla=d(b.lat-a.lat),dlo=d(b.lon-a.lon);
-  const h=Math.sin(dla/2)**2+Math.cos(d(a.lat))*Math.cos(d(b.lat))*Math.sin(dlo/2)**2;
-  return 2*R*Math.asin(Math.sqrt(h));}
-function fmt(min){const h=Math.floor(min/60),m=Math.round(min%60);return h?h+'س '+m+'د':m+'د';}
-function calc(){const a=byName[pa.value],b=byName[pb.value];
-  const res=document.getElementById('dres');
-  if(!a||!b){res.innerHTML='اختر مدينتين لعرض المسافة.';
-    if(measureLine){map.removeLayer(measureLine);measureLine=null;}return;}
-  let g=DATA.matrix[a.n+'|'+b.n];
-  if(g===undefined) g=DATA.matrix[b.n+'|'+a.n];
-  let html='<b>'+a.n+'</b> ↔ <b>'+b.n+'</b><br>';
-  if(g){
-    html+='المسافة (قوقل مابس): <b>'+g.km+' كم</b><br>'+
-          'زمن القيادة (قوقل مابس): <b style="color:#7CFC00">'+fmt(g.sec/60)+'</b>';
-  } else if(g===null){
-    const air=haversine(a,b);
-    html+='<span style="color:#ffb4b4">لا يوجد مسار بري على قوقل (قد يحتاج عبّارة/جزيرة).</span><br>'+
-          'خط مستقيم: '+air.toFixed(0)+' كم';
-  } else {
-    const air=haversine(a,b),road=air*1.3,v=road>=150?100:road>=80?90:road>=30?75:50;
-    html+='تقدير الطريق: <b>'+road.toFixed(0)+' كم</b><br>زمن تقريبي: <b>'+fmt(road/v*60)+'</b>';
-  }
-  res.innerHTML=html;
-  if(measureLine)map.removeLayer(measureLine);
-  measureLine=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],
-    {color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);
-  map.fitBounds([[a.lat,a.lon],[b.lat,b.lon]],{padding:[80,80]});
-}
-pa.onchange=calc; pb.onchange=calc;
-function openGmaps(){const a=byName[pa.value],b=byName[pb.value];
-  if(!a||!b){alert('اختر مدينتين أولاً');return;}
-  window.open('https://www.google.com/maps/dir/?api=1&origin='+a.lat+','+a.lon+
-    '&destination='+b.lat+','+b.lon+'&travelmode=driving','_blank');}
+function calc(){const a=byName[pa.value],b=byName[pb.value],res=document.getElementById('dres');
+  if(!a||!b){res.innerHTML='اختر مدينتين لعرض المسافة.';if(measureLine){map.removeLayer(measureLine);measureLine=null;}return;}
+  const g=getG(a.n,b.n);let html='<b>'+a.n+'</b> ↔ <b>'+b.n+'</b><br>';
+  if(g)html+='المسافة (قوقل مابس): <b>'+g.km+' كم</b><br>زمن القيادة (قوقل مابس): <b style="color:#7CFC00">'+fmt(g.sec/60)+'</b>';
+  else if(g===null){const air=haversine(a,b);html+='<span style="color:#ffb4b4">لا يوجد مسار بري على قوقل (جزيرة/عبّارة).</span><br>خط مستقيم: '+air.toFixed(0)+' كم';}
+  else{const air=haversine(a,b),road=air*1.3,v=road>=150?100:road>=80?90:road>=30?75:50;html+='تقدير الطريق: <b>'+road.toFixed(0)+' كم</b><br>زمن تقريبي: <b>'+fmt(road/v*60)+'</b>';}
+  res.innerHTML=html;if(measureLine)map.removeLayer(measureLine);
+  measureLine=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);
+  map.fitBounds([[a.lat,a.lon],[b.lat,b.lon]],{padding:[80,80]});}
+pa.onchange=calc;pb.onchange=calc;
+function openGmaps(){const a=byName[pa.value],b=byName[pb.value];if(!a||!b){alert('اختر مدينتين أولاً');return;}
+  window.open('https://www.google.com/maps/dir/?api=1&origin='+a.lat+','+a.lon+'&destination='+b.lat+','+b.lon+'&travelmode=driving','_blank');}
+
+// تعديل الكلاسترات
+const ec=document.getElementById('ecity'),et=document.getElementById('etarget');
+function refreshCity(){const cur=ec.value;ec.innerHTML='<option value="">— اختر مدينة —</option>'+
+  names.map(n=>'<option value="'+n+'">'+n+' ('+(ptCl[n]||'بدون')+')</option>').join('');ec.value=cur;}
+function refreshTarget(){et.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b))
+  .map(id=>'<option value="'+id+'">'+id+' — '+CL[id].region+'</option>').join('')+
+  '<option value="__none__">— بدون كلاستر —</option><option value="__new__">+ كلاستر جديد</option>';}
+ec.onchange=function(){const c=ec.value;if(c&&ptCl[c]&&CL[ptCl[c]])et.value=ptCl[c];};
+function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}let tgt=et.value;
+  const old=ptCl[city];
+  if(old&&CL[old]){CL[old].cities=CL[old].cities.filter(x=>x!==city);if(CL[old].cities.length===0)delete CL[old];}
+  if(tgt==='__none__')ptCl[city]=null;
+  else{if(tgt==='__new__'){newCount++;tgt='كلاستر جديد '+newCount;
+      CL[tgt]={region:byName[city].region,color:PALETTE[(Object.keys(CL).length+newCount)%PALETTE.length],cities:[]};}
+    if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[]};
+    CL[tgt].cities.push(city);ptCl[city]=tgt;}
+  renderAll();refreshCity();refreshTarget();
+  document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون كلاستر':tgt)+'</b>';}
+function exportCsv(){let rows=[['City','Region','Cluster']];
+  DATA.points.forEach(p=>rows.push([p.n,p.region,ptCl[p.n]||'']));
+  const csv='﻿'+rows.map(r=>r.map(x=>'"'+x+'"').join(',')).join('\\r\\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='clusters_edited.csv';a.click();}
+
+refreshCity();refreshTarget();renderAll();
 </script></body></html>"""
 
 HTML = HTML.replace("__DATA__", json.dumps(DATA, ensure_ascii=False))
