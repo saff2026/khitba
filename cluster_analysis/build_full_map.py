@@ -77,9 +77,18 @@ for cl in ordered:
                      "verdict": s["Verdict"], "vcolor": VERDICT_COLOR.get(s["Verdict"], "#888"),
                      "maxdrive": s["MaxDrive"], "cities": cluster_members[cl]})
 
-DATA = {"points": P, "clusters": CLUSTERS, "pairs": pair_lines,
-        "cl_color": CL_COLOR, "vcolor": VERDICT_COLOR}
+import os
+matrix = {}
+mpath = "/home/user/khitba/cluster_analysis/matrix.json"
+if os.path.exists(mpath):
+    matrix = json.load(open(mpath, encoding="utf-8"))
+    print("مصفوفة قوقل محمّلة:", len(matrix), "زوج")
 
+DATA = {"points": P, "clusters": CLUSTERS, "pairs": pair_lines,
+        "cl_color": CL_COLOR, "vcolor": VERDICT_COLOR, "matrix": matrix}
+
+json.dump(P, open("/home/user/khitba/cluster_analysis/points.json", "w", encoding="utf-8"),
+          ensure_ascii=False)
 print("نقاط على الخريطة:", len(P), "| محافظات الجدول:", len(recs),
       "| مدن كلاستر إضافية:", len(P) - len(recs))
 missing_tbl = [n for n in points if points[n]["cat"] != "كلاستر"]
@@ -122,8 +131,8 @@ HTML = """<!DOCTYPE html>
    <select id="pa"></select>
    <select id="pb"></select>
    <div class="res" id="dres">اختر مدينتين لعرض المسافة.</div>
-   <button class="gmaps" id="gbtn" onclick="openGmaps()">احسب الوقت الفعلي على قوقل مابس ↗</button>
-   <small>المسافة بالأعلى مباشرة (خط القيادة التقريبي). زر قوقل مابس يفتح المسار بالوقت الفعلي.</small>
+   <button class="gmaps" id="gbtn" onclick="openGmaps()">افتح المسار في قوقل مابس ↗</button>
+   <small>المسافة والزمن بالأعلى <b>حقيقية من قوقل مابس</b> (محسوبة مسبقًا لكل الأزواج). الزر يفتح المسار المباشر للتأكد/الازدحام اللحظي.</small>
   </div>
 
   <div class="sec">
@@ -223,13 +232,21 @@ function calc(){const a=byName[pa.value],b=byName[pb.value];
   const res=document.getElementById('dres');
   if(!a||!b){res.innerHTML='اختر مدينتين لعرض المسافة.';
     if(measureLine){map.removeLayer(measureLine);measureLine=null;}return;}
-  const air=haversine(a,b), road=air*1.3;
-  const v= road>=150?100: road>=80?90: road>=30?75:50;
-  const t=road/v*60;
-  res.innerHTML='<b>'+a.n+'</b> ↔ <b>'+b.n+'</b><br>'+
-    'خط مستقيم: '+air.toFixed(0)+' كم<br>'+
-    'تقدير الطريق: <b>'+road.toFixed(0)+' كم</b><br>'+
-    'زمن القيادة التقريبي: <b>'+fmt(t)+'</b>';
+  let g=DATA.matrix[a.n+'|'+b.n];
+  if(g===undefined) g=DATA.matrix[b.n+'|'+a.n];
+  let html='<b>'+a.n+'</b> ↔ <b>'+b.n+'</b><br>';
+  if(g){
+    html+='المسافة (قوقل مابس): <b>'+g.km+' كم</b><br>'+
+          'زمن القيادة (قوقل مابس): <b style="color:#7CFC00">'+fmt(g.sec/60)+'</b>';
+  } else if(g===null){
+    const air=haversine(a,b);
+    html+='<span style="color:#ffb4b4">لا يوجد مسار بري على قوقل (قد يحتاج عبّارة/جزيرة).</span><br>'+
+          'خط مستقيم: '+air.toFixed(0)+' كم';
+  } else {
+    const air=haversine(a,b),road=air*1.3,v=road>=150?100:road>=80?90:road>=30?75:50;
+    html+='تقدير الطريق: <b>'+road.toFixed(0)+' كم</b><br>زمن تقريبي: <b>'+fmt(road/v*60)+'</b>';
+  }
+  res.innerHTML=html;
   if(measureLine)map.removeLayer(measureLine);
   measureLine=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],
     {color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);
