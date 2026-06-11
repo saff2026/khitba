@@ -200,7 +200,9 @@ function popupHtml(n){const p=byName[n],id=ptCl[n];
   return s+'</div>';}
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
-  m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;});
+  m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
+  m.on('click',()=>{ec.value=p.n; ec.dispatchEvent(new Event('change'));
+    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد كلاستر الوجهة واضغط نقل';});});
 function renderMarkers(){DATA.points.forEach(p=>markers[p.n].setStyle({fillColor:colorOf(p.n)}));}
 
 // خطوط الكلاسترات
@@ -264,13 +266,16 @@ function refreshTarget(){et.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey
   '<option value="__none__">— بدون كلاستر —</option><option value="__new__">+ كلاستر جديد</option>';}
 ec.onchange=function(){const c=ec.value;if(c&&ptCl[c]&&CL[ptCl[c]])et.value=ptCl[c];};
 function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}let tgt=et.value;
-  const old=ptCl[city];
-  if(old&&CL[old]){CL[old].cities=CL[old].cities.filter(x=>x!==city);if(CL[old].cities.length===0)delete CL[old];}
+  // 1) أزلها من كل الكلاسترات (يمنع بقاءها في الأول عند تكرار النقل)
+  Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==city);});
+  // 2) أضفها للوجهة
   if(tgt==='__none__')ptCl[city]=null;
   else{if(tgt==='__new__'){newCount++;tgt='كلاستر جديد '+newCount;
       CL[tgt]={region:byName[city].region,color:PALETTE[(Object.keys(CL).length+newCount)%PALETTE.length],cities:[]};}
     if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[]};
     CL[tgt].cities.push(city);ptCl[city]=tgt;}
+  // 3) احذف الكلاسترات الفارغة
+  Object.keys(CL).forEach(id=>{if(CL[id].cities.length===0)delete CL[id];});
   renderAll();refreshCity();refreshTarget();
   document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون كلاستر':tgt)+'</b>';}
 function exportCsv(){let rows=[['City','Region','Cluster']];
