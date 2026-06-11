@@ -586,34 +586,34 @@
    "Region": "Eastern Province",
    "Cities": 5,
    "CityList": "AlDammam, AlDhahran, AlKhobar, Ras Tanura, Bqaiq",
-   "MaxRoad_km": 127.9,
-   "MaxDrive_min": 85,
-   "MaxDrive": "1س 25د",
-   "AvgRoad_km": 60.0,
+   "MaxRoad_km": 124.6,
+   "MaxDrive_min": 97,
+   "MaxDrive": "1س 37د",
+   "AvgRoad_km": 61.9,
    "Note": "",
-   "Verdict": "جيد"
+   "Verdict": "مقبول/مراجعة"
   },
   {
    "Cluster": "Cluster 2",
    "Region": "Eastern Province",
    "Cities": 5,
    "CityList": "AlQatif, Saihat, Safwa, AlJubail, Aljarudiyah",
-   "MaxRoad_km": 93.4,
-   "MaxDrive_min": 62,
-   "MaxDrive": "1س 2د",
-   "AvgRoad_km": 41.5,
+   "MaxRoad_km": 80.1,
+   "MaxDrive_min": 53,
+   "MaxDrive": "53د",
+   "AvgRoad_km": 38.3,
    "Note": "",
-   "Verdict": "جيد"
+   "Verdict": "ممتاز"
   },
   {
    "Cluster": "Cluster 3",
    "Region": "Eastern Province",
    "Cities": 2,
    "CityList": "AlAhsa, Mubarraz",
-   "MaxRoad_km": 4.2,
-   "MaxDrive_min": 5,
-   "MaxDrive": "5د",
-   "AvgRoad_km": 4.2,
+   "MaxRoad_km": 4.6,
+   "MaxDrive_min": 9,
+   "MaxDrive": "9د",
+   "AvgRoad_km": 4.6,
    "Note": "",
    "Verdict": "ممتاز"
   },
@@ -622,10 +622,10 @@
    "Region": "Eastern Province",
    "Cities": 2,
    "CityList": "Hafar albatin, AlQaisumah",
-   "MaxRoad_km": 27.4,
-   "MaxDrive_min": 33,
-   "MaxDrive": "33د",
-   "AvgRoad_km": 27.4,
+   "MaxRoad_km": 25.2,
+   "MaxDrive_min": 30,
+   "MaxDrive": "30د",
+   "AvgRoad_km": 25.2,
    "Note": "",
    "Verdict": "ممتاز"
   },
@@ -646,10 +646,10 @@
    "Region": "Riyadh Region",
    "Cities": 2,
    "CityList": "Riyadh, AlMuzahmiyya",
-   "MaxRoad_km": 64.5,
-   "MaxDrive_min": 52,
-   "MaxDrive": "52د",
-   "AvgRoad_km": 64.5,
+   "MaxRoad_km": 58.1,
+   "MaxDrive_min": 45,
+   "MaxDrive": "45د",
+   "AvgRoad_km": 58.1,
    "Note": "",
    "Verdict": "ممتاز"
   },
@@ -658,10 +658,10 @@
    "Region": "Riyadh Region",
    "Cities": 3,
    "CityList": "AlKharj, AlDilam, Howtat Bani Tamim",
-   "MaxRoad_km": 110.3,
-   "MaxDrive_min": 74,
-   "MaxDrive": "1س 14د",
-   "AvgRoad_km": 73.6,
+   "MaxRoad_km": 99.6,
+   "MaxDrive_min": 89,
+   "MaxDrive": "1س 29د",
+   "AvgRoad_km": 67.5,
    "Note": "",
    "Verdict": "جيد"
   },
@@ -670,10 +670,10 @@
    "Region": "Riyadh Region",
    "Cities": 3,
    "CityList": "AlMajma'ah, Al-Ghat, AlZulfi",
-   "MaxRoad_km": 89.5,
-   "MaxDrive_min": 60,
-   "MaxDrive": "60د",
-   "AvgRoad_km": 62.0,
+   "MaxRoad_km": 77.9,
+   "MaxDrive_min": 51,
+   "MaxDrive": "51د",
+   "AvgRoad_km": 53.7,
    "Note": "",
    "Verdict": "ممتاز"
   },
@@ -682,10 +682,10 @@
    "Region": "Riyadh Region",
    "Cities": 5,
    "CityList": "AlQuway'iyah, Afif, AlDuwadimi, Shaqra, Wadi Aldwasir",
-   "MaxRoad_km": 694.5,
-   "MaxDrive_min": 417,
-   "MaxDrive": "6س 57د",
-   "AvgRoad_km": 371.1,
+   "MaxRoad_km": 761.5,
+   "MaxDrive_min": 478,
+   "MaxDrive": "7س 58د",
+   "AvgRoad_km": 387.8,
    "Note": "could be seperated",
    "Verdict": "بعيد - يُفضّل الفصل"
   },
@@ -730,10 +730,10 @@
    "Region": "Makkah Region",
    "Cities": 2,
    "CityList": "AlQunfudhah, AlLith",
-   "MaxRoad_km": 184.7,
-   "MaxDrive_min": 111,
-   "MaxDrive": "1س 51د",
-   "AvgRoad_km": 184.7,
+   "MaxRoad_km": 162.4,
+   "MaxDrive_min": 116,
+   "MaxDrive": "1س 56د",
+   "AvgRoad_km": 162.4,
    "Note": "",
    "Verdict": "مقبول/مراجعة"
   },
@@ -778,10 +778,10 @@
    "Region": "Al-Qassim Region",
    "Cities": 10,
    "CityList": "Buraidah, Unaizah, Al-Bukiryah, Al-Badayea, AlRass, Al-Mithnab, AlJewa, AlKhabra, AlAsayah, Dukhnah",
-   "MaxRoad_km": 98.3,
-   "MaxDrive_min": 66,
-   "MaxDrive": "1س 6د",
-   "AvgRoad_km": 56.3,
+   "MaxRoad_km": 111.3,
+   "MaxDrive_min": 76,
+   "MaxDrive": "1س 16د",
+   "AvgRoad_km": 56.0,
    "Note": "",
    "Verdict": "جيد"
   },
@@ -790,10 +790,10 @@
    "Region": "Asir Region",
    "Cities": 4,
    "CityList": "Abha, Khamis Mushait, Ahad Rufaidah, Sarat Abidah",
-   "MaxRoad_km": 56.8,
-   "MaxDrive_min": 45,
-   "MaxDrive": "45د",
-   "AvgRoad_km": 37.1,
+   "MaxRoad_km": 58.4,
+   "MaxDrive_min": 53,
+   "MaxDrive": "53د",
+   "AvgRoad_km": 39.2,
    "Note": "",
    "Verdict": "ممتاز"
   },
@@ -802,10 +802,10 @@
    "Region": "Asir Region",
    "Cities": 3,
    "CityList": "Rijal Almaa, Muhail Aseer, Al-Majardah",
-   "MaxRoad_km": 142.5,
-   "MaxDrive_min": 95,
-   "MaxDrive": "1س 35د",
-   "AvgRoad_km": 95.8,
+   "MaxRoad_km": 134.6,
+   "MaxDrive_min": 137,
+   "MaxDrive": "2س 17د",
+   "AvgRoad_km": 90.4,
    "Note": "",
    "Verdict": "مقبول/مراجعة"
   },
@@ -826,10 +826,10 @@
    "Region": "Tabuk Region",
    "Cities": 2,
    "CityList": "Tabuk, Tayma",
-   "MaxRoad_km": 276.8,
-   "MaxDrive_min": 166,
-   "MaxDrive": "2س 46د",
-   "AvgRoad_km": 276.8,
+   "MaxRoad_km": 265.1,
+   "MaxDrive_min": 174,
+   "MaxDrive": "2س 54د",
+   "AvgRoad_km": 265.1,
    "Note": "",
    "Verdict": "بعيد - يُفضّل الفصل"
   },
@@ -850,10 +850,10 @@
    "Region": "Northern Borders",
    "Cities": 3,
    "CityList": "Arar, Rafha, Turaif",
-   "MaxRoad_km": 669.9,
-   "MaxDrive_min": 402,
-   "MaxDrive": "6س 42د",
-   "AvgRoad_km": 447.9,
+   "MaxRoad_km": 523.5,
+   "MaxDrive_min": 345,
+   "MaxDrive": "5س 45د",
+   "AvgRoad_km": 350.6,
    "Note": "",
    "Verdict": "بعيد - يُفضّل الفصل"
   },
@@ -862,10 +862,10 @@
    "Region": "Al-Jawf Region",
    "Cities": 3,
    "CityList": "Sakaka, Dumat AlJandal, Tabarjal",
-   "MaxRoad_km": 259.6,
-   "MaxDrive_min": 156,
-   "MaxDrive": "2س 36د",
-   "AvgRoad_km": 178.8,
+   "MaxRoad_km": 241.3,
+   "MaxDrive_min": 164,
+   "MaxDrive": "2س 44د",
+   "AvgRoad_km": 161.8,
    "Note": "",
    "Verdict": "بعيد - يُفضّل الفصل"
   },
@@ -874,22 +874,22 @@
    "Region": "Jazan Region",
    "Cities": 12,
    "CityList": "Jazan, Abu Arish, Sabya, Samtah, Ahad Al-Masarihah, Baish, Damad, Al-Dayer, Al-Darb, Al-Shuqayq, Faifa, Farasan",
-   "MaxRoad_km": 200.9,
-   "MaxDrive_min": 121,
-   "MaxDrive": "2س 1د",
-   "AvgRoad_km": 93.2,
+   "MaxRoad_km": 188.6,
+   "MaxDrive_min": 279,
+   "MaxDrive": "4س 39د",
+   "AvgRoad_km": 95.7,
    "Note": "",
-   "Verdict": "مقبول/مراجعة"
+   "Verdict": "بعيد - يُفضّل الفصل"
   },
   {
    "Cluster": "Cluster 26",
    "Region": "Najran Region",
    "Cities": 4,
    "CityList": "Najran, Hubuna, Khabash, Sharura",
-   "MaxRoad_km": 438.8,
-   "MaxDrive_min": 263,
-   "MaxDrive": "4س 23د",
-   "AvgRoad_km": 236.5,
+   "MaxRoad_km": 379.9,
+   "MaxDrive_min": 251,
+   "MaxDrive": "4س 11د",
+   "AvgRoad_km": 262.3,
    "Note": "Based on logistics",
    "Verdict": "بعيد - يُفضّل الفصل"
   },
@@ -898,10 +898,10 @@
    "Region": "Al-Baha Region",
    "Cities": 4,
    "CityList": "AlBaha, Al-Aqiq, Al-Mandaq, Al-Makhwah",
-   "MaxRoad_km": 78.0,
-   "MaxDrive_min": 62,
-   "MaxDrive": "1س 2د",
-   "AvgRoad_km": 50.8,
+   "MaxRoad_km": 96.1,
+   "MaxDrive_min": 89,
+   "MaxDrive": "1س 29د",
+   "AvgRoad_km": 65.3,
    "Note": "",
    "Verdict": "جيد"
   }
@@ -909,1614 +909,1412 @@
  "pairs": [
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDammam",
    "To": "AlDhahran",
-   "Road_km": 19.4,
-   "Drive_min": 23,
-   "Drive": "23د"
+   "Road_km": 19.8,
+   "Drive_min": 22,
+   "Drive": "22د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDammam",
    "To": "AlKhobar",
-   "Road_km": 25.6,
-   "Drive_min": 31,
-   "Drive": "31د"
+   "Road_km": 22.8,
+   "Drive_min": 20,
+   "Drive": "20د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDammam",
    "To": "Ras Tanura",
-   "Road_km": 41.5,
-   "Drive_min": 33,
-   "Drive": "33د"
+   "Road_km": 55.2,
+   "Drive_min": 47,
+   "Drive": "47د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDammam",
    "To": "Bqaiq",
-   "Road_km": 89.0,
+   "Road_km": 78.7,
    "Drive_min": 59,
    "Drive": "59د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDhahran",
    "To": "AlKhobar",
-   "Road_km": 12.3,
-   "Drive_min": 15,
-   "Drive": "15د"
+   "Road_km": 13.9,
+   "Drive_min": 18,
+   "Drive": "18د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
    "From": "AlDhahran",
    "To": "Ras Tanura",
-   "Road_km": 59.8,
-   "Drive_min": 48,
-   "Drive": "48د"
-  },
-  {
-   "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
-   "From": "AlDhahran",
-   "To": "Bqaiq",
-   "Road_km": 77.3,
+   "Road_km": 71.3,
    "Drive_min": 62,
    "Drive": "1س 2د"
   },
   {
    "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
-   "From": "AlKhobar",
-   "To": "Ras Tanura",
-   "Road_km": 61.1,
-   "Drive_min": 49,
-   "Drive": "49د"
-  },
-  {
-   "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
-   "From": "AlKhobar",
+   "From": "AlDhahran",
    "To": "Bqaiq",
-   "Road_km": 86.1,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 1",
-   "Region": "Eastern Province",
-   "From": "Ras Tanura",
-   "To": "Bqaiq",
-   "Road_km": 127.9,
-   "Drive_min": 85,
-   "Drive": "1س 25د"
-  },
-  {
-   "Cluster": "Cluster 13",
-   "Region": "Makkah Region",
-   "From": "AlQunfudhah",
-   "To": "AlLith",
-   "Road_km": 184.7,
-   "Drive_min": 111,
-   "Drive": "1س 51د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "Unaizah",
-   "Road_km": 35.0,
-   "Drive_min": 28,
-   "Drive": "28د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "Al-Bukiryah",
-   "Road_km": 49.3,
-   "Drive_min": 39,
-   "Drive": "39د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "Al-Badayea",
-   "Road_km": 52.2,
-   "Drive_min": 42,
-   "Drive": "42د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "AlRass",
-   "Road_km": 90.6,
+   "Road_km": 74.9,
    "Drive_min": 60,
    "Drive": "1س 0د"
   },
   {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "Al-Mithnab",
-   "Road_km": 73.4,
-   "Drive_min": 59,
-   "Drive": "59د"
+   "Cluster": "Cluster 1",
+   "From": "AlKhobar",
+   "To": "Ras Tanura",
+   "Road_km": 75.0,
+   "Drive_min": 63,
+   "Drive": "1س 3د"
   },
   {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "AlJewa",
-   "Road_km": 58.0,
-   "Drive_min": 46,
-   "Drive": "46د"
+   "Cluster": "Cluster 1",
+   "From": "AlKhobar",
+   "To": "Bqaiq",
+   "Road_km": 82.3,
+   "Drive_min": 63,
+   "Drive": "1س 3د"
   },
   {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "AlKhabra",
-   "Road_km": 64.8,
-   "Drive_min": 52,
-   "Drive": "52د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "AlAsayah",
-   "Road_km": 11.9,
-   "Drive_min": 14,
-   "Drive": "14د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Buraidah",
-   "To": "Dukhnah",
-   "Road_km": 78.0,
-   "Drive_min": 62,
-   "Drive": "1س 2د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "Al-Bukiryah",
-   "Road_km": 44.2,
-   "Drive_min": 35,
-   "Drive": "35د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "Al-Badayea",
-   "Road_km": 31.0,
-   "Drive_min": 25,
-   "Drive": "25د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "AlRass",
-   "Road_km": 71.6,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "Al-Mithnab",
-   "Road_km": 42.8,
-   "Drive_min": 34,
-   "Drive": "34د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "AlJewa",
-   "Road_km": 26.3,
-   "Drive_min": 32,
-   "Drive": "32د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "AlKhabra",
-   "Road_km": 59.9,
-   "Drive_min": 48,
-   "Drive": "48د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "AlAsayah",
-   "Road_km": 46.7,
-   "Drive_min": 37,
-   "Drive": "37د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Unaizah",
-   "To": "Dukhnah",
-   "Road_km": 67.3,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "Al-Badayea",
-   "Road_km": 22.5,
-   "Drive_min": 27,
-   "Drive": "27د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "AlRass",
-   "Road_km": 44.1,
-   "Drive_min": 35,
-   "Drive": "35د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "Al-Mithnab",
-   "Road_km": 82.5,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "AlJewa",
-   "Road_km": 67.0,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "AlKhabra",
-   "Road_km": 16.5,
-   "Drive_min": 20,
-   "Drive": "20د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "AlAsayah",
-   "Road_km": 54.1,
-   "Drive_min": 43,
-   "Drive": "43د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Bukiryah",
-   "To": "Dukhnah",
-   "Road_km": 28.7,
-   "Drive_min": 34,
-   "Drive": "34د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "AlRass",
-   "Road_km": 41.0,
-   "Drive_min": 33,
-   "Drive": "33د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "Al-Mithnab",
-   "Road_km": 62.4,
-   "Drive_min": 50,
-   "Drive": "50د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "AlJewa",
-   "Road_km": 48.2,
-   "Drive_min": 39,
-   "Drive": "39د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "AlKhabra",
-   "Road_km": 33.6,
-   "Drive_min": 27,
-   "Drive": "27د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "AlAsayah",
-   "Road_km": 61.0,
-   "Drive_min": 49,
-   "Drive": "49د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Badayea",
-   "To": "Dukhnah",
-   "Road_km": 37.2,
-   "Drive_min": 30,
-   "Drive": "30د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlRass",
-   "To": "Al-Mithnab",
-   "Road_km": 93.6,
-   "Drive_min": 62,
-   "Drive": "1س 2د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlRass",
-   "To": "AlJewa",
-   "Road_km": 83.1,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlRass",
-   "To": "AlKhabra",
-   "Road_km": 36.1,
-   "Drive_min": 29,
-   "Drive": "29د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlRass",
-   "To": "AlAsayah",
-   "Road_km": 97.2,
-   "Drive_min": 65,
-   "Drive": "1س 5د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlRass",
-   "To": "Dukhnah",
-   "Road_km": 21.9,
-   "Drive_min": 26,
-   "Drive": "26د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Mithnab",
-   "To": "AlJewa",
-   "Road_km": 16.5,
-   "Drive_min": 20,
-   "Drive": "20د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Mithnab",
-   "To": "AlKhabra",
-   "Road_km": 95.9,
-   "Drive_min": 64,
-   "Drive": "1س 4د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Mithnab",
-   "To": "AlAsayah",
-   "Road_km": 85.2,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "Al-Mithnab",
-   "To": "Dukhnah",
-   "Road_km": 98.3,
-   "Drive_min": 66,
-   "Drive": "1س 6د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlJewa",
-   "To": "AlKhabra",
-   "Road_km": 81.2,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlJewa",
-   "To": "AlAsayah",
-   "Road_km": 69.8,
-   "Drive_min": 56,
-   "Drive": "56د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlJewa",
-   "To": "Dukhnah",
-   "Road_km": 85.1,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlKhabra",
-   "To": "AlAsayah",
-   "Road_km": 68.2,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlKhabra",
-   "To": "Dukhnah",
-   "Road_km": 15.6,
-   "Drive_min": 19,
-   "Drive": "19د"
-  },
-  {
-   "Cluster": "Cluster 17",
-   "Region": "Al-Qassim Region",
-   "From": "AlAsayah",
-   "To": "Dukhnah",
-   "Road_km": 82.5,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Abha",
-   "To": "Khamis Mushait",
-   "Road_km": 33.5,
-   "Drive_min": 27,
-   "Drive": "27د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Abha",
-   "To": "Ahad Rufaidah",
-   "Road_km": 47.5,
-   "Drive_min": 38,
-   "Drive": "38د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Abha",
-   "To": "Sarat Abidah",
-   "Road_km": 56.8,
-   "Drive_min": 45,
-   "Drive": "45د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Khamis Mushait",
-   "To": "Ahad Rufaidah",
-   "Road_km": 22.2,
-   "Drive_min": 27,
-   "Drive": "27د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Khamis Mushait",
-   "To": "Sarat Abidah",
-   "Road_km": 41.4,
-   "Drive_min": 33,
-   "Drive": "33د"
-  },
-  {
-   "Cluster": "Cluster 18",
-   "Region": "Asir Region",
-   "From": "Ahad Rufaidah",
-   "To": "Sarat Abidah",
-   "Road_km": 21.2,
-   "Drive_min": 25,
-   "Drive": "25د"
-  },
-  {
-   "Cluster": "Cluster 19",
-   "Region": "Asir Region",
-   "From": "Rijal Almaa",
-   "To": "Muhail Aseer",
-   "Road_km": 61.0,
-   "Drive_min": 49,
-   "Drive": "49د"
-  },
-  {
-   "Cluster": "Cluster 19",
-   "Region": "Asir Region",
-   "From": "Rijal Almaa",
-   "To": "Al-Majardah",
-   "Road_km": 142.5,
-   "Drive_min": 95,
-   "Drive": "1س 35د"
-  },
-  {
-   "Cluster": "Cluster 19",
-   "Region": "Asir Region",
-   "From": "Muhail Aseer",
-   "To": "Al-Majardah",
-   "Road_km": 83.9,
-   "Drive_min": 56,
-   "Drive": "56د"
+   "Cluster": "Cluster 1",
+   "From": "Ras Tanura",
+   "To": "Bqaiq",
+   "Road_km": 124.6,
+   "Drive_min": 97,
+   "Drive": "1س 37د"
   },
   {
    "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
    "From": "AlQatif",
    "To": "Saihat",
-   "Road_km": 9.8,
+   "Road_km": 9.4,
+   "Drive_min": 20,
+   "Drive": "20د"
+  },
+  {
+   "Cluster": "Cluster 2",
+   "From": "AlQatif",
+   "To": "Safwa",
+   "Road_km": 23.9,
+   "Drive_min": 24,
+   "Drive": "24د"
+  },
+  {
+   "Cluster": "Cluster 2",
+   "From": "AlQatif",
+   "To": "AlJubail",
+   "Road_km": 73.5,
+   "Drive_min": 53,
+   "Drive": "53د"
+  },
+  {
+   "Cluster": "Cluster 2",
+   "From": "AlQatif",
+   "To": "Aljarudiyah",
+   "Road_km": 6.8,
    "Drive_min": 12,
    "Drive": "12د"
   },
   {
    "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "AlQatif",
+   "From": "Saihat",
    "To": "Safwa",
-   "Road_km": 20.3,
+   "Road_km": 30.4,
    "Drive_min": 24,
    "Drive": "24د"
   },
   {
    "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "AlQatif",
-   "To": "AlJubail",
-   "Road_km": 83.6,
-   "Drive_min": 56,
-   "Drive": "56د"
-  },
-  {
-   "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "AlQatif",
-   "To": "Aljarudiyah",
-   "Road_km": 5.9,
-   "Drive_min": 7,
-   "Drive": "7د"
-  },
-  {
-   "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "Saihat",
-   "To": "Safwa",
-   "Road_km": 30.1,
-   "Drive_min": 24,
-   "Drive": "24د"
-  },
-  {
-   "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
    "From": "Saihat",
    "To": "AlJubail",
-   "Road_km": 93.4,
-   "Drive_min": 62,
-   "Drive": "1س 2د"
+   "Road_km": 80.1,
+   "Drive_min": 53,
+   "Drive": "53د"
   },
   {
    "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
    "From": "Saihat",
    "To": "Aljarudiyah",
-   "Road_km": 15.7,
+   "Road_km": 20.6,
    "Drive_min": 19,
    "Drive": "19د"
   },
   {
    "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
    "From": "Safwa",
    "To": "AlJubail",
-   "Road_km": 63.8,
+   "Road_km": 56.0,
+   "Drive_min": 41,
+   "Drive": "41د"
+  },
+  {
+   "Cluster": "Cluster 2",
+   "From": "Safwa",
+   "To": "Aljarudiyah",
+   "Road_km": 13.8,
+   "Drive_min": 21,
+   "Drive": "21د"
+  },
+  {
+   "Cluster": "Cluster 2",
+   "From": "AlJubail",
+   "To": "Aljarudiyah",
+   "Road_km": 68.3,
    "Drive_min": 51,
    "Drive": "51د"
   },
   {
-   "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "Safwa",
-   "To": "Aljarudiyah",
-   "Road_km": 14.5,
-   "Drive_min": 17,
-   "Drive": "17د"
+   "Cluster": "Cluster 3",
+   "From": "AlAhsa",
+   "To": "Mubarraz",
+   "Road_km": 4.6,
+   "Drive_min": 9,
+   "Drive": "9د"
   },
   {
-   "Cluster": "Cluster 2",
-   "Region": "Eastern Province",
-   "From": "AlJubail",
-   "To": "Aljarudiyah",
-   "Road_km": 77.7,
+   "Cluster": "Cluster 4",
+   "From": "Hafar albatin",
+   "To": "AlQaisumah",
+   "Road_km": 25.2,
+   "Drive_min": 30,
+   "Drive": "30د"
+  },
+  {
+   "Cluster": "Cluster 6",
+   "From": "Riyadh",
+   "To": "AlMuzahmiyya",
+   "Road_km": 58.1,
+   "Drive_min": 45,
+   "Drive": "45د"
+  },
+  {
+   "Cluster": "Cluster 7",
+   "From": "AlKharj",
+   "To": "AlDilam",
+   "Road_km": 26.8,
+   "Drive_min": 31,
+   "Drive": "31د"
+  },
+  {
+   "Cluster": "Cluster 7",
+   "From": "AlKharj",
+   "To": "Howtat Bani Tamim",
+   "Road_km": 99.6,
+   "Drive_min": 89,
+   "Drive": "1س 29د"
+  },
+  {
+   "Cluster": "Cluster 7",
+   "From": "AlDilam",
+   "To": "Howtat Bani Tamim",
+   "Road_km": 76.0,
+   "Drive_min": 61,
+   "Drive": "1س 1د"
+  },
+  {
+   "Cluster": "Cluster 8",
+   "From": "AlMajma'ah",
+   "To": "Al-Ghat",
+   "Road_km": 47.6,
+   "Drive_min": 32,
+   "Drive": "32د"
+  },
+  {
+   "Cluster": "Cluster 8",
+   "From": "AlMajma'ah",
+   "To": "AlZulfi",
+   "Road_km": 77.9,
+   "Drive_min": 51,
+   "Drive": "51د"
+  },
+  {
+   "Cluster": "Cluster 8",
+   "From": "Al-Ghat",
+   "To": "AlZulfi",
+   "Road_km": 35.5,
+   "Drive_min": 27,
+   "Drive": "27د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlQuway'iyah",
+   "To": "Afif",
+   "Road_km": 331.7,
+   "Drive_min": 211,
+   "Drive": "3س 31د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlQuway'iyah",
+   "To": "AlDuwadimi",
+   "Road_km": 152.7,
+   "Drive_min": 111,
+   "Drive": "1س 51د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlQuway'iyah",
+   "To": "Shaqra",
+   "Road_km": 178.9,
+   "Drive_min": 134,
+   "Drive": "2س 14د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlQuway'iyah",
+   "To": "Wadi Aldwasir",
+   "Road_km": 576.6,
+   "Drive_min": 366,
+   "Drive": "6س 6د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "Afif",
+   "To": "AlDuwadimi",
+   "Road_km": 172.2,
+   "Drive_min": 125,
+   "Drive": "2س 5د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "Afif",
+   "To": "Shaqra",
+   "Road_km": 297.4,
+   "Drive_min": 214,
+   "Drive": "3س 34د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "Afif",
+   "To": "Wadi Aldwasir",
+   "Road_km": 623.9,
+   "Drive_min": 412,
+   "Drive": "6س 52د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlDuwadimi",
+   "To": "Shaqra",
+   "Road_km": 125.8,
+   "Drive_min": 92,
+   "Drive": "1س 32د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "AlDuwadimi",
+   "To": "Wadi Aldwasir",
+   "Road_km": 657.4,
+   "Drive_min": 433,
+   "Drive": "7س 13د"
+  },
+  {
+   "Cluster": "Cluster 9",
+   "From": "Shaqra",
+   "To": "Wadi Aldwasir",
+   "Road_km": 761.5,
+   "Drive_min": 478,
+   "Drive": "7س 58د"
+  },
+  {
+   "Cluster": "Cluster 13",
+   "From": "AlQunfudhah",
+   "To": "AlLith",
+   "Road_km": 162.4,
+   "Drive_min": 116,
+   "Drive": "1س 56د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "Unaizah",
+   "Road_km": 33.3,
+   "Drive_min": 39,
+   "Drive": "39د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "Al-Bukiryah",
+   "Road_km": 43.8,
+   "Drive_min": 40,
+   "Drive": "40د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "Al-Badayea",
+   "Road_km": 53.0,
+   "Drive_min": 45,
+   "Drive": "45د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "AlRass",
+   "Road_km": 98.0,
+   "Drive_min": 71,
+   "Drive": "1س 11د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "Al-Mithnab",
+   "Road_km": 72.5,
+   "Drive_min": 56,
+   "Drive": "56د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "AlJewa",
+   "Road_km": 64.1,
+   "Drive_min": 49,
+   "Drive": "49د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "AlKhabra",
+   "Road_km": 59.2,
+   "Drive_min": 51,
+   "Drive": "51د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "AlAsayah",
+   "Road_km": 11.2,
+   "Drive_min": 15,
+   "Drive": "15د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Buraidah",
+   "To": "Dukhnah",
+   "Road_km": 74.0,
+   "Drive_min": 58,
+   "Drive": "58د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "Al-Bukiryah",
+   "Road_km": 40.2,
+   "Drive_min": 38,
+   "Drive": "38د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "Al-Badayea",
+   "Road_km": 28.9,
+   "Drive_min": 27,
+   "Drive": "27د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "AlRass",
+   "Road_km": 60.1,
+   "Drive_min": 56,
+   "Drive": "56د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "Al-Mithnab",
+   "Road_km": 35.6,
+   "Drive_min": 33,
+   "Drive": "33د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "AlJewa",
+   "Road_km": 27.2,
+   "Drive_min": 25,
+   "Drive": "25د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "AlKhabra",
+   "Road_km": 57.9,
+   "Drive_min": 45,
+   "Drive": "45د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "AlAsayah",
+   "Road_km": 49.3,
+   "Drive_min": 41,
+   "Drive": "41د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Unaizah",
+   "To": "Dukhnah",
+   "Road_km": 66.0,
+   "Drive_min": 52,
+   "Drive": "52د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "Al-Badayea",
+   "Road_km": 22.1,
+   "Drive_min": 21,
+   "Drive": "21د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "AlRass",
+   "Road_km": 52.2,
+   "Drive_min": 39,
+   "Drive": "39د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "Al-Mithnab",
+   "Road_km": 73.9,
+   "Drive_min": 55,
+   "Drive": "55د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "AlJewa",
+   "Road_km": 65.5,
+   "Drive_min": 48,
+   "Drive": "48د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "AlKhabra",
+   "Road_km": 20.2,
+   "Drive_min": 18,
+   "Drive": "18د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "AlAsayah",
+   "Road_km": 49.3,
+   "Drive_min": 42,
+   "Drive": "42د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Bukiryah",
+   "To": "Dukhnah",
+   "Road_km": 28.2,
+   "Drive_min": 25,
+   "Drive": "25د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "AlRass",
+   "Road_km": 33.9,
+   "Drive_min": 33,
+   "Drive": "33د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "Al-Mithnab",
+   "Road_km": 60.3,
+   "Drive_min": 45,
+   "Drive": "45د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "AlJewa",
+   "Road_km": 51.9,
+   "Drive_min": 38,
+   "Drive": "38د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "AlKhabra",
+   "Road_km": 37.3,
+   "Drive_min": 29,
+   "Drive": "29د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "AlAsayah",
+   "Road_km": 57.8,
+   "Drive_min": 48,
+   "Drive": "48د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Badayea",
+   "To": "Dukhnah",
+   "Road_km": 36.5,
+   "Drive_min": 35,
+   "Drive": "35د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlRass",
+   "To": "Al-Mithnab",
+   "Road_km": 92.3,
+   "Drive_min": 75,
+   "Drive": "1س 15د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlRass",
+   "To": "AlJewa",
+   "Road_km": 83.9,
+   "Drive_min": 68,
+   "Drive": "1س 8د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlRass",
+   "To": "AlKhabra",
+   "Road_km": 34.9,
+   "Drive_min": 32,
+   "Drive": "32د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlRass",
+   "To": "AlAsayah",
+   "Road_km": 111.3,
+   "Drive_min": 76,
+   "Drive": "1س 16د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlRass",
+   "To": "Dukhnah",
+   "Road_km": 29.6,
+   "Drive_min": 25,
+   "Drive": "25د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Mithnab",
+   "To": "AlJewa",
+   "Road_km": 12.1,
+   "Drive_min": 14,
+   "Drive": "14د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Mithnab",
+   "To": "AlKhabra",
+   "Road_km": 90.3,
+   "Drive_min": 63,
+   "Drive": "1س 3د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Mithnab",
+   "To": "AlAsayah",
+   "Road_km": 80.7,
+   "Drive_min": 60,
+   "Drive": "1س 0د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "Al-Mithnab",
+   "To": "Dukhnah",
+   "Road_km": 98.4,
+   "Drive_min": 71,
+   "Drive": "1س 11د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlJewa",
+   "To": "AlKhabra",
+   "Road_km": 80.3,
+   "Drive_min": 55,
+   "Drive": "55د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlJewa",
+   "To": "AlAsayah",
+   "Road_km": 70.7,
+   "Drive_min": 51,
+   "Drive": "51د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlJewa",
+   "To": "Dukhnah",
+   "Road_km": 88.4,
    "Drive_min": 62,
    "Drive": "1س 2د"
   },
   {
+   "Cluster": "Cluster 17",
+   "From": "AlKhabra",
+   "To": "AlAsayah",
+   "Road_km": 79.9,
+   "Drive_min": 55,
+   "Drive": "55د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlKhabra",
+   "To": "Dukhnah",
+   "Road_km": 17.4,
+   "Drive_min": 19,
+   "Drive": "19د"
+  },
+  {
+   "Cluster": "Cluster 17",
+   "From": "AlAsayah",
+   "To": "Dukhnah",
+   "Road_km": 85.9,
+   "Drive_min": 60,
+   "Drive": "1س 0د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Abha",
+   "To": "Khamis Mushait",
+   "Road_km": 29.9,
+   "Drive_min": 32,
+   "Drive": "32د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Abha",
+   "To": "Ahad Rufaidah",
+   "Road_km": 44.4,
+   "Drive_min": 39,
+   "Drive": "39د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Abha",
+   "To": "Sarat Abidah",
+   "Road_km": 58.4,
+   "Drive_min": 53,
+   "Drive": "53د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Khamis Mushait",
+   "To": "Ahad Rufaidah",
+   "Road_km": 22.5,
+   "Drive_min": 25,
+   "Drive": "25د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Khamis Mushait",
+   "To": "Sarat Abidah",
+   "Road_km": 49.3,
+   "Drive_min": 49,
+   "Drive": "49د"
+  },
+  {
+   "Cluster": "Cluster 18",
+   "From": "Ahad Rufaidah",
+   "To": "Sarat Abidah",
+   "Road_km": 30.6,
+   "Drive_min": 40,
+   "Drive": "40د"
+  },
+  {
+   "Cluster": "Cluster 19",
+   "From": "Rijal Almaa",
+   "To": "Muhail Aseer",
+   "Road_km": 61.0,
+   "Drive_min": 68,
+   "Drive": "1س 8د"
+  },
+  {
+   "Cluster": "Cluster 19",
+   "From": "Rijal Almaa",
+   "To": "Al-Majardah",
+   "Road_km": 134.6,
+   "Drive_min": 137,
+   "Drive": "2س 17د"
+  },
+  {
+   "Cluster": "Cluster 19",
+   "From": "Muhail Aseer",
+   "To": "Al-Majardah",
+   "Road_km": 75.7,
+   "Drive_min": 72,
+   "Drive": "1س 12د"
+  },
+  {
    "Cluster": "Cluster 21",
-   "Region": "Tabuk Region",
    "From": "Tabuk",
    "To": "Tayma",
-   "Road_km": 276.8,
-   "Drive_min": 166,
-   "Drive": "2س 46د"
+   "Road_km": 265.1,
+   "Drive_min": 174,
+   "Drive": "2س 54د"
   },
   {
    "Cluster": "Cluster 23",
-   "Region": "Northern Borders",
    "From": "Arar",
    "To": "Rafha",
-   "Road_km": 363.7,
-   "Drive_min": 218,
-   "Drive": "3س 38د"
-  },
-  {
-   "Cluster": "Cluster 23",
-   "Region": "Northern Borders",
-   "From": "Arar",
-   "To": "Turaif",
-   "Road_km": 310.0,
+   "Road_km": 283.7,
    "Drive_min": 186,
    "Drive": "3س 6د"
   },
   {
    "Cluster": "Cluster 23",
-   "Region": "Northern Borders",
+   "From": "Arar",
+   "To": "Turaif",
+   "Road_km": 244.5,
+   "Drive_min": 157,
+   "Drive": "2س 37د"
+  },
+  {
+   "Cluster": "Cluster 23",
    "From": "Rafha",
    "To": "Turaif",
-   "Road_km": 669.9,
-   "Drive_min": 402,
-   "Drive": "6س 42د"
+   "Road_km": 523.5,
+   "Drive_min": 345,
+   "Drive": "5س 45د"
   },
   {
    "Cluster": "Cluster 24",
-   "Region": "Al-Jawf Region",
    "From": "Sakaka",
    "To": "Dumat AlJandal",
-   "Road_km": 48.2,
-   "Drive_min": 39,
-   "Drive": "39د"
-  },
-  {
-   "Cluster": "Cluster 24",
-   "Region": "Al-Jawf Region",
-   "From": "Sakaka",
-   "To": "Tabarjal",
-   "Road_km": 259.6,
-   "Drive_min": 156,
-   "Drive": "2س 36د"
-  },
-  {
-   "Cluster": "Cluster 24",
-   "Region": "Al-Jawf Region",
-   "From": "Dumat AlJandal",
-   "To": "Tabarjal",
-   "Road_km": 228.6,
-   "Drive_min": 137,
-   "Drive": "2س 17د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Abu Arish",
-   "Road_km": 39.3,
-   "Drive_min": 31,
-   "Drive": "31د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Sabya",
-   "Road_km": 38.7,
-   "Drive_min": 31,
-   "Drive": "31د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Samtah",
-   "Road_km": 68.0,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Ahad Al-Masarihah",
-   "Road_km": 60.4,
-   "Drive_min": 48,
-   "Drive": "48د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Baish",
-   "Road_km": 71.4,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Damad",
-   "Road_km": 32.0,
-   "Drive_min": 26,
-   "Drive": "26د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Al-Dayer",
-   "Road_km": 98.3,
-   "Drive_min": 66,
-   "Drive": "1س 6د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Al-Darb",
-   "Road_km": 128.1,
-   "Drive_min": 85,
-   "Drive": "1س 25د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Al-Shuqayq",
-   "Road_km": 135.8,
-   "Drive_min": 91,
-   "Drive": "1س 31د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Faifa",
-   "Road_km": 90.9,
-   "Drive_min": 61,
-   "Drive": "1س 1د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Jazan",
-   "To": "Farasan",
-   "Road_km": 67.3,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Sabya",
-   "Road_km": 38.7,
-   "Drive_min": 31,
-   "Drive": "31د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Samtah",
-   "Road_km": 56.0,
-   "Drive_min": 45,
-   "Drive": "45د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Ahad Al-Masarihah",
-   "Road_km": 41.1,
-   "Drive_min": 33,
-   "Drive": "33د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Baish",
-   "Road_km": 71.5,
-   "Drive_min": 57,
-   "Drive": "57د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Damad",
-   "Road_km": 23.2,
-   "Drive_min": 28,
-   "Drive": "28د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Al-Dayer",
-   "Road_km": 67.0,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Al-Darb",
-   "Road_km": 135.6,
-   "Drive_min": 90,
-   "Drive": "1س 30د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Al-Shuqayq",
-   "Road_km": 150.3,
-   "Drive_min": 90,
-   "Drive": "1س 30د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Faifa",
-   "Road_km": 54.9,
+   "Road_km": 52.2,
    "Drive_min": 44,
    "Drive": "44د"
   },
   {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Abu Arish",
-   "To": "Farasan",
-   "Road_km": 106.4,
-   "Drive_min": 71,
-   "Drive": "1س 11د"
+   "Cluster": "Cluster 24",
+   "From": "Sakaka",
+   "To": "Tabarjal",
+   "Road_km": 241.3,
+   "Drive_min": 164,
+   "Drive": "2س 44د"
+  },
+  {
+   "Cluster": "Cluster 24",
+   "From": "Dumat AlJandal",
+   "To": "Tabarjal",
+   "Road_km": 191.8,
+   "Drive_min": 127,
+   "Drive": "2س 7د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
+   "From": "Jazan",
+   "To": "Abu Arish",
+   "Road_km": 32.4,
+   "Drive_min": 31,
+   "Drive": "31د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Jazan",
+   "To": "Sabya",
+   "Road_km": 37.5,
+   "Drive_min": 36,
+   "Drive": "36د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Jazan",
    "To": "Samtah",
-   "Road_km": 91.3,
-   "Drive_min": 61,
-   "Drive": "1س 1د"
+   "Road_km": 63.3,
+   "Drive_min": 56,
+   "Drive": "56د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
+   "From": "Jazan",
    "To": "Ahad Al-Masarihah",
-   "Road_km": 78.1,
-   "Drive_min": 63,
-   "Drive": "1س 3د"
+   "Road_km": 50.8,
+   "Drive_min": 43,
+   "Drive": "43د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
+   "From": "Jazan",
    "To": "Baish",
-   "Road_km": 35.4,
-   "Drive_min": 28,
-   "Drive": "28د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Damad",
-   "Road_km": 15.7,
-   "Drive_min": 19,
-   "Drive": "19د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Al-Dayer",
-   "Road_km": 67.6,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Al-Darb",
-   "Road_km": 98.0,
+   "Road_km": 70.6,
    "Drive_min": 65,
    "Drive": "1س 5د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Al-Shuqayq",
-   "Road_km": 111.6,
-   "Drive_min": 74,
-   "Drive": "1س 14د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Faifa",
-   "Road_km": 67.1,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Sabya",
-   "To": "Farasan",
-   "Road_km": 95.8,
-   "Drive_min": 64,
-   "Drive": "1س 4د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Ahad Al-Masarihah",
-   "Road_km": 16.4,
-   "Drive_min": 20,
-   "Drive": "20د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Baish",
-   "Road_km": 126.1,
-   "Drive_min": 84,
-   "Drive": "1س 24د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
+   "From": "Jazan",
    "To": "Damad",
-   "Road_km": 75.9,
-   "Drive_min": 61,
-   "Drive": "1س 1د"
+   "Road_km": 33.4,
+   "Drive_min": 36,
+   "Drive": "36د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
+   "From": "Jazan",
    "To": "Al-Dayer",
-   "Road_km": 114.6,
-   "Drive_min": 76,
-   "Drive": "1س 16د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Al-Darb",
-   "Road_km": 189.2,
+   "Road_km": 103.3,
    "Drive_min": 114,
    "Drive": "1س 54د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Al-Shuqayq",
-   "Road_km": 200.9,
-   "Drive_min": 121,
-   "Drive": "2س 1د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Faifa",
-   "Road_km": 96.8,
-   "Drive_min": 65,
-   "Drive": "1س 5د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Samtah",
-   "To": "Farasan",
-   "Road_km": 115.8,
-   "Drive_min": 77,
-   "Drive": "1س 17د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
-   "To": "Baish",
-   "Road_km": 112.3,
-   "Drive_min": 75,
-   "Drive": "1س 15د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
-   "To": "Damad",
-   "Road_km": 62.5,
-   "Drive_min": 50,
-   "Drive": "50د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
-   "To": "Al-Dayer",
-   "Road_km": 98.2,
-   "Drive_min": 65,
-   "Drive": "1س 5د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
+   "From": "Jazan",
    "To": "Al-Darb",
-   "Road_km": 176.0,
-   "Drive_min": 106,
-   "Drive": "1س 46د"
+   "Road_km": 129.4,
+   "Drive_min": 93,
+   "Drive": "1س 33د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
+   "From": "Jazan",
    "To": "Al-Shuqayq",
-   "Road_km": 189.1,
-   "Drive_min": 113,
-   "Drive": "1س 53د"
+   "Road_km": 138.7,
+   "Drive_min": 101,
+   "Drive": "1س 41د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
+   "From": "Jazan",
    "To": "Faifa",
-   "Road_km": 80.6,
-   "Drive_min": 54,
-   "Drive": "54د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Ahad Al-Masarihah",
-   "To": "Farasan",
-   "Road_km": 116.1,
-   "Drive_min": 77,
-   "Drive": "1س 17د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Damad",
-   "Road_km": 50.2,
-   "Drive_min": 40,
-   "Drive": "40د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Al-Dayer",
-   "Road_km": 69.0,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Al-Darb",
-   "Road_km": 64.4,
-   "Drive_min": 52,
-   "Drive": "52د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Al-Shuqayq",
-   "Road_km": 82.1,
-   "Drive_min": 55,
-   "Drive": "55د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Faifa",
-   "Road_km": 78.3,
-   "Drive_min": 63,
-   "Drive": "1س 3د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Baish",
-   "To": "Farasan",
-   "Road_km": 115.5,
-   "Drive_min": 77,
-   "Drive": "1س 17د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Damad",
-   "To": "Al-Dayer",
-   "Road_km": 66.6,
-   "Drive_min": 53,
-   "Drive": "53د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Damad",
-   "To": "Al-Darb",
-   "Road_km": 113.6,
-   "Drive_min": 76,
-   "Drive": "1س 16د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Damad",
-   "To": "Al-Shuqayq",
-   "Road_km": 127.3,
-   "Drive_min": 85,
-   "Drive": "1س 25د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Damad",
-   "To": "Faifa",
-   "Road_km": 61.3,
-   "Drive_min": 49,
-   "Drive": "49د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Damad",
-   "To": "Farasan",
-   "Road_km": 96.5,
-   "Drive_min": 64,
-   "Drive": "1س 4د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Dayer",
-   "To": "Al-Darb",
-   "Road_km": 120.9,
-   "Drive_min": 81,
-   "Drive": "1س 21د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Dayer",
-   "To": "Al-Shuqayq",
-   "Road_km": 144.9,
-   "Drive_min": 97,
-   "Drive": "1س 37د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Dayer",
-   "To": "Faifa",
-   "Road_km": 20.5,
-   "Drive_min": 25,
-   "Drive": "25د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Dayer",
-   "To": "Farasan",
-   "Road_km": 162.5,
-   "Drive_min": 97,
-   "Drive": "1س 37د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Darb",
-   "To": "Al-Shuqayq",
-   "Road_km": 27.7,
-   "Drive_min": 33,
-   "Drive": "33د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Darb",
-   "To": "Faifa",
-   "Road_km": 135.9,
-   "Drive_min": 91,
-   "Drive": "1س 31د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Darb",
-   "To": "Farasan",
-   "Road_km": 149.1,
-   "Drive_min": 99,
-   "Drive": "1س 39د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Shuqayq",
-   "To": "Faifa",
-   "Road_km": 158.2,
-   "Drive_min": 95,
-   "Drive": "1س 35د"
-  },
-  {
-   "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Al-Shuqayq",
-   "To": "Farasan",
-   "Road_km": 143.6,
+   "Road_km": 93.7,
    "Drive_min": 96,
    "Drive": "1س 36د"
   },
   {
    "Cluster": "Cluster 25",
-   "Region": "Jazan Region",
-   "From": "Faifa",
+   "From": "Jazan",
    "To": "Farasan",
-   "Road_km": 157.5,
-   "Drive_min": 94,
-   "Drive": "1س 34د"
+   "Road_km": 58.7,
+   "Drive_min": 168,
+   "Drive": "2س 48د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Najran",
-   "To": "Hubuna",
-   "Road_km": 68.2,
-   "Drive_min": 55,
-   "Drive": "55د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Sabya",
+   "Road_km": 35.1,
+   "Drive_min": 40,
+   "Drive": "40د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Najran",
-   "To": "Khabash",
-   "Road_km": 34.7,
-   "Drive_min": 28,
-   "Drive": "28د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Samtah",
+   "Road_km": 48.2,
+   "Drive_min": 46,
+   "Drive": "46د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Najran",
-   "To": "Sharura",
-   "Road_km": 412.1,
-   "Drive_min": 247,
-   "Drive": "4س 7د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Ahad Al-Masarihah",
+   "Road_km": 35.7,
+   "Drive_min": 32,
+   "Drive": "32د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Hubuna",
-   "To": "Khabash",
-   "Road_km": 34.9,
-   "Drive_min": 28,
-   "Drive": "28د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Baish",
+   "Road_km": 68.3,
+   "Drive_min": 69,
+   "Drive": "1س 9د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Hubuna",
-   "To": "Sharura",
-   "Road_km": 438.8,
-   "Drive_min": 263,
-   "Drive": "4س 23د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Damad",
+   "Road_km": 25.5,
+   "Drive_min": 32,
+   "Drive": "32د"
   },
   {
-   "Cluster": "Cluster 26",
-   "Region": "Najran Region",
-   "From": "Khabash",
-   "To": "Sharura",
-   "Road_km": 430.6,
-   "Drive_min": 258,
-   "Drive": "4س 18د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Al-Dayer",
+   "Road_km": 76.1,
+   "Drive_min": 92,
+   "Drive": "1س 32د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "AlBaha",
-   "To": "Al-Aqiq",
-   "Road_km": 44.3,
-   "Drive_min": 35,
-   "Drive": "35د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Al-Darb",
+   "Road_km": 118.9,
+   "Drive_min": 107,
+   "Drive": "1س 47د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "AlBaha",
-   "To": "Al-Mandaq",
-   "Road_km": 33.5,
-   "Drive_min": 27,
-   "Drive": "27د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Al-Shuqayq",
+   "Road_km": 147.6,
+   "Drive_min": 116,
+   "Drive": "1س 56د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "AlBaha",
-   "To": "Al-Makhwah",
-   "Road_km": 35.9,
-   "Drive_min": 29,
-   "Drive": "29د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Faifa",
+   "Road_km": 66.5,
+   "Drive_min": 75,
+   "Drive": "1س 15د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "Al-Aqiq",
-   "To": "Al-Mandaq",
-   "Road_km": 51.8,
-   "Drive_min": 41,
-   "Drive": "41د"
+   "Cluster": "Cluster 25",
+   "From": "Abu Arish",
+   "To": "Farasan",
+   "Road_km": 91.0,
+   "Drive_min": 197,
+   "Drive": "3س 17د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "Al-Aqiq",
-   "To": "Al-Makhwah",
-   "Road_km": 78.0,
-   "Drive_min": 62,
-   "Drive": "1س 2د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Samtah",
+   "Road_km": 92.0,
+   "Drive_min": 77,
+   "Drive": "1س 17د"
   },
   {
-   "Cluster": "Cluster 27",
-   "Region": "Al-Baha Region",
-   "From": "Al-Mandaq",
-   "To": "Al-Makhwah",
-   "Road_km": 61.3,
-   "Drive_min": 49,
-   "Drive": "49د"
-  },
-  {
-   "Cluster": "Cluster 3",
-   "Region": "Eastern Province",
-   "From": "AlAhsa",
-   "To": "Mubarraz",
-   "Road_km": 4.2,
-   "Drive_min": 5,
-   "Drive": "5د"
-  },
-  {
-   "Cluster": "Cluster 4",
-   "Region": "Eastern Province",
-   "From": "Hafar albatin",
-   "To": "AlQaisumah",
-   "Road_km": 27.4,
-   "Drive_min": 33,
-   "Drive": "33د"
-  },
-  {
-   "Cluster": "Cluster 6",
-   "Region": "Riyadh Region",
-   "From": "Riyadh",
-   "To": "AlMuzahmiyya",
-   "Road_km": 64.5,
-   "Drive_min": 52,
-   "Drive": "52د"
-  },
-  {
-   "Cluster": "Cluster 7",
-   "Region": "Riyadh Region",
-   "From": "AlKharj",
-   "To": "AlDilam",
-   "Road_km": 31.1,
-   "Drive_min": 25,
-   "Drive": "25د"
-  },
-  {
-   "Cluster": "Cluster 7",
-   "Region": "Riyadh Region",
-   "From": "AlKharj",
-   "To": "Howtat Bani Tamim",
-   "Road_km": 110.3,
-   "Drive_min": 74,
-   "Drive": "1س 14د"
-  },
-  {
-   "Cluster": "Cluster 7",
-   "Region": "Riyadh Region",
-   "From": "AlDilam",
-   "To": "Howtat Bani Tamim",
-   "Road_km": 79.4,
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Ahad Al-Masarihah",
+   "Road_km": 79.5,
    "Drive_min": 64,
    "Drive": "1س 4د"
   },
   {
-   "Cluster": "Cluster 8",
-   "Region": "Riyadh Region",
-   "From": "AlMajma'ah",
-   "To": "Al-Ghat",
-   "Road_km": 53.0,
-   "Drive_min": 42,
-   "Drive": "42د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Baish",
+   "Road_km": 37.8,
+   "Drive_min": 40,
+   "Drive": "40د"
   },
   {
-   "Cluster": "Cluster 8",
-   "Region": "Riyadh Region",
-   "From": "AlMajma'ah",
-   "To": "AlZulfi",
-   "Road_km": 89.5,
-   "Drive_min": 60,
-   "Drive": "60د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Damad",
+   "Road_km": 26.8,
+   "Drive_min": 30,
+   "Drive": "30د"
   },
   {
-   "Cluster": "Cluster 8",
-   "Region": "Riyadh Region",
-   "From": "Al-Ghat",
-   "To": "AlZulfi",
-   "Road_km": 43.5,
-   "Drive_min": 35,
-   "Drive": "35د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Al-Dayer",
+   "Road_km": 71.6,
+   "Drive_min": 91,
+   "Drive": "1س 31د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlQuway'iyah",
-   "To": "Afif",
-   "Road_km": 311.0,
-   "Drive_min": 187,
-   "Drive": "3س 7د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Al-Darb",
+   "Road_km": 88.5,
+   "Drive_min": 78,
+   "Drive": "1س 18د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlQuway'iyah",
-   "To": "AlDuwadimi",
-   "Road_km": 132.8,
-   "Drive_min": 89,
-   "Drive": "1س 29د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Al-Shuqayq",
+   "Road_km": 111.5,
+   "Drive_min": 90,
+   "Drive": "1س 30د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlQuway'iyah",
-   "To": "Shaqra",
-   "Road_km": 172.6,
-   "Drive_min": 104,
-   "Drive": "1س 44د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Faifa",
+   "Road_km": 62.0,
+   "Drive_min": 73,
+   "Drive": "1س 13د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlQuway'iyah",
-   "To": "Wadi Aldwasir",
-   "Road_km": 523.1,
-   "Drive_min": 314,
-   "Drive": "5س 14د"
+   "Cluster": "Cluster 25",
+   "From": "Sabya",
+   "To": "Farasan",
+   "Road_km": 93.0,
+   "Drive_min": 200,
+   "Drive": "3س 20د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "Afif",
-   "To": "AlDuwadimi",
-   "Road_km": 213.1,
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Ahad Al-Masarihah",
+   "Road_km": 13.6,
+   "Drive_min": 19,
+   "Drive": "19د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Baish",
+   "Road_km": 120.2,
+   "Drive_min": 103,
+   "Drive": "1س 43د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Damad",
+   "Road_km": 74.3,
+   "Drive_min": 65,
+   "Drive": "1س 5د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Al-Dayer",
+   "Road_km": 119.4,
+   "Drive_min": 129,
+   "Drive": "2س 9د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Al-Darb",
+   "Road_km": 179.3,
+   "Drive_min": 132,
+   "Drive": "2س 12د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Al-Shuqayq",
+   "Road_km": 188.6,
+   "Drive_min": 140,
+   "Drive": "2س 20د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Faifa",
+   "Road_km": 109.8,
+   "Drive_min": 111,
+   "Drive": "1س 51د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Samtah",
+   "To": "Farasan",
+   "Road_km": 125.3,
+   "Drive_min": 221,
+   "Drive": "3س 41د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Baish",
+   "Road_km": 107.6,
+   "Drive_min": 91,
+   "Drive": "1س 31د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Damad",
+   "Road_km": 61.7,
+   "Drive_min": 52,
+   "Drive": "52د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Al-Dayer",
+   "Road_km": 106.7,
+   "Drive_min": 116,
+   "Drive": "1س 56د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Al-Darb",
+   "Road_km": 166.7,
+   "Drive_min": 119,
+   "Drive": "1س 59د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Al-Shuqayq",
+   "Road_km": 176.0,
    "Drive_min": 128,
    "Drive": "2س 8د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "Afif",
-   "To": "Shaqra",
-   "Road_km": 362.8,
-   "Drive_min": 218,
-   "Drive": "3س 38د"
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Faifa",
+   "Road_km": 97.1,
+   "Drive_min": 98,
+   "Drive": "1س 38د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "Afif",
-   "To": "Wadi Aldwasir",
-   "Road_km": 558.0,
-   "Drive_min": 335,
-   "Drive": "5س 35د"
+   "Cluster": "Cluster 25",
+   "From": "Ahad Al-Masarihah",
+   "To": "Farasan",
+   "Road_km": 112.7,
+   "Drive_min": 208,
+   "Drive": "3س 28د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlDuwadimi",
-   "To": "Shaqra",
-   "Road_km": 155.0,
-   "Drive_min": 93,
-   "Drive": "1س 33د"
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Damad",
+   "Road_km": 56.9,
+   "Drive_min": 56,
+   "Drive": "56د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "AlDuwadimi",
-   "To": "Wadi Aldwasir",
-   "Road_km": 587.8,
-   "Drive_min": 353,
-   "Drive": "5س 53د"
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Al-Dayer",
+   "Road_km": 99.6,
+   "Drive_min": 113,
+   "Drive": "1س 53د"
   },
   {
-   "Cluster": "Cluster 9",
-   "Region": "Riyadh Region",
-   "From": "Shaqra",
-   "To": "Wadi Aldwasir",
-   "Road_km": 694.5,
-   "Drive_min": 417,
-   "Drive": "6س 57د"
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Al-Darb",
+   "Road_km": 54.2,
+   "Drive_min": 44,
+   "Drive": "44د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Al-Shuqayq",
+   "Road_km": 78.5,
+   "Drive_min": 64,
+   "Drive": "1س 4د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Faifa",
+   "Road_km": 90.0,
+   "Drive_min": 95,
+   "Drive": "1س 35د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Baish",
+   "To": "Farasan",
+   "Road_km": 123.1,
+   "Drive_min": 225,
+   "Drive": "3س 45د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Damad",
+   "To": "Al-Dayer",
+   "Road_km": 80.3,
+   "Drive_min": 104,
+   "Drive": "1س 44د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Damad",
+   "To": "Al-Darb",
+   "Road_km": 117.7,
+   "Drive_min": 87,
+   "Drive": "1س 27د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Damad",
+   "To": "Al-Shuqayq",
+   "Road_km": 126.9,
+   "Drive_min": 96,
+   "Drive": "1س 36د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Damad",
+   "To": "Faifa",
+   "Road_km": 70.7,
+   "Drive_min": 86,
+   "Drive": "1س 26د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Damad",
+   "To": "Farasan",
+   "Road_km": 93.7,
+   "Drive_min": 202,
+   "Drive": "3س 22د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Dayer",
+   "To": "Al-Darb",
+   "Road_km": 153.2,
+   "Drive_min": 153,
+   "Drive": "2س 33د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Dayer",
+   "To": "Al-Shuqayq",
+   "Road_km": 177.5,
+   "Drive_min": 172,
+   "Drive": "2س 52د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Dayer",
+   "To": "Faifa",
+   "Road_km": 26.7,
+   "Drive_min": 58,
+   "Drive": "58د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Dayer",
+   "To": "Farasan",
+   "Road_km": 160.2,
+   "Drive_min": 279,
+   "Drive": "4س 39د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Darb",
+   "To": "Al-Shuqayq",
+   "Road_km": 27.0,
+   "Drive_min": 27,
+   "Drive": "27د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Darb",
+   "To": "Faifa",
+   "Road_km": 143.9,
+   "Drive_min": 139,
+   "Drive": "2س 19د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Darb",
+   "To": "Farasan",
+   "Road_km": 183.6,
+   "Drive_min": 261,
+   "Drive": "4س 21د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Shuqayq",
+   "To": "Faifa",
+   "Road_km": 165.8,
+   "Drive_min": 156,
+   "Drive": "2س 36د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Al-Shuqayq",
+   "To": "Farasan",
+   "Road_km": 186.8,
+   "Drive_min": 263,
+   "Drive": "4س 23د"
+  },
+  {
+   "Cluster": "Cluster 25",
+   "From": "Faifa",
+   "To": "Farasan",
+   "Road_km": 155.3,
+   "Drive_min": 266,
+   "Drive": "4س 26د"
+  },
+  {
+   "Cluster": "Cluster 26",
+   "From": "Najran",
+   "To": "Khabash",
+   "Road_km": 61.4,
+   "Drive_min": 58,
+   "Drive": "58د"
+  },
+  {
+   "Cluster": "Cluster 26",
+   "From": "Najran",
+   "To": "Sharura",
+   "Road_km": 345.6,
+   "Drive_min": 226,
+   "Drive": "3س 46د"
+  },
+  {
+   "Cluster": "Cluster 26",
+   "From": "Khabash",
+   "To": "Sharura",
+   "Road_km": 379.9,
+   "Drive_min": 251,
+   "Drive": "4س 11د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "AlBaha",
+   "To": "Al-Aqiq",
+   "Road_km": 41.3,
+   "Drive_min": 33,
+   "Drive": "33د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "AlBaha",
+   "To": "Al-Mandaq",
+   "Road_km": 42.4,
+   "Drive_min": 46,
+   "Drive": "46د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "AlBaha",
+   "To": "Al-Makhwah",
+   "Road_km": 48.8,
+   "Drive_min": 53,
+   "Drive": "53د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "Al-Aqiq",
+   "To": "Al-Mandaq",
+   "Road_km": 80.8,
+   "Drive_min": 79,
+   "Drive": "1س 19د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "Al-Aqiq",
+   "To": "Al-Makhwah",
+   "Road_km": 96.1,
+   "Drive_min": 86,
+   "Drive": "1س 26د"
+  },
+  {
+   "Cluster": "Cluster 27",
+   "From": "Al-Mandaq",
+   "To": "Al-Makhwah",
+   "Road_km": 82.6,
+   "Drive_min": 89,
+   "Drive": "1س 29د"
   }
- ]
+ ],
+ "source": "google"
 }

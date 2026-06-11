@@ -80,8 +80,7 @@ legend = """
  <span style="color:#d73027">●</span> بعيد — يُفضّل الفصل (&gt; ساعتين ونصف)<br>
  <span style="color:#878787">●</span> مدينة واحدة<br>
  <hr style="margin:6px 0">
- <small>المسافات على الطريق تقديرية (خط مستقيم ×1.3) والأزمنة بسرعات واقعية.<br>
- لا تشمل خدمة قوقل مابس المباشرة (تتطلب مفتاح API).</small>
+ <small>المسافات والأزمنة <b>حقيقية من Google Maps</b> (Distance Matrix API، وضع القيادة).</small>
 </div>"""
 m.get_root().html.add_child(folium.Element(legend))
 
@@ -89,7 +88,7 @@ title = """
 <div style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;
  background:#0a3d62;color:#fff;padding:8px 18px;border-radius:8px;
  font-family:Tajawal,Arial,sans-serif;font-size:16px;font-weight:bold;
- box-shadow:0 2px 8px rgba(0,0,0,.3)">خريطة كلاسترات المدن U11–U14 — تقييم المسافة والوقت</div>"""
+ box-shadow:0 2px 8px rgba(0,0,0,.3)">خريطة كلاسترات المدن U11–U14 — مسافات وأزمنة Google Maps</div>"""
 m.get_root().html.add_child(folium.Element(title))
 
 m.save("/home/user/khitba/cluster_analysis/clusters_map.html")
