@@ -85,48 +85,120 @@ def _sec(a, b):
         if k in MX:
             v = MX[k]; return v["sec"] if v else 9e9
     return 9e9
-def cluster_name(cl):
-    cities = cluster_members[cl]
+def fmt_t(sec):
+    if sec >= 9e8: return "—"
+    m = round(sec / 60); h, m = divmod(m, 60)
+    return (f"{h}س {m}د" if h else f"{m}د")
+def name_for(cities):
     if len(cities) == 1:
         return "مجموعة " + cities[0]
-    # رتبة الحجم (0 = الأكبر) + رتبة المركزية (0 = أقل متوسط زمن للبقية)
     rank_pop = {c: i for i, c in enumerate(sorted(cities, key=lambda c: -POP.get(c, 0)))}
     avg = {c: sum(_sec(c, o) for o in cities if o != c) / (len(cities) - 1) for c in cities}
     rank_cen = {c: i for i, c in enumerate(sorted(cities, key=lambda c: avg[c]))}
     best = min(cities, key=lambda c: (rank_pop[c] + rank_cen[c], -POP.get(c, 0)))
     return "مجموعة " + best
-NAME = {cl: cluster_name(cl) for cl in ordered}
-assert len(set(NAME.values())) == len(NAME), "أسماء كلاسترات مكررة!"
+def verdict_of(maxsec, n):
+    if n <= 1: return "مدينة واحدة"
+    m = maxsec / 60
+    if m <= 60: return "ممتاز"
+    if m <= 90: return "جيد"
+    if m <= 150: return "مقبول/مراجعة"
+    return "بعيد - يُفضّل الفصل"
+def cluster_maxsec(cities):
+    mx = 0
+    for i in range(len(cities)):
+        for j in range(i + 1, len(cities)):
+            s = _sec(cities[i], cities[j])
+            if s < 9e8 and s > mx: mx = s
+    return mx
+def build_dataset(groups):
+    out = []
+    for i, (region, cities_en) in enumerate(groups):
+        cities = [EN2AR.get(c, c) for c in cities_en]
+        mx = cluster_maxsec(cities)
+        v = verdict_of(mx, len(cities))
+        out.append({"id": name_for(cities), "region": region, "color": PALETTE[i % len(PALETTE)],
+                    "verdict": v, "vcolor": VERDICT_COLOR.get(v, "#888"),
+                    "maxdrive": fmt_t(mx) if len(cities) > 1 else "—", "cities": cities})
+    ids = [c["id"] for c in out]
+    assert len(set(ids)) == len(ids), "أسماء مكررة: " + str([x for x in ids if ids.count(x) > 1])
+    return out
 
-# اربط النقاط بالاسم الجديد
-for cl in ordered:
-    for ar in cluster_members[cl]:
-        points[ar]["cluster"] = NAME[cl]
-CL_COLOR = {NAME[cl]: PALETTE[i % len(PALETTE)] for i, cl in enumerate(ordered)}
-
-# أزواج الكلاستر بأوقات قوقل (بالأسماء العربية)
-pair_lines = []
-for p in pairs:
-    a = EN2AR.get(p["From"], p["From"]); b = EN2AR.get(p["To"], p["To"])
-    if a in points and b in points:
-        pair_lines.append({"a": a, "b": b, "km": p["Road_km"], "t": p["Drive"],
-                           "cl": NAME[p["Cluster"]]})
-
-# تجهيز JSON للواجهة
-P = [{"n": n, "lat": v["lat"], "lon": v["lon"], "region": v["region"],
-      "cat": v["cat"], "cl": v["cluster"]} for n, v in points.items()]
-CLUSTERS = []
-for cl in ordered:
-    s = summary[cl]; nm = NAME[cl]
-    CLUSTERS.append({"id": nm, "region": s["Region"], "color": CL_COLOR[nm],
-                     "verdict": s["Verdict"], "vcolor": VERDICT_COLOR.get(s["Verdict"], "#888"),
-                     "maxdrive": s["MaxDrive"], "cities": cluster_members[cl]})
+# تجميعة 11-14 (من ملف المجموعات الأصلي)
+groups_1114 = [(clusters[cl]["region"], clusters[cl]["cities"]) for cl in ordered]
+# تجميعة 5-9 (من الجدول الجديد — نفس المدن بتجميع أدق)
+groups_59 = [
+ ("Eastern Province", ["AlDammam","AlDhahran","AlKhobar","AlQatif","Saihat","Safwa","Aljarudiyah"]),
+ ("Eastern Province", ["AlAhsa","Mubarraz"]),
+ ("Eastern Province", ["AlJubail"]),
+ ("Eastern Province", ["Ras Tanura"]),
+ ("Eastern Province", ["Bqaiq"]),
+ ("Eastern Province", ["Hafar albatin","AlQaisumah"]),
+ ("Eastern Province", ["AlKhafji"]),
+ ("Riyadh Region", ["Riyadh"]),
+ ("Riyadh Region", ["AlKharj","AlDilam"]),
+ ("Riyadh Region", ["AlMuzahmiyya"]),
+ ("Riyadh Region", ["Howtat Bani Tamim"]),
+ ("Riyadh Region", ["AlMajma'ah"]),
+ ("Riyadh Region", ["Al-Ghat"]),
+ ("Riyadh Region", ["AlZulfi"]),
+ ("Riyadh Region", ["AlQuway'iyah"]),
+ ("Riyadh Region", ["Afif"]),
+ ("Riyadh Region", ["AlDuwadimi"]),
+ ("Riyadh Region", ["Shaqra"]),
+ ("Riyadh Region", ["Wadi Aldwasir"]),
+ ("Makkah Region", ["Makkah"]),
+ ("Makkah Region", ["Jeddah"]),
+ ("Makkah Region", ["Taif"]),
+ ("Makkah Region", ["AlQunfudhah"]),
+ ("Makkah Region", ["AlLith"]),
+ ("Madinah Region", ["Madinah"]),
+ ("Madinah Region", ["Yanbu"]),
+ ("Madinah Region", ["AlUla"]),
+ ("Al-Qassim Region", ["Buraidah","Unaizah"]),
+ ("Al-Qassim Region", ["Al-Bukiryah","Al-Badayea","AlKhabra"]),
+ ("Al-Qassim Region", ["AlRass"]),
+ ("Al-Qassim Region", ["Al-Mithnab"]),
+ ("Al-Qassim Region", ["AlJewa","AlAsayah","Dukhnah"]),
+ ("Asir Region", ["Abha","Khamis Mushait"]),
+ ("Asir Region", ["Ahad Rufaidah"]),
+ ("Asir Region", ["Muhail Aseer"]),
+ ("Asir Region", ["Rijal Almaa","Sarat Abidah"]),
+ ("Asir Region", ["Al-Majardah"]),
+ ("Asir Region", ["Bisha"]),
+ ("Tabuk Region", ["Tabuk"]),
+ ("Tabuk Region", ["Tayma"]),
+ ("Hail Region", ["Hail"]),
+ ("Northern Borders", ["Arar"]),
+ ("Northern Borders", ["Rafha"]),
+ ("Northern Borders", ["Turaif"]),
+ ("Al-Jawf Region", ["Sakaka"]),
+ ("Al-Jawf Region", ["Dumat AlJandal"]),
+ ("Al-Jawf Region", ["Tabarjal"]),
+ ("Jazan Region", ["Jazan","Ahad Al-Masarihah"]),
+ ("Jazan Region", ["Abu Arish","Samtah"]),
+ ("Jazan Region", ["Sabya","Damad"]),
+ ("Jazan Region", ["Baish"]),
+ ("Jazan Region", ["Al-Dayer","Al-Darb","Al-Shuqayq"]),
+ ("Jazan Region", ["Faifa"]),
+ ("Jazan Region", ["Farasan"]),
+ ("Najran Region", ["Najran"]),
+ ("Najran Region", ["Hubuna","Khabash"]),
+ ("Najran Region", ["Sharura"]),
+ ("Al-Baha Region", ["AlBaha"]),
+ ("Al-Baha Region", ["Al-Aqiq"]),
+ ("Al-Baha Region", ["Al-Mandaq"]),
+ ("Al-Baha Region", ["Al-Makhwah"]),
+]
+DATASETS = {"11-14": build_dataset(groups_1114), "5-9": build_dataset(groups_59)}
 
 matrix = MX
 print("مصفوفة قوقل محمّلة:", len(matrix), "زوج")
+print("مجموعات 11-14:", len(DATASETS["11-14"]), "| مجموعات 5-9:", len(DATASETS["5-9"]))
 
-DATA = {"points": P, "clusters": CLUSTERS, "pairs": pair_lines,
-        "cl_color": CL_COLOR, "vcolor": VERDICT_COLOR, "matrix": matrix}
+P = [{"n": n, "lat": v["lat"], "lon": v["lon"], "region": v["region"],
+      "cat": v["cat"]} for n, v in points.items()]
+DATA = {"points": P, "datasets": DATASETS, "vcolor": VERDICT_COLOR, "matrix": matrix}
 
 json.dump(P, open("/home/user/khitba/cluster_analysis/points.json", "w", encoding="utf-8"),
           ensure_ascii=False)
@@ -155,6 +227,8 @@ HTML = """<!DOCTYPE html>
    background:#16314f;color:#fff;font-size:13px;margin-bottom:6px}
  button{background:#1b6ca8;cursor:pointer;font-weight:bold} button:hover{background:#2980b9}
  .gmaps{background:#2e7d32} .gmaps:hover{background:#388e3c}
+ .dsbtn{flex:1;background:#16314f;border:1px solid #2a4a6e;font-size:14px}
+ .dsbtn.on{background:#ffd166;color:#0a3d62;border-color:#ffd166}
  .res{background:#16314f;border-radius:6px;padding:8px;font-size:13px;line-height:1.7}
  .res b{color:#ffd166}
  .cl{padding:7px 9px;border-radius:6px;margin-bottom:5px;cursor:pointer;background:#16314f;
@@ -169,6 +243,11 @@ HTML = """<!DOCTYPE html>
 <div id="wrap">
  <div id="side">
   <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات</div>
+
+  <div class="sec" style="display:flex;gap:8px">
+   <button id="btn1114" class="dsbtn on" onclick="switchDataset('11-14')">تحت 11 – 14</button>
+   <button id="btn59" class="dsbtn" onclick="switchDataset('5-9')">تحت 5 – 9</button>
+  </div>
 
   <div class="sec">
    <h3>📏 قياس المسافة بين مدينتين</h3>
@@ -231,10 +310,21 @@ const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f03
  '#008b8b','#9932cc','#cd5c5c','#6a5acd','#a0522d','#008b45','#b22222','#4682b4'];
 
 // حالة قابلة للتعديل
-let CL={}, ptCl={}, newCount=0;
-DATA.clusters.forEach(c=>{CL[c.id]={region:c.region,color:c.color,cities:c.cities.slice()};});
-DATA.points.forEach(p=>{ptCl[p.n]=p.cl;});
-let hidden=new Set(), hideNone=false;
+const DS=DATA.datasets;
+let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14';
+const store={};
+function buildLive(key){const cl={},pt={};
+  DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice()});
+  DATA.points.forEach(p=>pt[p.n]=null);
+  DS[key].forEach(c=>c.cities.forEach(x=>pt[x]=c.id));
+  return {CL:cl,ptCl:pt,hidden:new Set(),newCount:0};}
+function switchDataset(key){if(key===curKey)return;
+  store[curKey]={CL,ptCl,hidden,newCount};curKey=key;
+  if(!store[key])store[key]=buildLive(key);
+  const s=store[key];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
+  updateDsUI();renderAll();refreshSelectors();}
+function updateDsUI(){document.getElementById('btn1114').className=curKey==='11-14'?'dsbtn on':'dsbtn';
+  document.getElementById('btn59').className=curKey==='5-9'?'dsbtn on':'dsbtn';}
 function isVisible(n){const id=ptCl[n];return id?!hidden.has(id):!hideNone;}
 function showAll(v){if(v)hidden.clear();else hidden=new Set(Object.keys(CL));renderAll();}
 function toggleNone(){hideNone=!document.getElementById('vnone').checked;renderMarkers();}
@@ -362,7 +452,9 @@ function exportCsv(){let rows=[['City','Region','Group']];
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='clusters_edited.csv';a.click();}
 
-refreshSelectors();renderAll();
+store['11-14']=buildLive('11-14');
+{const s=store['11-14'];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;}
+updateDsUI();refreshSelectors();renderAll();
 </script></body></html>"""
 
 HTML = HTML.replace("__DATA__", json.dumps(DATA, ensure_ascii=False))
