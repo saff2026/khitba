@@ -127,69 +127,7 @@ def build_dataset(groups):
 # تجميعة 11-14 (من ملف المجموعات الأصلي)
 groups_1114 = [(clusters[cl]["region"], clusters[cl]["cities"]) for cl in ordered]
 # تجميعة 5-9 (من الجدول الجديد — نفس المدن بتجميع أدق)
-groups_59 = [
- ("Eastern Province", ["AlDammam","AlDhahran","AlKhobar","AlQatif","Saihat","Safwa","Aljarudiyah"]),
- ("Eastern Province", ["AlAhsa","Mubarraz"]),
- ("Eastern Province", ["AlJubail"]),
- ("Eastern Province", ["Ras Tanura"]),
- ("Eastern Province", ["Bqaiq"]),
- ("Eastern Province", ["Hafar albatin","AlQaisumah"]),
- ("Eastern Province", ["AlKhafji"]),
- ("Riyadh Region", ["Riyadh"]),
- ("Riyadh Region", ["AlKharj","AlDilam"]),
- ("Riyadh Region", ["AlMuzahmiyya"]),
- ("Riyadh Region", ["Howtat Bani Tamim"]),
- ("Riyadh Region", ["AlMajma'ah"]),
- ("Riyadh Region", ["Al-Ghat"]),
- ("Riyadh Region", ["AlZulfi"]),
- ("Riyadh Region", ["AlQuway'iyah"]),
- ("Riyadh Region", ["Afif"]),
- ("Riyadh Region", ["AlDuwadimi"]),
- ("Riyadh Region", ["Shaqra"]),
- ("Riyadh Region", ["Wadi Aldwasir"]),
- ("Makkah Region", ["Makkah"]),
- ("Makkah Region", ["Jeddah"]),
- ("Makkah Region", ["Taif"]),
- ("Makkah Region", ["AlQunfudhah"]),
- ("Makkah Region", ["AlLith"]),
- ("Madinah Region", ["Madinah"]),
- ("Madinah Region", ["Yanbu"]),
- ("Madinah Region", ["AlUla"]),
- ("Al-Qassim Region", ["Buraidah","Unaizah"]),
- ("Al-Qassim Region", ["Al-Bukiryah","Al-Badayea","AlKhabra"]),
- ("Al-Qassim Region", ["AlRass"]),
- ("Al-Qassim Region", ["Al-Mithnab"]),
- ("Al-Qassim Region", ["AlJewa","AlAsayah","Dukhnah"]),
- ("Asir Region", ["Abha","Khamis Mushait"]),
- ("Asir Region", ["Ahad Rufaidah"]),
- ("Asir Region", ["Muhail Aseer"]),
- ("Asir Region", ["Rijal Almaa","Sarat Abidah"]),
- ("Asir Region", ["Al-Majardah"]),
- ("Asir Region", ["Bisha"]),
- ("Tabuk Region", ["Tabuk"]),
- ("Tabuk Region", ["Tayma"]),
- ("Hail Region", ["Hail"]),
- ("Northern Borders", ["Arar"]),
- ("Northern Borders", ["Rafha"]),
- ("Northern Borders", ["Turaif"]),
- ("Al-Jawf Region", ["Sakaka"]),
- ("Al-Jawf Region", ["Dumat AlJandal"]),
- ("Al-Jawf Region", ["Tabarjal"]),
- ("Jazan Region", ["Jazan","Ahad Al-Masarihah"]),
- ("Jazan Region", ["Abu Arish","Samtah"]),
- ("Jazan Region", ["Sabya","Damad"]),
- ("Jazan Region", ["Baish"]),
- ("Jazan Region", ["Al-Dayer","Al-Darb","Al-Shuqayq"]),
- ("Jazan Region", ["Faifa"]),
- ("Jazan Region", ["Farasan"]),
- ("Najran Region", ["Najran"]),
- ("Najran Region", ["Hubuna","Khabash"]),
- ("Najran Region", ["Sharura"]),
- ("Al-Baha Region", ["AlBaha"]),
- ("Al-Baha Region", ["Al-Aqiq"]),
- ("Al-Baha Region", ["Al-Mandaq"]),
- ("Al-Baha Region", ["Al-Makhwah"]),
-]
+groups_59 = groups_1114  # تحت 5-9 بنفس تجميع 11-14
 DATASETS = {"11-14": build_dataset(groups_1114), "5-9": build_dataset(groups_59)}
 
 matrix = MX
@@ -325,7 +263,7 @@ const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f03
 const DS=DATA.datasets;
 let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14';
 const store={};
-const LSKEY='ksa_map_state_v2';
+const LSKEY='ksa_map_state_v3';
 // ===== Firebase (حفظ سحابي دائم ومشترك) =====
 let STATE_REF=null;
 try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
@@ -333,7 +271,7 @@ try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
   databaseURL:"https://u5-u14-city-clusters-default-rtdb.firebaseio.com",
   projectId:"u5-u14-city-clusters",storageBucket:"u5-u14-city-clusters.firebasestorage.app",
   messagingSenderId:"760460103213",appId:"1:760460103213:web:3366fc514fb443d912f2a4"});
-  STATE_REF=firebase.database().ref('clustersMap/state');}catch(e){STATE_REF=null;}
+  STATE_REF=firebase.database().ref('clustersMap/state_v3');}catch(e){STATE_REF=null;}
 function buildLive(key){const cl={},pt={};
   DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice(),manual:false});
   DATA.points.forEach(p=>pt[p.n]=null);
@@ -454,10 +392,19 @@ function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
     for(let i=0;i<ct.length;i++)for(let j=i+1;j<ct.length;j++){const a=byName[ct[i]],b=byName[ct[j]];if(!a||!b)continue;
-      const g=gd(ct[i],ct[j]);const lbl=ct[i]+' ↔ '+ct[j]+': '+g.km+' كم / '+fmt(g.sec/60)+(g.est?' ≈ تقديري':'');
-      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:lineColor(g.sec/60),weight:3,opacity:0.75,
-        dashArray:g.est?'5,5':null}).bindTooltip(lbl).addTo(lineLayer);}});
+      const A=ct[i],B=ct[j];const g=gd(A,B);const lbl=A+' ↔ '+B+': '+g.km+' كم / '+fmt(g.sec/60)+(g.est?' ≈ تقديري':'');
+      L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:lineColor(g.sec/60),weight:4,opacity:0.75,
+        dashArray:g.est?'5,5':null}).bindTooltip(lbl).bindPopup(()=>linePopup(A,B)).addTo(lineLayer);}});
   document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
+function linePopup(A,B){const g=gd(A,B);const d=document.createElement('div');
+  d.style.cssText='direction:rtl;font-family:Tajawal;font-size:13px;min-width:150px';
+  d.innerHTML='<b>'+A+'</b> ↔ <b>'+B+'</b><br>'+g.km+' كم / '+fmt(g.sec/60)+(g.est?' ≈ تقديري':'')+'<hr style="margin:5px 0">حذف الرابط بإخراج:';
+  [A,B].forEach(nm=>{const b=document.createElement('button');b.textContent='🗑️ '+nm;
+    b.style.cssText='margin-top:5px;display:block;width:100%;cursor:pointer;background:#7a2e2e;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
+    b.onclick=()=>ejectCity(nm);d.appendChild(b);});
+  return d;}
+function ejectCity(c){applyMove(c,'__none__');map.closePopup();
+  document.getElementById('estat').innerHTML='🗑️ أُخرجت <b>'+c+'</b> من مجموعتها (حُذف الرابط)';}
 function toggleLines(){document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
 
 // أسماء دائمة
