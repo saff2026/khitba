@@ -198,7 +198,7 @@ print("مجموعات 11-14:", len(DATASETS["11-14"]), "| مجموعات 5-9:", 
 
 P = [{"n": n, "lat": v["lat"], "lon": v["lon"], "region": v["region"],
       "cat": v["cat"]} for n, v in points.items()]
-DATA = {"points": P, "datasets": DATASETS, "vcolor": VERDICT_COLOR, "matrix": matrix}
+DATA = {"points": P, "datasets": DATASETS, "vcolor": VERDICT_COLOR, "matrix": matrix, "pop": POP}
 
 json.dump(P, open("/home/user/khitba/cluster_analysis/points.json", "w", encoding="utf-8"),
           ensure_ascii=False)
@@ -252,6 +252,11 @@ HTML = """<!DOCTYPE html>
   </div>
 
   <div class="sec">
+   <button class="gmaps" onclick="optimize()">🪄 احسب أفضل تقسيمة (أقل عدد مجموعات)</button>
+   <div style="font-size:11px;color:#9fb6d0">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات حسب أقصى زمن قيادة تختاره.</div>
+  </div>
+
+  <div class="sec">
    <h3>📏 قياس المسافة بين مدينتين</h3>
    <select id="pa"></select>
    <select id="pb"></select>
@@ -282,7 +287,8 @@ HTML = """<!DOCTYPE html>
    <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
   </div>
 
-  <div class="sec"><h3>📋 المجموعات (✓ للإظهار · اضغط الصف للتمييز)</h3>
+  <div class="sec"><h3>📋 المجموعات — العدد: <span id="clcount">0</span></h3>
+   <div style="font-size:11px;color:#9fb6d0;margin-bottom:6px">✓ للإظهار · اضغط الصف للتمييز على الخريطة</div>
    <div style="display:flex;gap:6px">
      <button style="flex:1" onclick="showAll(true)">إظهار الكل</button>
      <button style="flex:1" onclick="showAll(false)">إخفاء الكل</button>
@@ -327,7 +333,7 @@ try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
   messagingSenderId:"760460103213",appId:"1:760460103213:web:3366fc514fb443d912f2a4"});
   STATE_REF=firebase.database().ref('clustersMap/state');}catch(e){STATE_REF=null;}
 function buildLive(key){const cl={},pt={};
-  DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice()});
+  DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice(),manual:false});
   DATA.points.forEach(p=>pt[p.n]=null);
   DS[key].forEach(c=>c.cities.forEach(x=>pt[x]=c.id));
   return {CL:cl,ptCl:pt,hidden:new Set(),newCount:0};}
@@ -384,6 +390,35 @@ function verdict(min,n){if(n<=1)return['مدينة واحدة',VC['مدينة و
 function stats(cities){let mx=0,nr=0;for(let i=0;i<cities.length;i++)for(let j=i+1;j<cities.length;j++){
   const g=gd(cities[i],cities[j]); if(g.est)nr++; if(g.sec>mx)mx=g.sec;} return{mx,nr};}
 function clKey(id){const m=id.match(/\d+/);return (id.indexOf('جديد')>=0?1000:0)+(m?parseInt(m[0]):9999);}
+function uniqueName(base){if(!CL[base])return base;let i=2;while(CL[base+' '+i])i++;return base+' '+i;}
+function nameFor(cities){if(cities.length===1)return 'مجموعة '+cities[0];
+  const pop=DATA.pop||{};const rp={},rc={},avg={};
+  [...cities].sort((a,b)=>(pop[b]||0)-(pop[a]||0)).forEach((c,i)=>rp[c]=i);
+  cities.forEach(c=>{let s=0,n=0;cities.forEach(o=>{if(o!==c){s+=gd(c,o).sec;n++;}});avg[c]=n?s/n:0;});
+  [...cities].sort((a,b)=>avg[a]-avg[b]).forEach((c,i)=>rc[c]=i);
+  let best=cities[0],bs=1e9;
+  cities.forEach(c=>{const sc=rp[c]+rc[c];if(sc<bs||(sc===bs&&(pop[c]||0)>(pop[best]||0))){bs=sc;best=c;}});
+  return 'مجموعة '+best;}
+function renameKey(oldId,newId){if(oldId===newId||CL[newId])return oldId;
+  const e=Object.keys(CL).map(k=>k===oldId?[newId,CL[oldId]]:[k,CL[k]]);
+  CL={};e.forEach(([k,v])=>CL[k]=v);CL[newId].cities.forEach(x=>ptCl[x]=newId);return newId;}
+function autoRename(id){if(!CL[id]||CL[id].manual)return id;
+  let want=nameFor(CL[id].cities);if(want===id)return id;
+  if(CL[want])want=uniqueName(want);return renameKey(id,want);}
+function optimize(){const cities=Object.values(CL).flatMap(c=>c.cities);if(!cities.length)return;
+  const inp=prompt('أقصى زمن قيادة مسموح داخل المجموعة (بالدقائق)؟\\nكل ما زاد الرقم قلّ عدد المجموعات.',90);
+  if(inp===null)return;const T=parseInt(inp);if(!T||T<=0){alert('أدخل رقمًا صحيحًا');return;}
+  const sorted=[...cities].sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
+  const groups=[];
+  sorted.forEach(city=>{let placed=false;
+    for(const g of groups){if(g.every(o=>gd(city,o).sec/60<=T)){g.push(city);placed=true;break;}}
+    if(!placed)groups.push([city]);});
+  CL={};DATA.points.forEach(p=>ptCl[p.n]=null);
+  groups.forEach((g,i)=>{const id=uniqueName(nameFor(g));
+    CL[id]={region:byName[g[0]].region,color:PALETTE[i%PALETTE.length],cities:g,manual:false};
+    g.forEach(c=>ptCl[c]=id);});
+  hidden=new Set();saveState();refreshSelectors();renderAll();
+  alert('أفضل تقسيمة تقريبية: '+groups.length+' مجموعة، بأقصى زمن قيادة داخلي ≤ '+T+' دقيقة.');}
 
 // النقاط
 function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
@@ -420,6 +455,7 @@ function toggleNames(){const on=document.getElementById('names').checked;
 
 // قائمة المجموعات
 function renderList(){const cl=document.getElementById('cllist');cl.innerHTML='';
+  const cc=document.getElementById('clcount');if(cc)cc.textContent=Object.keys(CL).length;
   Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b)).forEach(id=>{const c=CL[id],st=stats(c.cities);
     const[v,vc]=verdict(st.mx/60,c.cities.length);
     const d=document.createElement('div');d.className='cl';d.style.borderRightColor=c.color;
@@ -476,21 +512,25 @@ function renameCluster(){const old=rcl.value,nn=document.getElementById('rname')
   // أعد بناء CL مع الحفاظ على الترتيب وتغيير المفتاح القديم للجديد
   const entries=Object.keys(CL).map(k=>k===old?[nn,CL[old]]:[k,CL[k]]);
   CL={};entries.forEach(([k,v])=>CL[k]=v);
-  CL[nn].cities.forEach(x=>ptCl[x]=nn);
+  CL[nn].cities.forEach(x=>ptCl[x]=nn);CL[nn].manual=true;
   document.getElementById('rname').value='';
   saveState();renderAll();refreshSelectors();rcl.value=nn;
   document.getElementById('estat').innerHTML='✒️ تغيّر الاسم إلى <b>'+nn+'</b> (محفوظ)';}
 function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}let tgt=et.value;
+  const old=ptCl[city];
   // 1) أزلها من كل المجموعات (يمنع بقاءها في الأول عند تكرار النقل)
   Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==city);});
   // 2) أضفها للوجهة
   if(tgt==='__none__')ptCl[city]=null;
-  else{if(tgt==='__new__'){newCount++;tgt='مجموعة جديدة '+newCount;
-      CL[tgt]={region:byName[city].region,color:PALETTE[(Object.keys(CL).length+newCount)%PALETTE.length],cities:[]};}
-    if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[]};
+  else{if(tgt==='__new__'){tgt=uniqueName(nameFor([city]));
+      CL[tgt]={region:byName[city].region,color:PALETTE[Object.keys(CL).length%PALETTE.length],cities:[],manual:false};}
+    if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[],manual:false};
     CL[tgt].cities.push(city);ptCl[city]=tgt;}
   // 3) احذف المجموعات الفارغة
   Object.keys(CL).forEach(id=>{if(CL[id].cities.length===0)delete CL[id];});
+  // 4) أعد تسمية المجموعات غير المُسمّاة يدويًا بأكبر مدينة فيها (القديمة أولًا لتحرير الاسم)
+  if(old&&CL[old])autoRename(old);
+  if(tgt!=='__none__'&&CL[tgt])tgt=autoRename(tgt);
   saveState();renderAll();refreshSelectors();
   document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون مجموعة':tgt)+'</b> (محفوظ)';}
 function exportCsv(){let rows=[['City','Region','Group']];
