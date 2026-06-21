@@ -75,7 +75,8 @@
   <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
+   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label><br>
+   <label><input type="checkbox" id="dragm" onchange="setDragMode(this.checked)" style="width:auto"> 🔗 وضع الربط بالسحب (اسحب من مدينة لأخرى لضمّهما)</label>
   </div>
 
   <div class="sec"><h3>📋 المجموعات — العدد: <span id="clcount">0</span></h3>
@@ -105,6 +106,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 const byName={}; DATA.points.forEach(p=>byName[p.n]=p);
 const markers={};
+let dragMode=false, connectFrom=null, rubber=null;
 const VC=DATA.vcolor;
 const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f032e6','#bf40bf',
  '#1f9e89','#d2691e','#2e8b57','#c71585','#1e90ff','#b8860b','#8b008b','#ff4500','#556b2f',
@@ -221,8 +223,19 @@ function popupHtml(n){const p=byName[n],id=ptCl[n];
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
   m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
-  m.on('click',()=>{ec.value=p.n; ec.dispatchEvent(new Event('change'));
-    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد مجموعة الوجهة واضغط نقل';});});
+  m.on('click',()=>{if(dragMode)return;ec.value=p.n; ec.dispatchEvent(new Event('change'));
+    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد مجموعة الوجهة واضغط نقل';});
+  m.on('mousedown',e=>{if(!dragMode)return;connectFrom=p.n;map.dragging.disable();L.DomEvent.stop(e);});});
+map.on('mousemove',e=>{if(!connectFrom)return;const a=byName[connectFrom];
+  if(rubber)map.removeLayer(rubber);
+  rubber=L.polyline([[a.lat,a.lon],[e.latlng.lat,e.latlng.lng]],{color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);});
+map.on('mouseup',e=>{if(!connectFrom)return;const src=connectFrom;connectFrom=null;
+  setTimeout(()=>map.dragging.enable(),0);
+  if(rubber){map.removeLayer(rubber);rubber=null;}
+  const pt=map.latLngToContainerPoint(e.latlng);let best=null,bd=1e9;
+  DATA.points.forEach(p=>{const q=map.latLngToContainerPoint([p.lat,p.lon]);const d=pt.distanceTo(q);if(d<bd){bd=d;best=p.n;}});
+  if(best&&best!==src&&bd<30)connectDrop(src,best);});
+function setDragMode(on){dragMode=on;map.getContainer().style.cursor=on?'crosshair':'';}
 function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle({fillColor:colorOf(p.n)});
   if(isVisible(p.n)){if(!map.hasLayer(m))m.addTo(map);}else if(map.hasLayer(m))map.removeLayer(m);});}
 
@@ -307,23 +320,28 @@ function renameCluster(){const old=rcl.value,nn=document.getElementById('rname')
   document.getElementById('rname').value='';
   saveState();renderAll();refreshSelectors();rcl.value=nn;
   document.getElementById('estat').innerHTML='✒️ تغيّر الاسم إلى <b>'+nn+'</b> (محفوظ)';}
-function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}let tgt=et.value;
+function applyMove(city,tgt){
   const old=ptCl[city];
-  // 1) أزلها من كل المجموعات (يمنع بقاءها في الأول عند تكرار النقل)
   Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==city);});
-  // 2) أضفها للوجهة
   if(tgt==='__none__')ptCl[city]=null;
   else{if(tgt==='__new__'){tgt=uniqueName(nameFor([city]));
       CL[tgt]={region:byName[city].region,color:PALETTE[Object.keys(CL).length%PALETTE.length],cities:[],manual:false};}
     if(!CL[tgt])CL[tgt]={region:byName[city].region,color:'#888',cities:[],manual:false};
     CL[tgt].cities.push(city);ptCl[city]=tgt;}
-  // 3) احذف المجموعات الفارغة
   Object.keys(CL).forEach(id=>{if(CL[id].cities.length===0)delete CL[id];});
-  // 4) أعد تسمية المجموعات غير المُسمّاة يدويًا بأكبر مدينة فيها (القديمة أولًا لتحرير الاسم)
   if(old&&CL[old])autoRename(old);
   if(tgt!=='__none__'&&CL[tgt])tgt=autoRename(tgt);
-  saveState();renderAll();refreshSelectors();
+  saveState();renderAll();refreshSelectors();return tgt;}
+function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}
+  const tgt=applyMove(city,et.value);
   document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون مجموعة':tgt)+'</b> (محفوظ)';}
+// السحب على الخريطة: اربط مدينتين في نفس المجموعة
+function connectDrop(src,t){if(src===t)return;
+  const tc=ptCl[t];let where;
+  if(tc){where=applyMove(src,tc);}
+  else{const nid=applyMove(src,'__new__');where=applyMove(t,nid);}
+  const g=gd(src,t);
+  document.getElementById('estat').innerHTML='🔗 ضممت <b>'+src+'</b> و<b>'+t+'</b> ('+g.km+' كم / '+fmt(g.sec/60)+') في <b>'+where+'</b>';}
 function exportCsv(){let rows=[['City','Region','Group']];
   DATA.points.forEach(p=>rows.push([p.n,p.region,ptCl[p.n]||'']));
   const csv='﻿'+rows.map(r=>r.map(x=>'"'+x+'"').join(',')).join('\r\n');
