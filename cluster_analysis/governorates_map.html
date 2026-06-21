@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
  *{box-sizing:border-box} body{margin:0;font-family:'Tajawal',sans-serif}
  .leaflet-container{font-family:'Tajawal',sans-serif}
@@ -60,7 +62,7 @@
    <select id="rcl"></select>
    <input id="rname" placeholder="الاسم الجديد للمجموعة" />
    <button onclick="renameCluster()">✒️ تغيير الاسم</button>
-   <div style="font-size:11px;color:#9fdca0;margin:2px 0 6px">✔️ كل تعديلاتك تُحفظ تلقائيًا في متصفحك وتبقى بعد إغلاق الصفحة.</div>
+   <div style="font-size:11px;color:#9fdca0;margin:2px 0 6px">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
    <button style="background:#7a2e2e" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
@@ -107,30 +109,44 @@ const DS=DATA.datasets;
 let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14';
 const store={};
 const LSKEY='ksa_map_state_v2';
+// ===== Firebase (حفظ سحابي دائم ومشترك) =====
+let STATE_REF=null;
+try{firebase.initializeApp({apiKey:"AIzaSyD4tyQotZeMeh86s5yq9EbRIoXoev10Ajk",
+  authDomain:"engagement-cards.firebaseapp.com",
+  databaseURL:"https://engagement-cards-default-rtdb.firebaseio.com",
+  projectId:"engagement-cards",storageBucket:"engagement-cards.firebasestorage.app",
+  messagingSenderId:"277478223891",appId:"1:277478223891:web:12165a3b3826c436954fe6"});
+  STATE_REF=firebase.database().ref('clustersMap/state');}catch(e){STATE_REF=null;}
 function buildLive(key){const cl={},pt={};
   DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice()});
   DATA.points.forEach(p=>pt[p.n]=null);
   DS[key].forEach(c=>c.cities.forEach(x=>pt[x]=c.id));
   return {CL:cl,ptCl:pt,hidden:new Set(),newCount:0};}
-function saveState(){try{store[curKey]={CL,ptCl,hidden,newCount};
+function snapshot(){store[curKey]={CL,ptCl,hidden,newCount};
   const o={curKey,hideNone,store:{}};
   for(const k in store){const s=store[k];
     o.store[k]={CL:s.CL,ptCl:s.ptCl,hidden:[...s.hidden],newCount:s.newCount};}
-  localStorage.setItem(LSKEY,JSON.stringify(o));}catch(e){}}
-function loadState(){try{const r=localStorage.getItem(LSKEY);if(!r)return false;
-  const o=JSON.parse(r);
+  return o;}
+function saveState(){const o=snapshot();
+  try{localStorage.setItem(LSKEY,JSON.stringify(o));}catch(e){}
+  if(STATE_REF){try{STATE_REF.set(o);}catch(e){}}}
+function applyStateObj(o){if(!o||!o.store)return false;
   for(const k in o.store){const s=o.store[k];
-    store[k]={CL:s.CL,ptCl:s.ptCl,hidden:new Set(s.hidden||[]),newCount:s.newCount||0};}
+    const hid=Array.isArray(s.hidden)?s.hidden:Object.values(s.hidden||{});
+    store[k]={CL:s.CL||{},ptCl:s.ptCl||{},hidden:new Set(hid),newCount:s.newCount||0};}
   if(!store['11-14'])store['11-14']=buildLive('11-14');
   if(!store['5-9'])store['5-9']=buildLive('5-9');
-  curKey=o.curKey||'11-14'; hideNone=!!o.hideNone;
-  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
-  return true;}catch(e){return false;}}
-function resetAll(){if(!confirm('استرجاع التقسيمة الأصلية وحذف كل تعديلاتك؟'))return;
+  // تأكد أن كل النقاط موجودة في ptCl (Firebase يحذف القيم null)
+  for(const k in store){const pt=store[k].ptCl;DATA.points.forEach(p=>{if(!(p.n in pt))pt[p.n]=null;});}
+  curKey=o.curKey||'11-14';hideNone=!!o.hideNone;
+  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;return true;}
+function loadLocal(){try{const r=localStorage.getItem(LSKEY);return r?applyStateObj(JSON.parse(r)):false;}catch(e){return false;}}
+function defaultInit(){store['11-14']=buildLive('11-14');store['5-9']=buildLive('5-9');
+  curKey='11-14';hideNone=false;const s=store['11-14'];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;}
+function resetAll(){if(!confirm('استرجاع التقسيمة الأصلية وحذف كل تعديلاتك (من السحابة أيضًا)؟'))return;
   try{localStorage.removeItem(LSKEY);}catch(e){}
-  for(const k in store)delete store[k];
-  store['11-14']=buildLive('11-14');store['5-9']=buildLive('5-9');curKey='11-14';hideNone=false;
-  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
+  if(STATE_REF){try{STATE_REF.remove();}catch(e){}}
+  for(const k in store)delete store[k];defaultInit();
   const v=document.getElementById('vnone');if(v)v.checked=true;
   updateDsUI();refreshSelectors();renderAll();}
 function switchDataset(key){if(key===curKey)return;
@@ -274,8 +290,13 @@ function exportCsv(){let rows=[['City','Region','Group']];
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='clusters_edited.csv';a.click();}
 
-if(!loadState()){store['11-14']=buildLive('11-14');
-  const s=store['11-14'];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;curKey='11-14';}
-{const v=document.getElementById('vnone');if(v)v.checked=!hideNone;}
-updateDsUI();refreshSelectors();renderAll();
+function finishInit(){const v=document.getElementById('vnone');if(v)v.checked=!hideNone;
+  updateDsUI();refreshSelectors();renderAll();}
+function bootstrap(){
+  if(STATE_REF){STATE_REF.once('value').then(s=>{
+      if(!applyStateObj(s.val())&&!loadLocal())defaultInit();finishInit();
+    }).catch(()=>{if(!loadLocal())defaultInit();finishInit();});}
+  else{if(!loadLocal())defaultInit();finishInit();}
+}
+bootstrap();
 </script></body></html>
