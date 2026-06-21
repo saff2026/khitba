@@ -320,11 +320,11 @@ const store={};
 const LSKEY='ksa_map_state_v2';
 // ===== Firebase (حفظ سحابي دائم ومشترك) =====
 let STATE_REF=null;
-try{firebase.initializeApp({apiKey:"AIzaSyD4tyQotZeMeh86s5yq9EbRIoXoev10Ajk",
-  authDomain:"engagement-cards.firebaseapp.com",
-  databaseURL:"https://engagement-cards-default-rtdb.firebaseio.com",
-  projectId:"engagement-cards",storageBucket:"engagement-cards.firebasestorage.app",
-  messagingSenderId:"277478223891",appId:"1:277478223891:web:12165a3b3826c436954fe6"});
+try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
+  authDomain:"u5-u14-city-clusters.firebaseapp.com",
+  databaseURL:"https://u5-u14-city-clusters-default-rtdb.firebaseio.com",
+  projectId:"u5-u14-city-clusters",storageBucket:"u5-u14-city-clusters.firebasestorage.app",
+  messagingSenderId:"760460103213",appId:"1:760460103213:web:3366fc514fb443d912f2a4"});
   STATE_REF=firebase.database().ref('clustersMap/state');}catch(e){STATE_REF=null;}
 function buildLive(key){const cl={},pt={};
   DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice()});
