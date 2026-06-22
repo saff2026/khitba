@@ -53,13 +53,14 @@
 </style></head><body>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:01</span></div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:04</span></div>
 
   <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div class="lab" style="margin-top:10px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <button id="copyfirst" onclick="copyFromFirst()" style="display:none;margin-top:8px;background:#6a4aa0">📋 اجعل هذا الخيار مثل الخيار الأول</button>
+   <button onclick="swapOpt23()" style="margin-top:6px;background:#0f7b8a">🔄 تبديل محتوى خيار 2 ↔ خيار 3</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -193,6 +194,15 @@ function resetAll(){const b=document.getElementById('resetbtn');const now=Date.n
   for(const k in store)delete store[k];defaultInit();
   const v=document.getElementById('vnone');if(v)v.checked=true;
   updateDsUI();refreshSelectors();renderAll();}
+function swapOpt23(){const age=ageOf(curKey);const k2=age+' — خيار 2',k3=age+' — خيار 3';
+  if(!DS[k2]||!DS[k3])return;
+  store[curKey]={CL,ptCl,hidden,newCount};
+  if(!store[k2])store[k2]=buildLive(k2);
+  if(!store[k3])store[k3]=buildLive(k3);
+  const tmp=store[k2];store[k2]=store[k3];store[k3]=tmp;
+  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
+  saveState();updateDsUI();renderAll();refreshSelectors();
+  document.getElementById('estat').innerHTML='🔄 تبدّل محتوى «خيار 2» و«خيار 3» لفئة '+dsLabel(age);}
 function switchDataset(key){if(key===curKey)return;
   store[curKey]={CL,ptCl,hidden,newCount};curKey=key;
   if(!store[key])store[key]=buildLive(key);
