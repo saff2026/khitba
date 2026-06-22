@@ -552,11 +552,16 @@ const lineLayer=L.layerGroup().addTo(map);
 const glabels=L.layerGroup().addTo(map);
 function renderGroupLabels(){glabels.clearLayers();
   const cb=document.getElementById('gnames');if(!cb||!cb.checked)return;
+  const z=map.getZoom();
+  const fs=z<=5?7:z<=6?8:z<=7?10:z<=8?11:z<=9?12:13;
+  const pad=z<=6?'1px 5px':z<=8?'1px 6px':'2px 8px';
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const cs=CL[id].cities;
     let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;
     L.marker([la/n,lo/n],{interactive:true,
-      icon:L.divIcon({className:'glbl',iconSize:[0,0],html:'<div class="glblbox">'+id+'</div>'})})
+      icon:L.divIcon({className:'glbl',iconSize:[0,0],
+        html:'<div class="glblbox" style="font-size:'+fs+'px;padding:'+pad+'">'+id+'</div>'})})
       .on('click',()=>focusCluster(id)).addTo(glabels);});}
+map.on('zoomend',renderGroupLabels);
 function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
