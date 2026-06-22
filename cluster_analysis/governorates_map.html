@@ -328,16 +328,27 @@ function renderDiff(){const el=document.getElementById('diffbox');if(!el)return;
   const first=firstKeyOfAge(ageOf(curKey));
   if(curKey===first){el.innerHTML='<small style="color:#9fdca0">هذا هو الخيار الأول لهذه الفئة (المرجع للمقارنة).</small>';return;}
   const base=store[first]||buildLive(first);
-  const diffs=[];
-  DATA.points.forEach(p=>{const c=p.n;const ic=ptCl[c],ib=base.ptCl[c];
-    const sc=new Set((ic&&CL[ic]?CL[ic].cities:[]).filter(x=>x!==c));
-    const sb=new Set((ib&&base.CL[ib]?base.CL[ib].cities:[]).filter(x=>x!==c));
-    let same=sc.size===sb.size;if(same)for(const x of sc)if(!sb.has(x)){same=false;break;}
-    if(!same)diffs.push({c,cur:ic||'بدون مجموعة',base:ib||'بدون مجموعة'});});
-  if(!diffs.length){el.innerHTML='<small style="color:#9fdca0">لا فروقات عن الخيار الأول حتى الآن.</small>';return;}
-  el.innerHTML='<div style="color:#ffd166;margin-bottom:3px">🔀 الفروقات عن «'+dsLabel(ageOf(first))+' — '+optOf(first)+'» ('+diffs.length+'):</div>'+
-    diffs.map(d=>'<div style="padding:3px 0;border-bottom:1px solid #1c3a5e"><b>'+d.c+'</b> → '+d.cur+
-      '<br><span style="color:#9fb6d0;font-size:11px">في الخيار الأول: '+d.base+'</span></div>').join('');}
+  const trans={};
+  DATA.points.forEach(p=>{const c=p.n;const bg=base.ptCl[c]||null,cg=ptCl[c]||null;
+    if(bg===cg)return;
+    const key=(bg||'∅')+'|'+(cg||'∅');
+    (trans[key]=trans[key]||{from:bg,to:cg,cities:[]}).cities.push(c);});
+  const keys=Object.keys(trans);
+  if(!keys.length){el.innerHTML='<small style="color:#9fdca0">لا فروقات عن الخيار الأول حتى الآن.</small>';return;}
+  let html='<div style="color:#ffd166;margin-bottom:4px">🔀 الفروقات عن «'+dsLabel(ageOf(first))+' — '+optOf(first)+'» ('+keys.length+'):</div>';
+  keys.forEach(k=>{const t=trans[k];
+    const fromCl=t.from?base.CL[t.from]:null,toCl=t.to?CL[t.to]:null;
+    const fullFrom=fromCl&&t.cities.length===fromCl.cities.length;
+    const fullTo=toCl&&t.cities.length===toCl.cities.length;
+    let icon,label;
+    if(t.to===null){icon='🗑️';label='حُذفت «'+t.from+'» — مدنها صارت بدون مجموعة';}
+    else if(t.from===null){icon='➕';label='أُضيفت إلى «'+t.to+'»';}
+    else if(fullFrom&&fullTo){icon='✏️';label='«'+t.from+'» أُعيدت تسميتها إلى «'+t.to+'»';}
+    else if(fullFrom){icon='📦';label='«'+t.from+'» بالكامل ضُمّت إلى «'+t.to+'»';}
+    else{icon='↪️';label='نُقلت من «'+t.from+'» إلى «'+t.to+'»';}
+    html+='<div style="padding:4px 0;border-bottom:1px solid #1c3a5e"><b>'+icon+' '+label+'</b>'+
+      ((fullFrom&&fullTo)?'':'<br><span style="color:#9fb6d0;font-size:11px">'+t.cities.join('، ')+'</span>')+'</div>';});
+  el.innerHTML=html;}
 function renderAll(){renderMarkers();renderLines();renderList();renderDiff();}
 
 // أداة المسافة
