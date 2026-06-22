@@ -191,6 +191,7 @@ HTML = """<!DOCTYPE html>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div style="font-size:12px;color:#ffd166;margin:8px 0 5px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+   <button id="copyfirst" onclick="copyFromFirst()" style="display:none;margin-top:6px;font-size:12px;background:#5a3a86">📋 اجعل هذا الخيار مثل الخيار الأول</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -331,7 +332,16 @@ function updateDsUI(){
       b.textContent=dsLabel(age);b.onclick=()=>{const want=age+' — '+optOf(curKey);switchDataset(DS[want]?want:firstKeyOfAge(age));};at.appendChild(b);});}
   const ot=document.getElementById('opttabs');if(ot){ot.innerHTML='';
     Object.keys(DS).filter(k=>ageOf(k)===ageOf(curKey)).forEach(key=>{const b=document.createElement('button');
-      b.className='dsbtn'+(key===curKey?' on':'');b.textContent=optOf(key);b.onclick=()=>switchDataset(key);ot.appendChild(b);});}}
+      b.className='dsbtn'+(key===curKey?' on':'');b.textContent=optOf(key);b.onclick=()=>switchDataset(key);ot.appendChild(b);});}
+  const cf=document.getElementById('copyfirst');if(cf)cf.style.display=(curKey===firstKeyOfAge(ageOf(curKey)))?'none':'block';}
+function copyFromFirst(){const first=firstKeyOfAge(ageOf(curKey));if(curKey===first)return;
+  if(!confirm('نسخ تجميع «'+dsLabel(ageOf(first))+' — '+optOf(first)+'» فوق هذا الخيار؟'))return;
+  const base=store[first]||buildLive(first);
+  CL={};Object.keys(base.CL).forEach(id=>CL[id]={region:base.CL[id].region,color:base.CL[id].color,
+    cities:base.CL[id].cities.slice(),manual:base.CL[id].manual});
+  ptCl={};DATA.points.forEach(p=>ptCl[p.n]=base.ptCl[p.n]||null);
+  hidden=new Set();saveState();renderAll();refreshSelectors();
+  document.getElementById('estat').innerHTML='✓ هذا الخيار صار مثل «'+dsLabel(ageOf(first))+' — '+optOf(first)+'»';}
 function isVisible(n){const id=ptCl[n];return id?!hidden.has(id):!hideNone;}
 function showAll(v){if(v)hidden.clear();else hidden=new Set(Object.keys(CL));saveState();renderAll();}
 function toggleNone(){hideNone=!document.getElementById('vnone').checked;saveState();renderMarkers();}
