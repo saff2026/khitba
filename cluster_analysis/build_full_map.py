@@ -330,14 +330,20 @@ function saveState(){const o=snapshot();
   if(STATE_REF){setSaveStatus('saving');
     STATE_REF.set(o).then(()=>setSaveStatus('ok')).catch(()=>setSaveStatus('local'));}
   else setSaveStatus('local');}
+const RENAMES={'صيهات':'سيهات'};  // تصحيح أسماء قديمة محفوظة سحابيًا
 function applyStateObj(o){if(!o||!o.store)return false;
-  for(const k in o.store){const s=o.store[k];
+  const valid=new Set(DATA.points.map(p=>p.n));
+  for(const k in o.store){const s=o.store[k];const cl={};
+    Object.keys(s.CL||{}).forEach(id=>{const c=s.CL[id]||{};
+      const cities=(c.cities||[]).map(x=>RENAMES[x]||x).filter(x=>valid.has(x));
+      if(cities.length)cl[id]={region:c.region,color:c.color||'#888',cities:cities,manual:!!c.manual};});
+    const pt={};DATA.points.forEach(p=>pt[p.n]=null);
+    Object.keys(cl).forEach(id=>cl[id].cities.forEach(c=>pt[c]=id));
     const hid=Array.isArray(s.hidden)?s.hidden:Object.values(s.hidden||{});
-    store[k]={CL:s.CL||{},ptCl:s.ptCl||{},hidden:new Set(hid),newCount:s.newCount||0};}
+    store[k]={CL:cl,ptCl:pt,hidden:new Set(hid.filter(h=>cl[h])),newCount:s.newCount||0};}
   Object.keys(DS).forEach(k=>{if(!store[k])store[k]=buildLive(k);});
-  // تأكد أن كل النقاط موجودة في ptCl (Firebase يحذف القيم null)
-  for(const k in store){const pt=store[k].ptCl;DATA.points.forEach(p=>{if(!(p.n in pt))pt[p.n]=null;});}
-  curKey=o.curKey||'11-14';hideNone=!!o.hideNone;
+  curKey=(o.curKey&&store[o.curKey]&&DS[o.curKey])?o.curKey:Object.keys(DS)[0];
+  hideNone=!!o.hideNone;
   const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;return true;}
 function loadLocal(){try{const r=localStorage.getItem(LSKEY);return r?applyStateObj(JSON.parse(r)):false;}catch(e){return false;}}
 function defaultInit(){Object.keys(DS).forEach(k=>store[k]=buildLive(k));
@@ -428,7 +434,7 @@ function optimize(){const os=document.getElementById('optstat');
   const raw=(el?el.value:'90').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9]/g,'');
   const T=parseInt(raw);
   if(!T||T<=0){if(os){os.textContent='⚠ اكتب عدد دقائق صحيح في الحقل';os.style.color='#ffb4b4';}return;}
-  const sorted=[...cities].sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
+  const sorted=[...cities].filter(c=>byName[c]).sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
   const groups=[];
   sorted.forEach(city=>{let placed=false;
     for(const g of groups){if(g.every(o=>gd(city,o).sec/60<=T)){g.push(city);placed=true;break;}}
