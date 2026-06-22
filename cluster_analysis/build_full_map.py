@@ -539,7 +539,8 @@ map.on('mouseup',e=>{if(!connectFrom)return;const src=connectFrom;connectFrom=nu
   if(rubber){map.removeLayer(rubber);rubber=null;}
   const pt=map.latLngToContainerPoint(e.latlng);let best=null,bd=1e9;
   DATA.points.forEach(p=>{const q=map.latLngToContainerPoint([p.lat,p.lon]);const d=pt.distanceTo(q);if(d<bd){bd=d;best=p.n;}});
-  if(best&&bd<30){if(best===src){markers[src].openPopup();ec.value=src;ec.dispatchEvent(new Event('change'));}
+  if(best&&bd<30){if(best===src){const gid=ptCl[src];if(gid&&CL[gid])focusCluster(gid);
+      markers[src].openPopup();ec.value=src;ec.dispatchEvent(new Event('change'));}
     else connectDrop(src,best);}});
 function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];const ex=excluded.has(p.n);
   m.setStyle({fillColor:ex?'#555':colorOf(p.n),color:ex?'#ff5252':'#222',weight:ex?2:1,dashArray:ex?'3,3':null});
@@ -554,7 +555,7 @@ function renderGroupLabels(){glabels.clearLayers();
     let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;
     L.marker([la/n,lo/n],{interactive:true,
       icon:L.divIcon({className:'glbl',iconSize:[0,0],html:'<div class="glblbox">'+id+'</div>'})})
-      .bindPopup(()=>groupBlock(id)).addTo(glabels);});}
+      .bindPopup(()=>groupBlock(id)).on('click',()=>focusCluster(id)).addTo(glabels);});}
 function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
