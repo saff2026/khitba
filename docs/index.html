@@ -60,7 +60,7 @@
 <div id="errbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b00020;color:#fff;padding:8px 12px;font-size:13px;font-family:Tajawal"></div>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:22</span></div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:30</span></div>
 
   <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
@@ -156,7 +156,7 @@ const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f03
 
 // حالة قابلة للتعديل
 const DS=DATA.datasets;
-let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14';
+let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14', excluded=new Set();
 const store={};
 const LSKEY='ksa_map_state_v4';
 // ===== Firebase (حفظ سحابي دائم ومشترك) =====
@@ -171,11 +171,11 @@ function buildLive(key){const cl={},pt={};
   DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice(),manual:false});
   DATA.points.forEach(p=>pt[p.n]=null);
   DS[key].forEach(c=>c.cities.forEach(x=>pt[x]=c.id));
-  return {CL:cl,ptCl:pt,hidden:new Set(),newCount:0};}
-function snapshot(){store[curKey]={CL,ptCl,hidden,newCount};
+  return {CL:cl,ptCl:pt,hidden:new Set(),newCount:0,excluded:new Set()};}
+function snapshot(){store[curKey]={CL,ptCl,hidden,newCount,excluded};
   const o={curKey,hideNone,store:{}};
   for(const k in store){const s=store[k];
-    o.store[k]={CL:s.CL,ptCl:s.ptCl,hidden:[...s.hidden],newCount:s.newCount};}
+    o.store[k]={CL:s.CL,ptCl:s.ptCl,hidden:[...s.hidden],newCount:s.newCount,excluded:[...(s.excluded||[])]};}
   return o;}
 function setSaveStatus(s){const el=document.getElementById('savestat');if(!el)return;
   if(s==='ok'){el.textContent='✔ تم الحفظ في السحابة';el.style.color='#9fdca0';}
@@ -196,14 +196,14 @@ function applyStateObj(o){if(!o||!o.store)return false;
     const pt={};DATA.points.forEach(p=>pt[p.n]=null);
     Object.keys(cl).forEach(id=>cl[id].cities.forEach(c=>pt[c]=id));
     const hid=Array.isArray(s.hidden)?s.hidden:Object.values(s.hidden||{});
-    store[k]={CL:cl,ptCl:pt,hidden:new Set(hid.filter(h=>cl[h])),newCount:s.newCount||0};}
+    store[k]={CL:cl,ptCl:pt,hidden:new Set(hid.filter(h=>cl[h])),newCount:s.newCount||0,excluded:new Set((Array.isArray(s.excluded)?s.excluded:Object.values(s.excluded||{})).map(x=>RENAMES[x]||x).filter(x=>valid.has(x)))};}
   Object.keys(DS).forEach(k=>{if(!store[k])store[k]=buildLive(k);});
   curKey=(o.curKey&&store[o.curKey]&&DS[o.curKey])?o.curKey:Object.keys(DS)[0];
   hideNone=!!o.hideNone;
-  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;return true;}
+  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;excluded=s.excluded||new Set();return true;}
 function loadLocal(){try{const r=localStorage.getItem(LSKEY);return r?applyStateObj(JSON.parse(r)):false;}catch(e){return false;}}
 function defaultInit(){Object.keys(DS).forEach(k=>store[k]=buildLive(k));
-  curKey=Object.keys(DS)[0];hideNone=false;const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;}
+  curKey=Object.keys(DS)[0];hideNone=false;const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;excluded=s.excluded||new Set();}
 let _resetArm=0;
 function resetAll(){const b=document.getElementById('resetbtn');const now=Date.now();
   if(now-_resetArm>4000){_resetArm=now;if(b)b.textContent='⚠ اضغط مرة أخرى للتأكيد';
@@ -216,17 +216,17 @@ function resetAll(){const b=document.getElementById('resetbtn');const now=Date.n
   updateDsUI();refreshSelectors();renderAll();}
 function swapOpt23(){const age=ageOf(curKey);const k2=age+' — خيار 2',k3=age+' — خيار 3';
   if(!DS[k2]||!DS[k3])return;
-  store[curKey]={CL,ptCl,hidden,newCount};
+  store[curKey]={CL,ptCl,hidden,newCount,excluded};
   if(!store[k2])store[k2]=buildLive(k2);
   if(!store[k3])store[k3]=buildLive(k3);
   const tmp=store[k2];store[k2]=store[k3];store[k3]=tmp;
-  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
+  const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;excluded=s.excluded||new Set();
   saveState();updateDsUI();renderAll();refreshSelectors();
   document.getElementById('estat').innerHTML='🔄 تبدّل محتوى «خيار 2» و«خيار 3» لفئة '+dsLabel(age);}
 function switchDataset(key){if(key===curKey)return;
-  store[curKey]={CL,ptCl,hidden,newCount};curKey=key;
+  store[curKey]={CL,ptCl,hidden,newCount,excluded};curKey=key;
   if(!store[key])store[key]=buildLive(key);
-  const s=store[key];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
+  const s=store[key];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;excluded=s.excluded||new Set();
   saveState();updateDsUI();renderAll();refreshSelectors();}
 function ageOf(k){return k.split(' — ')[0];}
 function optOf(k){return k.split(' — ')[1]||k;}
@@ -309,7 +309,7 @@ function greedyCover(cities,Tmin){const sorted=[...cities].filter(c=>byName[c]).
 function clusterDiam(g){let mx=0;for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){const s=gd(g[i],g[j]).sec;if(s>mx)mx=s;}return mx;}
 function optimizeK(){const os=document.getElementById('optstat2');
  try{
-  const cities=Object.values(CL).flatMap(c=>c.cities).filter(c=>byName[c]);
+  const cities=Object.values(CL).flatMap(c=>c.cities).filter(c=>byName[c]&&!excluded.has(c));
   if(!cities.length){if(os){os.textContent='⚠ لا توجد مدن';os.style.color='#ffb4b4';}return;}
   const el=document.getElementById('optk');
   let K=parseInt((el?el.value:'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9]/g,''));
@@ -343,18 +343,21 @@ function optimizeK(){const os=document.getElementById('optstat2');
 function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
 function popupHtml(n){const p=byName[n],id=ptCl[n];const d=document.createElement('div');
   d.style.cssText='direction:rtl;font-family:Tajawal,sans-serif;font-size:13px;min-width:150px';
+  const ex=excluded.has(n);
   let s='<b>'+n+'</b><br>المنطقة: '+p.region+'<br>الفئة: '+p.cat;
-  if(id&&CL[id]){const st=stats(CL[id].cities);const[v,vc]=verdict(st.mx/60,CL[id].cities.length);
+  if(ex)s+='<br><b style="color:#ff8a8a">🚫 مستبعدة من التجميع</b>';
+  else if(id&&CL[id]){const st=stats(CL[id].cities);const[v,vc]=verdict(st.mx/60,CL[id].cities.length);
     s+='<br>المجموعة: '+id+'<br>التقييم: <b style="color:'+vc+'">'+v+'</b>';}else s+='<br>بدون مجموعة';
   d.innerHTML=s;
-  if(id&&CL[id]&&CL[id].cities.length===1){const b=document.createElement('button');
-    b.textContent='🗑️ احذف هذه المجموعة';
-    b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:#7a2e2e;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
-    b.onclick=()=>{ejectCity(n);};d.appendChild(b);}
-  if(!id||!CL[id]){const b=document.createElement('button');
-    b.textContent='➕ اجعلها مجموعة مستقلة';
-    b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:#1b6ca8;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
-    b.onclick=()=>{const w=applyMove(n,'__new__');map.closePopup();document.getElementById('estat').innerHTML='➕ أنشئت <b>'+w+'</b>';};d.appendChild(b);}
+  const mkBtn=(txt,bg,fn)=>{const b=document.createElement('button');b.textContent=txt;
+    b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:'+bg+';color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
+    b.onclick=fn;d.appendChild(b);};
+  if(ex){mkBtn('↩️ أرجعها للتجميع','#2e7d32',()=>includeCity(n));}
+  else{
+    if(id&&CL[id]&&CL[id].cities.length===1)mkBtn('🗑️ احذف هذه المجموعة','#7a2e2e',()=>ejectCity(n));
+    if(!id||!CL[id])mkBtn('➕ اجعلها مجموعة مستقلة','#1b6ca8',()=>{const w=applyMove(n,'__new__');map.closePopup();document.getElementById('estat').innerHTML='➕ أنشئت <b>'+w+'</b>';});
+    mkBtn('🚫 استبعدها من التجميع','#8a5a00',()=>excludeCity(n));
+  }
   return d;}
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
@@ -370,7 +373,8 @@ map.on('mouseup',e=>{if(!connectFrom)return;const src=connectFrom;connectFrom=nu
   DATA.points.forEach(p=>{const q=map.latLngToContainerPoint([p.lat,p.lon]);const d=pt.distanceTo(q);if(d<bd){bd=d;best=p.n;}});
   if(best&&bd<30){if(best===src){markers[src].openPopup();ec.value=src;ec.dispatchEvent(new Event('change'));}
     else connectDrop(src,best);}});
-function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle({fillColor:colorOf(p.n)});
+function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];const ex=excluded.has(p.n);
+  m.setStyle({fillColor:ex?'#555':colorOf(p.n),color:ex?'#ff5252':'#222',weight:ex?2:1,dashArray:ex?'3,3':null});
   if(isVisible(p.n)){if(!map.hasLayer(m))m.addTo(map);}else if(map.hasLayer(m))map.removeLayer(m);});}
 
 // خطوط المجموعات
@@ -399,6 +403,14 @@ function linePopup(A,B){const g=gd(A,B);const d=document.createElement('div');
   return d;}
 function ejectCity(c){applyMove(c,'__none__');map.closePopup();
   document.getElementById('estat').innerHTML='🗑️ أُخرجت <b>'+c+'</b> من مجموعتها (حُذف الرابط)';}
+function excludeCity(n){const old=ptCl[n];
+  Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==n);});
+  Object.keys(CL).forEach(id=>{if(CL[id].cities.length===0)delete CL[id];});
+  ptCl[n]=null;if(old&&CL[old])autoRename(old);
+  excluded.add(n);map.closePopup();saveState();renderAll();refreshSelectors();
+  document.getElementById('estat').innerHTML='🚫 استُبعدت <b>'+n+'</b> من التجميع (تبقى ظاهرة على الخريطة)';}
+function includeCity(n){excluded.delete(n);map.closePopup();saveState();renderAll();
+  document.getElementById('estat').innerHTML='↩️ رجعت <b>'+n+'</b> للتجميع (بدون مجموعة الآن)';}
 function toggleLines(){document.getElementById('lines').checked?map.addLayer(lineLayer):map.removeLayer(lineLayer);}
 
 // أسماء دائمة
@@ -498,6 +510,7 @@ function renameCluster(){const old=rcl.value,nn=document.getElementById('rname')
   document.getElementById('estat').innerHTML='✒️ تغيّر الاسم إلى <b>'+nn+'</b> (محفوظ)';}
 function applyMove(city,tgt){
   const old=ptCl[city];
+  if(tgt!=='__none__')excluded.delete(city);   // الانضمام لمجموعة يلغي الاستبعاد
   Object.keys(CL).forEach(id=>{CL[id].cities=CL[id].cities.filter(x=>x!==city);});
   if(tgt==='__none__')ptCl[city]=null;
   else{if(tgt==='__new__'){tgt=uniqueName(nameFor([city]));
