@@ -198,6 +198,11 @@ HTML = """<!DOCTYPE html>
  .leaflet-tooltip.glbl{background:rgba(10,61,98,.92);color:#fff;font-weight:700;border:1px solid #ffd166;
    border-radius:11px;box-shadow:0 1px 4px rgba(0,0,0,.5);padding:2px 8px;white-space:nowrap;font-family:'Tajawal',sans-serif}
  .leaflet-tooltip.glbl:before{display:none!important}
+ .mapopts{background:rgba(15,37,64,.93);color:#e9eef5;padding:9px 11px;border-radius:9px;font-size:12.5px;
+   box-shadow:0 2px 10px rgba(0,0,0,.45);font-family:'Tajawal',sans-serif;line-height:1.95;max-width:215px;direction:rtl}
+ .mapopts .moh{color:#ffd166;font-weight:700;margin-bottom:5px;font-size:13px}
+ .mapopts label{display:block;cursor:pointer}
+ .mapopts input{width:auto;margin:0 0 0 6px;vertical-align:-2px;cursor:pointer}
  .leaflet-tooltip.lbl{background:transparent!important;border:0!important;box-shadow:none!important;padding:0}
  .leaflet-tooltip.lbl:before{display:none!important}
  .leg{background:#13294a;font-size:11.5px;line-height:1.9}
@@ -260,15 +265,6 @@ HTML = """<!DOCTYPE html>
    <button id="resetbtn" class="danger" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
 
-  <div class="sec">
-   <h3>🎛️ خيارات العرض</h3>
-   <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
-   <label><input type="checkbox" id="gnames" onchange="renderGroupLabels()"> إظهار أسماء المجموعات على الخريطة</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label><br>
-   <label><input type="checkbox" id="vnone" checked onchange="toggleNone()"> إظهار المحافظات خارج المجموعات</label>
-   <div class="hint">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
-  </div>
-
   <div class="sec"><h3>📋 المجموعات — العدد: <span id="clcount">0</span></h3>
    <div class="hint" style="margin:0 0 8px">✓ للإظهار · اضغط الصف للتمييز على الخريطة</div>
    <div class="row" style="margin-bottom:8px">
@@ -294,6 +290,15 @@ const DATA = __DATA__;
 const map = L.map('map').setView([24.2,45.5],6);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(map);
+const optCtl=L.control({position:'topright'});
+optCtl.onAdd=function(){const d=L.DomUtil.create('div','mapopts');
+  d.innerHTML='<div class="moh">🎛️ خيارات العرض</div>'+
+    '<label><input type="checkbox" id="names" onchange="toggleNames()"> أسماء كل المدن</label>'+
+    '<label><input type="checkbox" id="gnames" onchange="renderGroupLabels()"> أسماء المجموعات</label>'+
+    '<label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>'+
+    '<label><input type="checkbox" id="vnone" checked onchange="toggleNone()"> محافظات خارج المجموعات</label>';
+  L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d;};
+optCtl.addTo(map);
 
 const byName={}; DATA.points.forEach(p=>byName[p.n]=p);
 const markers={};
