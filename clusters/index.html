@@ -70,6 +70,7 @@
    <input id="rname" placeholder="الاسم الجديد للمجموعة" />
    <button onclick="renameCluster()">✒️ تغيير الاسم</button>
    <div style="font-size:11px;color:#9fdca0;margin:2px 0 6px">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
+   <div id="savestat" style="font-size:11px;margin:0 0 6px;min-height:14px"></div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
    <button style="background:#7a2e2e" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
@@ -137,9 +138,15 @@ function snapshot(){store[curKey]={CL,ptCl,hidden,newCount};
   for(const k in store){const s=store[k];
     o.store[k]={CL:s.CL,ptCl:s.ptCl,hidden:[...s.hidden],newCount:s.newCount};}
   return o;}
+function setSaveStatus(s){const el=document.getElementById('savestat');if(!el)return;
+  if(s==='ok'){el.textContent='✔ تم الحفظ في السحابة';el.style.color='#9fdca0';}
+  else if(s==='local'){el.textContent='⚠ حُفظ محليًا فقط — الحفظ السحابي مرفوض (افتح قواعد قاعدة البيانات)';el.style.color='#ffb4b4';}
+  else if(s==='saving'){el.textContent='⏳ جارٍ الحفظ...';el.style.color='#ffd166';}}
 function saveState(){const o=snapshot();
   try{localStorage.setItem(LSKEY,JSON.stringify(o));}catch(e){}
-  if(STATE_REF){try{STATE_REF.set(o);}catch(e){}}}
+  if(STATE_REF){setSaveStatus('saving');
+    STATE_REF.set(o).then(()=>setSaveStatus('ok')).catch(()=>setSaveStatus('local'));}
+  else setSaveStatus('local');}
 function applyStateObj(o){if(!o||!o.store)return false;
   for(const k in o.store){const s=o.store[k];
     const hid=Array.isArray(s.hidden)?s.hidden:Object.values(s.hidden||{});
