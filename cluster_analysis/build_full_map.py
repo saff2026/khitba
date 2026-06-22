@@ -158,46 +158,64 @@ HTML = """<!DOCTYPE html>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
- *{box-sizing:border-box} body{margin:0;font-family:'Tajawal',sans-serif}
+ *{box-sizing:border-box}
+ body{margin:0;font-family:'Tajawal',sans-serif}
  .leaflet-container{font-family:'Tajawal',sans-serif}
  #wrap{display:flex;height:100vh}
- #side{width:340px;background:#0f2540;color:#e9eef5;overflow-y:auto;flex-shrink:0}
+ #side{width:352px;background:#0f2540;color:#e9eef5;overflow-y:auto;flex-shrink:0;font-size:13px;line-height:1.55}
+ #side::-webkit-scrollbar{width:9px}
+ #side::-webkit-scrollbar-thumb{background:#2a4a6e;border-radius:6px}
+ #side::-webkit-scrollbar-track{background:#0f2540}
  #map{flex:1}
- .hd{background:#0a3d62;padding:12px 14px;font-weight:bold;font-size:15px;position:sticky;top:0;z-index:5}
- .sec{padding:10px 14px;border-bottom:1px solid #1c3a5e}
- .sec h3{margin:0 0 8px;font-size:14px;color:#ffd166}
- select,button,input{width:100%;padding:8px;border-radius:6px;border:1px solid #2a4a6e;
-   background:#16314f;color:#fff;font-size:13px;margin-bottom:6px}
- button{background:#1b6ca8;cursor:pointer;font-weight:bold} button:hover{background:#2980b9}
+ .hd{background:#0a3d62;padding:14px 16px;font-weight:700;font-size:15.5px;position:sticky;top:0;z-index:5;
+   box-shadow:0 2px 8px rgba(0,0,0,.35)}
+ .sec{padding:14px 16px;border-bottom:1px solid #1c3a5e}
+ .sec h3{margin:0 0 10px;font-size:14px;font-weight:700;color:#ffd166}
+ .lab{font-size:12px;color:#9fb6d0;margin:0 0 6px;font-weight:500}
+ .hint{font-size:11.5px;color:#8aa3bf;line-height:1.6;margin-top:7px}
+ .note{font-size:11.5px;color:#9fdca0;margin:4px 0 7px}
+ select,input[type=text]{width:100%;padding:9px 10px;border-radius:8px;border:1px solid #2a4a6e;
+   background:#13294a;color:#fff;font-size:13px;margin-bottom:7px;font-family:'Tajawal',sans-serif}
+ button{width:100%;padding:9px 10px;border-radius:8px;border:0;background:#1b6ca8;color:#fff;
+   font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:7px;transition:background .15s}
+ button:hover{background:#2980b9}
  .gmaps{background:#2e7d32} .gmaps:hover{background:#388e3c}
- .dsbtn{flex:1;background:#16314f;border:1px solid #2a4a6e;font-size:14px}
- .dsbtn.on{background:#ffd166;color:#0a3d62;border-color:#ffd166}
- .res{background:#16314f;border-radius:6px;padding:8px;font-size:13px;line-height:1.7}
+ .danger{background:#9b3535} .danger:hover{background:#c0392b}
+ .row{display:flex;gap:7px} .row button{margin-bottom:0;flex:1}
+ .dsbtn{width:auto;flex:0 0 auto;padding:7px 14px;border-radius:18px;background:#16314f;
+   border:1px solid #2a4a6e;font-size:13px;margin:0}
+ .dsbtn:hover{background:#1d3e63} .dsbtn.on{background:#ffd166;color:#0a3d62;border-color:#ffd166}
+ .dsbtn.on:hover{background:#ffd166}
+ .res{background:#13294a;border-radius:8px;padding:9px 10px;font-size:12.5px;line-height:1.7;margin-bottom:7px}
  .res b{color:#ffd166}
- .cl{padding:7px 9px;border-radius:6px;margin-bottom:5px;cursor:pointer;background:#16314f;
-   border-right:5px solid #888;font-size:12.5px}
- .cl:hover{background:#1d3e63} .cl .v{float:left;font-size:11px;padding:1px 6px;border-radius:10px;color:#fff}
- .cl .cbx{float:right;width:auto;margin:2px 6px 0 0;cursor:pointer}
- .cl .ct{color:#aac4e0;font-size:11px;margin-top:3px}
- .lbl{font-size:11px;color:#111;font-weight:bold;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
- .leg{background:#16314f;font-size:11.5px;line-height:1.8}
- small{color:#9fb6d0}
+ .cl{padding:8px 10px;border-radius:7px;margin-bottom:6px;cursor:pointer;background:#16314f;
+   border-right:5px solid #888;font-size:12.5px;line-height:1.5}
+ .cl:hover{background:#1d3e63}
+ .cl .v{float:left;font-size:10.5px;padding:2px 7px;border-radius:10px;color:#fff;font-weight:700}
+ .cl .cbx{float:right;width:auto;margin:2px 0 0 7px;cursor:pointer;transform:scale(1.1)}
+ .cl .ct{color:#aac4e0;font-size:11px;margin-top:4px;line-height:1.55}
+ .lbl{font-size:11px;color:#111;font-weight:700;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+ .leg{background:#13294a;font-size:11.5px;line-height:1.9}
+ small{color:#9fb6d0;font-size:11.5px;line-height:1.6;display:block}
+ hr{border:0;border-top:1px solid #1c3a5e;margin:11px 0}
+ label{font-size:13px;cursor:pointer;display:inline-block;margin-bottom:4px}
+ input[type=checkbox]{width:auto;margin:0 0 0 7px;vertical-align:-2px;cursor:pointer}
 </style></head><body>
 <div id="wrap">
  <div id="side">
   <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات</div>
 
-  <div class="sec"><div style="font-size:12px;color:#ffd166;margin-bottom:5px">الفئة العمرية:</div>
+  <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-   <div style="font-size:12px;color:#ffd166;margin:8px 0 5px">خيار التجميع:</div>
+   <div class="lab" style="margin-top:10px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-   <button id="copyfirst" onclick="copyFromFirst()" style="display:none;margin-top:6px;font-size:12px;background:#5a3a86">📋 اجعل هذا الخيار مثل الخيار الأول</button>
+   <button id="copyfirst" onclick="copyFromFirst()" style="display:none;margin-top:8px;background:#6a4aa0">📋 اجعل هذا الخيار مثل الخيار الأول</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
   <div class="sec">
    <button class="gmaps" onclick="optimize()">🪄 احسب أفضل تقسيمة (أقل عدد مجموعات)</button>
-   <div style="font-size:11px;color:#9fb6d0">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات حسب أقصى زمن قيادة تختاره.</div>
+   <div class="hint">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات حسب أقصى زمن قيادة تختاره.</div>
   </div>
 
   <div class="sec">
@@ -220,24 +238,24 @@ HTML = """<!DOCTYPE html>
    <select id="rcl"></select>
    <input id="rname" placeholder="الاسم الجديد للمجموعة" />
    <button onclick="renameCluster()">✒️ تغيير الاسم</button>
-   <div style="font-size:11px;color:#9fdca0;margin:2px 0 6px">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
+   <div class="note">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
    <div id="savestat" style="font-size:11px;margin:0 0 6px;min-height:14px"></div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
-   <button style="background:#7a2e2e" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
+   <button class="danger" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
 
   <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
    <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
-   <div style="font-size:11px;color:#9fb6d0;margin-top:6px">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
+   <div class="hint">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
   </div>
 
   <div class="sec"><h3>📋 المجموعات — العدد: <span id="clcount">0</span></h3>
-   <div style="font-size:11px;color:#9fb6d0;margin-bottom:6px">✓ للإظهار · اضغط الصف للتمييز على الخريطة</div>
-   <div style="display:flex;gap:6px">
-     <button style="flex:1" onclick="showAll(true)">إظهار الكل</button>
-     <button style="flex:1" onclick="showAll(false)">إخفاء الكل</button>
+   <div class="hint" style="margin:0 0 8px">✓ للإظهار · اضغط الصف للتمييز على الخريطة</div>
+   <div class="row" style="margin-bottom:8px">
+     <button onclick="showAll(true)">إظهار الكل</button>
+     <button onclick="showAll(false)">إخفاء الكل</button>
    </div>
    <label style="font-size:12px;display:block;margin-bottom:6px"><input type="checkbox" id="vnone" checked onchange="toggleNone()" style="width:auto"> إظهار المحافظات خارج المجموعات</label>
    <div id="cllist"></div></div>
