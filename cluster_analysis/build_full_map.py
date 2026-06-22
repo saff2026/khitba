@@ -253,12 +253,7 @@ HTML = """<!DOCTYPE html>
    <select id="ecity"></select>
    <select id="etarget"></select>
    <button onclick="moveCity()">↪️ نقل المدينة للمجموعة المحددة</button>
-   <div class="res" id="estat">اختر مدينة، ثم مجموعة الوجهة (أو «مجموعة جديدة»)، واضغط نقل. كل شيء يتحدّث فورًا.</div>
-   <hr style="border-color:#1c3a5e">
-   <h3 style="margin-top:4px">✒️ إعادة تسمية مجموعة</h3>
-   <select id="rcl"></select>
-   <input id="rname" placeholder="الاسم الجديد للمجموعة" />
-   <button onclick="renameCluster()">✒️ تغيير الاسم</button>
+   <div class="res" id="estat">اختر مدينة، ثم مجموعة الوجهة (أو «مجموعة جديدة»)، واضغط نقل. لإعادة تسمية مجموعة استخدم زر ✏️ في قائمة المجموعات بالأسفل.</div>
    <div class="note">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
    <div id="savestat" style="font-size:11px;margin:0 0 6px;min-height:14px"></div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
@@ -608,11 +603,25 @@ function renderList(){const cl=document.getElementById('cllist');cl.innerHTML=''
     const d=document.createElement('div');d.className='cl';d.style.borderRightColor=c.color;
     const cb=document.createElement('input');cb.type='checkbox';cb.className='cbx';cb.checked=!hidden.has(id);
     cb.onclick=e=>e.stopPropagation();cb.onchange=()=>toggleCluster(id,cb.checked);
+    const rb=document.createElement('button');rb.textContent='✏️';rb.title='إعادة تسمية';
+    rb.style.cssText='float:left;width:auto;margin:0 0 0 5px;padding:1px 7px;font-size:11px;background:#6a4aa0;border:0;border-radius:6px;color:#fff;cursor:pointer';
+    rb.onclick=e=>{e.stopPropagation();startRename(d,id);};
     const body=document.createElement('div');
     body.innerHTML='<span class="v" style="background:'+vc+'">'+v+'</span><b>'+id+'</b> — '+c.region+
       '<div class="ct">أقصى زمن: '+(c.cities.length>1?fmt(st.mx/60):'—')+' · '+c.cities.length+' مدن'+
       (st.nr?' · '+st.nr+' تقديري':'')+'<br>'+c.cities.join('، ')+'</div>';
-    d.appendChild(cb);d.appendChild(body);d.onclick=()=>focusCluster(id);cl.appendChild(d);});}
+    d.appendChild(cb);d.appendChild(rb);d.appendChild(body);d.onclick=()=>focusCluster(id);cl.appendChild(d);});}
+function startRename(d,id){d.onclick=null;d.innerHTML='';
+  const inp=document.createElement('input');inp.type='text';inp.value=id;
+  inp.style.cssText='width:68%;padding:5px;border-radius:5px;border:1px solid #2a4a6e;background:#13294a;color:#fff;font-family:Tajawal,sans-serif';
+  inp.onclick=e=>e.stopPropagation();
+  const ok=document.createElement('button');ok.textContent='✓ حفظ';
+  ok.style.cssText='width:auto;margin:0 5px;padding:5px 10px;background:#2e7d32;border:0;border-radius:5px;color:#fff;cursor:pointer;font-family:Tajawal';
+  ok.onclick=e=>{e.stopPropagation();const nn=inp.value.trim();
+    if(nn&&nn!==id){if(CL[nn]){inp.style.borderColor='#ff5252';return;}renameKey(id,nn);CL[nn].manual=true;saveState();
+      document.getElementById('estat').innerHTML='✒️ صار الاسم <b>'+nn+'</b>';}
+    renderAll();refreshSelectors();};
+  d.appendChild(inp);d.appendChild(ok);inp.focus();}
 function toggleCluster(id,show){if(show)hidden.delete(id);else hidden.add(id);saveState();renderMarkers();renderLines();}
 let hi=[];
 function focusCluster(id){hi.forEach(m=>m.setStyle&&m.setStyle({weight:1,radius:m._r0||5.5}));hi=[];const pts=[];
@@ -674,7 +683,7 @@ function refreshTarget(){et.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey
   .map(id=>'<option value="'+id+'">'+id+' — '+CL[id].region+'</option>').join('')+
   '<option value="__none__">— بدون مجموعة —</option><option value="__new__">+ مجموعة جديدة</option>'+
   '<option value="__exclude__">🚫 استبعاد من التجميع</option>';}
-function refreshRcl(){const cur=rcl.value;rcl.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b))
+function refreshRcl(){if(!rcl)return;const cur=rcl.value;rcl.innerHTML=Object.keys(CL).sort((a,b)=>clKey(a)-clKey(b))
   .map(id=>'<option value="'+id+'">'+id+'</option>').join('');if(CL[cur])rcl.value=cur;}
 function refreshSelectors(){refreshCity();refreshTarget();refreshRcl();}
 ec.onchange=function(){const c=ec.value;if(c&&ptCl[c]&&CL[ptCl[c]])et.value=ptCl[c];};
