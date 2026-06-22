@@ -53,7 +53,7 @@
 </style></head><body>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 11:56</span></div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:01</span></div>
 
   <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
@@ -449,10 +449,11 @@ function exportCsv(){let rows=[['City','Region','Group']];
 function finishInit(){const v=document.getElementById('vnone');if(v)v.checked=!hideNone;
   updateDsUI();refreshSelectors();renderAll();}
 function bootstrap(){
-  if(STATE_REF){STATE_REF.once('value').then(s=>{
-      if(!applyStateObj(s.val())&&!loadLocal())defaultInit();finishInit();
-    }).catch(()=>{if(!loadLocal())defaultInit();finishInit();});}
-  else{if(!loadLocal())defaultInit();finishInit();}
+  if(!loadLocal())defaultInit();   // ارسم فورًا (لا ننتظر السحابة)
+  finishInit();
+  if(STATE_REF){STATE_REF.once('value').then(s=>{   // ثم زامن من السحابة إن توفّرت
+      const v=s.val(); if(v&&v.store){applyStateObj(v);finishInit();}
+    }).catch(()=>{});}
 }
 bootstrap();
 </script></body></html>

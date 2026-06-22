@@ -599,10 +599,11 @@ function exportCsv(){let rows=[['City','Region','Group']];
 function finishInit(){const v=document.getElementById('vnone');if(v)v.checked=!hideNone;
   updateDsUI();refreshSelectors();renderAll();}
 function bootstrap(){
-  if(STATE_REF){STATE_REF.once('value').then(s=>{
-      if(!applyStateObj(s.val())&&!loadLocal())defaultInit();finishInit();
-    }).catch(()=>{if(!loadLocal())defaultInit();finishInit();});}
-  else{if(!loadLocal())defaultInit();finishInit();}
+  if(!loadLocal())defaultInit();   // ارسم فورًا (لا ننتظر السحابة)
+  finishInit();
+  if(STATE_REF){STATE_REF.once('value').then(s=>{   // ثم زامن من السحابة إن توفّرت
+      const v=s.val(); if(v&&v.store){applyStateObj(v);finishInit();}
+    }).catch(()=>{});}
 }
 bootstrap();
 </script></body></html>"""
