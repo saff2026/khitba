@@ -265,7 +265,8 @@ HTML = """<!DOCTYPE html>
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
    <label><input type="checkbox" id="gnames" onchange="renderGroupLabels()"> إظهار أسماء المجموعات على الخريطة</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
+   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label><br>
+   <label><input type="checkbox" id="vnone" checked onchange="toggleNone()"> إظهار المحافظات خارج المجموعات</label>
    <div class="hint">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
   </div>
 
@@ -275,7 +276,6 @@ HTML = """<!DOCTYPE html>
      <button onclick="showAll(true)">إظهار الكل</button>
      <button onclick="showAll(false)">إخفاء الكل</button>
    </div>
-   <label style="font-size:12px;display:block;margin-bottom:6px"><input type="checkbox" id="vnone" checked onchange="toggleNone()" style="width:auto"> إظهار المحافظات خارج المجموعات</label>
    <div id="cllist"></div></div>
 
   <div class="sec leg"><h3>دليل الألوان</h3>
