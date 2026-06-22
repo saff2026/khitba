@@ -128,12 +128,14 @@ def build_dataset(groups):
 groups_1114 = [(clusters[cl]["region"], clusters[cl]["cities"]) for cl in ordered]
 # تجميعة 5-9 (من الجدول الجديد — نفس المدن بتجميع أدق)
 groups_59 = groups_1114  # تحت 5-9 بنفس تجميع 11-14
-DATASETS = {"11-14": build_dataset(groups_1114), "5-9": build_dataset(groups_59),
-            "خيار 3": build_dataset(groups_1114), "خيار 4": build_dataset(groups_1114)}
+DATASETS = {}
+for _age in ["11-14", "5-9"]:
+    for _i in (1, 2, 3):
+        DATASETS[f"{_age} — خيار {_i}"] = build_dataset(groups_1114)
 
 matrix = MX
 print("مصفوفة قوقل محمّلة:", len(matrix), "زوج")
-print("مجموعات 11-14:", len(DATASETS["11-14"]), "| مجموعات 5-9:", len(DATASETS["5-9"]))
+print("عدد خيارات التجميع:", len(DATASETS), "->", list(DATASETS.keys()))
 
 P = [{"n": n, "lat": v["lat"], "lon": v["lon"], "region": v["region"],
       "cat": v["cat"]} for n, v in points.items()]
@@ -185,8 +187,10 @@ HTML = """<!DOCTYPE html>
  <div id="side">
   <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات</div>
 
-  <div class="sec"><div style="font-size:12px;color:#ffd166;margin-bottom:5px">خيارات التجميع:</div>
-   <div id="dstabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+  <div class="sec"><div style="font-size:12px;color:#ffd166;margin-bottom:5px">الفئة العمرية:</div>
+   <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+   <div style="font-size:12px;color:#ffd166;margin:8px 0 5px">خيار التجميع:</div>
+   <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -264,7 +268,7 @@ const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f03
 const DS=DATA.datasets;
 let CL={}, ptCl={}, hidden=new Set(), newCount=0, hideNone=false, curKey='11-14';
 const store={};
-const LSKEY='ksa_map_state_v3';
+const LSKEY='ksa_map_state_v4';
 // ===== Firebase (حفظ سحابي دائم ومشترك) =====
 let STATE_REF=null;
 try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
@@ -272,7 +276,7 @@ try{firebase.initializeApp({apiKey:"AIzaSyDt8Ci7c6yMReMYo54Kkh9AU_OGZ1Y9BME",
   databaseURL:"https://u5-u14-city-clusters-default-rtdb.firebaseio.com",
   projectId:"u5-u14-city-clusters",storageBucket:"u5-u14-city-clusters.firebasestorage.app",
   messagingSenderId:"760460103213",appId:"1:760460103213:web:3366fc514fb443d912f2a4"});
-  STATE_REF=firebase.database().ref('clustersMap/state_v3');}catch(e){STATE_REF=null;}
+  STATE_REF=firebase.database().ref('clustersMap/state_v4');}catch(e){STATE_REF=null;}
 function buildLive(key){const cl={},pt={};
   DS[key].forEach(c=>cl[c.id]={region:c.region,color:c.color,cities:c.cities.slice(),manual:false});
   DATA.points.forEach(p=>pt[p.n]=null);
@@ -309,10 +313,18 @@ function switchDataset(key){if(key===curKey)return;
   if(!store[key])store[key]=buildLive(key);
   const s=store[key];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;
   saveState();updateDsUI();renderAll();refreshSelectors();}
-function dsLabel(k){return /^[0-9]/.test(k)?'تحت '+k:k;}
-function updateDsUI(){const c=document.getElementById('dstabs');if(!c)return;c.innerHTML='';
-  Object.keys(DS).forEach(k=>{const b=document.createElement('button');b.className='dsbtn'+(k===curKey?' on':'');
-    b.textContent=dsLabel(k);b.onclick=()=>switchDataset(k);c.appendChild(b);});}
+function ageOf(k){return k.split(' — ')[0];}
+function optOf(k){return k.split(' — ')[1]||k;}
+function dsLabel(age){return /^[0-9]/.test(age)?'تحت '+age:age;}
+function ages(){const a=[];Object.keys(DS).forEach(k=>{const g=ageOf(k);if(!a.includes(g))a.push(g);});return a;}
+function firstKeyOfAge(age){return Object.keys(DS).find(k=>ageOf(k)===age);}
+function updateDsUI(){
+  const at=document.getElementById('agetabs');if(at){at.innerHTML='';
+    ages().forEach(age=>{const b=document.createElement('button');b.className='dsbtn'+(ageOf(curKey)===age?' on':'');
+      b.textContent=dsLabel(age);b.onclick=()=>{const want=age+' — '+optOf(curKey);switchDataset(DS[want]?want:firstKeyOfAge(age));};at.appendChild(b);});}
+  const ot=document.getElementById('opttabs');if(ot){ot.innerHTML='';
+    Object.keys(DS).filter(k=>ageOf(k)===ageOf(curKey)).forEach(key=>{const b=document.createElement('button');
+      b.className='dsbtn'+(key===curKey?' on':'');b.textContent=optOf(key);b.onclick=()=>switchDataset(key);ot.appendChild(b);});}}
 function isVisible(n){const id=ptCl[n];return id?!hidden.has(id):!hideNone;}
 function showAll(v){if(v)hidden.clear();else hidden=new Set(Object.keys(CL));saveState();renderAll();}
 function toggleNone(){hideNone=!document.getElementById('vnone').checked;saveState();renderMarkers();}
@@ -436,8 +448,8 @@ function focusCluster(id){hi.forEach(m=>m.setStyle&&m.setStyle({weight:1,radius:
   if(pts.length>1)map.fitBounds(pts,{padding:[60,60]});else if(pts.length===1)map.setView(pts[0],10);}
 
 function renderDiff(){const el=document.getElementById('diffbox');if(!el)return;
-  const first=Object.keys(DS)[0];
-  if(curKey===first){el.innerHTML='<small style="color:#9fdca0">هذا هو الخيار الأول (المرجع للمقارنة).</small>';return;}
+  const first=firstKeyOfAge(ageOf(curKey));
+  if(curKey===first){el.innerHTML='<small style="color:#9fdca0">هذا هو الخيار الأول لهذه الفئة (المرجع للمقارنة).</small>';return;}
   const base=store[first]||buildLive(first);
   const diffs=[];
   DATA.points.forEach(p=>{const c=p.n;const ic=ptCl[c],ib=base.ptCl[c];
@@ -446,7 +458,7 @@ function renderDiff(){const el=document.getElementById('diffbox');if(!el)return;
     let same=sc.size===sb.size;if(same)for(const x of sc)if(!sb.has(x)){same=false;break;}
     if(!same)diffs.push({c,cur:ic||'بدون مجموعة',base:ib||'بدون مجموعة'});});
   if(!diffs.length){el.innerHTML='<small style="color:#9fdca0">لا فروقات عن الخيار الأول حتى الآن.</small>';return;}
-  el.innerHTML='<div style="color:#ffd166;margin-bottom:3px">🔀 الفروقات عن «'+dsLabel(first)+'» ('+diffs.length+'):</div>'+
+  el.innerHTML='<div style="color:#ffd166;margin-bottom:3px">🔀 الفروقات عن «'+dsLabel(ageOf(first))+' — '+optOf(first)+'» ('+diffs.length+'):</div>'+
     diffs.map(d=>'<div style="padding:3px 0;border-bottom:1px solid #1c3a5e"><b>'+d.c+'</b> → '+d.cur+
       '<br><span style="color:#9fb6d0;font-size:11px">في الخيار الأول: '+d.base+'</span></div>').join('');}
 function renderAll(){renderMarkers();renderLines();renderList();renderDiff();}
