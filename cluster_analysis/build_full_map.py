@@ -203,7 +203,7 @@ HTML = """<!DOCTYPE html>
 </style></head><body>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات</div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة __BUILD__</span></div>
 
   <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
@@ -607,6 +607,8 @@ function bootstrap(){
 bootstrap();
 </script></body></html>"""
 
+import datetime
+HTML = HTML.replace("__BUILD__", datetime.datetime.now().strftime("%m-%d %H:%M"))
 HTML = HTML.replace("__DATA__", json.dumps(DATA, ensure_ascii=False))
 open("/home/user/khitba/cluster_analysis/governorates_map.html", "w", encoding="utf-8").write(HTML)
 print("تم حفظ governorates_map.html")
