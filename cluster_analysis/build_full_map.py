@@ -195,6 +195,9 @@ HTML = """<!DOCTYPE html>
  .cl .cbx{float:right;width:auto;margin:2px 0 0 7px;cursor:pointer;transform:scale(1.1)}
  .cl .ct{color:#aac4e0;font-size:11px;margin-top:4px;line-height:1.55}
  .lbl{font-size:11px;color:#111;font-weight:700;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+ .glblbox{background:rgba(10,61,98,.9);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;
+   border-radius:11px;white-space:nowrap;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.5);
+   border:1px solid #ffd166}
  .leg{background:#13294a;font-size:11.5px;line-height:1.9}
  small{color:#9fb6d0;font-size:11.5px;line-height:1.6;display:block}
  hr{border:0;border-top:1px solid #1c3a5e;margin:11px 0}
@@ -209,8 +212,6 @@ HTML = """<!DOCTYPE html>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div class="lab" style="margin-top:10px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-   <button id="copyfirst" onclick="copyFromFirst()" style="display:none;margin-top:8px;background:#6a4aa0">📋 اجعل هذا الخيار مثل الخيار الأول</button>
-   <button onclick="swapOpt23()" style="margin-top:6px;background:#0f7b8a">🔄 تبديل محتوى خيار 2 ↔ خيار 3</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -253,6 +254,7 @@ HTML = """<!DOCTYPE html>
   <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
+   <label><input type="checkbox" id="gnames" onchange="renderGroupLabels()"> إظهار أسماء المجموعات على الخريطة</label><br>
    <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
    <div class="hint">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
   </div>
@@ -464,6 +466,13 @@ function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle
 
 // خطوط المجموعات
 const lineLayer=L.layerGroup().addTo(map);
+const glabels=L.layerGroup().addTo(map);
+function renderGroupLabels(){glabels.clearLayers();
+  const cb=document.getElementById('gnames');if(!cb||!cb.checked)return;
+  Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const cs=CL[id].cities;
+    let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;
+    L.marker([la/n,lo/n],{interactive:false,
+      icon:L.divIcon({className:'glbl',iconSize:[0,0],html:'<div class="glblbox">'+id+'</div>'})}).addTo(glabels);});}
 function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const c=CL[id],ct=c.cities;
@@ -534,7 +543,7 @@ function renderDiff(){const el=document.getElementById('diffbox');if(!el)return;
     html+='<div style="padding:4px 0;border-bottom:1px solid #1c3a5e"><b>'+icon+' '+label+'</b>'+
       ((fullFrom&&fullTo)?'':'<br><span style="color:#9fb6d0;font-size:11px">'+t.cities.join('، ')+'</span>')+'</div>';});
   el.innerHTML=html;}
-function renderAll(){renderMarkers();renderLines();renderList();renderDiff();}
+function renderAll(){renderMarkers();renderLines();renderList();renderDiff();renderGroupLabels();}
 
 // أداة المسافة
 const pa=document.getElementById('pa'),pb=document.getElementById('pb');
