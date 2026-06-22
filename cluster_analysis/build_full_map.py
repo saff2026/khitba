@@ -383,11 +383,17 @@ function optimize(){const cities=Object.values(CL).flatMap(c=>c.cities);if(!citi
 
 // النقاط
 function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
-function popupHtml(n){const p=byName[n],id=ptCl[n];
-  let s='<div style="direction:rtl;font-family:Tajawal,sans-serif"><b>'+n+'</b><br>المنطقة: '+p.region+'<br>الفئة: '+p.cat;
+function popupHtml(n){const p=byName[n],id=ptCl[n];const d=document.createElement('div');
+  d.style.cssText='direction:rtl;font-family:Tajawal,sans-serif;font-size:13px;min-width:150px';
+  let s='<b>'+n+'</b><br>المنطقة: '+p.region+'<br>الفئة: '+p.cat;
   if(id&&CL[id]){const st=stats(CL[id].cities);const[v,vc]=verdict(st.mx/60,CL[id].cities.length);
     s+='<br>المجموعة: '+id+'<br>التقييم: <b style="color:'+vc+'">'+v+'</b>';}else s+='<br>بدون مجموعة';
-  return s+'</div>';}
+  d.innerHTML=s;
+  if(id&&CL[id]&&CL[id].cities.length===1){const b=document.createElement('button');
+    b.textContent='🗑️ احذف هذه المجموعة';
+    b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:#7a2e2e;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
+    b.onclick=()=>{ejectCity(n);};d.appendChild(b);}
+  return d;}
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
   m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
