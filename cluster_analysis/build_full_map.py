@@ -393,6 +393,10 @@ function popupHtml(n){const p=byName[n],id=ptCl[n];const d=document.createElemen
     b.textContent='🗑️ احذف هذه المجموعة';
     b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:#7a2e2e;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
     b.onclick=()=>{ejectCity(n);};d.appendChild(b);}
+  if(!id||!CL[id]){const b=document.createElement('button');
+    b.textContent='➕ اجعلها مجموعة مستقلة';
+    b.style.cssText='margin-top:7px;display:block;width:100%;cursor:pointer;background:#1b6ca8;color:#fff;border:0;border-radius:5px;padding:6px;font-family:Tajawal';
+    b.onclick=()=>{const w=applyMove(n,'__new__');map.closePopup();document.getElementById('estat').innerHTML='➕ أنشئت <b>'+w+'</b>';};d.appendChild(b);}
   return d;}
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
