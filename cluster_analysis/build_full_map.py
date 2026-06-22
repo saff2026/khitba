@@ -553,10 +553,13 @@ function renderGroupLabels(){glabels.clearLayers();
   const cb=document.getElementById('gnames');if(!cb||!cb.checked)return;
   const z=map.getZoom();
   const fs=z<=5?7:z<=6?8:z<=7?10:z<=8?11:z<=9?12:13;
-  Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const cs=CL[id].cities;
-    let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;
+  Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const cs=CL[id].cities;if(!cs.length)return;
+    let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;la/=n;lo/=n;
+    let anchor=cs[0],bd=1e9;cs.forEach(c=>{const q=byName[c];if(!q)return;const d=(q.lat-la)*(q.lat-la)+(q.lon-lo)*(q.lon-lo);if(d<bd){bd=d;anchor=c;}});
+    const nm=id.replace(/^مجموعة /,'');if(byName[nm]&&cs.indexOf(nm)>=0)anchor=nm;
+    const p=byName[anchor];if(!p)return;
     const t=L.tooltip({permanent:true,direction:'center',className:'glbl',interactive:true})
-      .setLatLng([la/n,lo/n]).setContent('<span style="font-size:'+fs+'px">'+id+'</span>');
+      .setLatLng([p.lat,p.lon]).setContent('<span style="font-size:'+fs+'px">'+id+'</span>');
     glabels.addLayer(t);t.on('click',()=>focusCluster(id));});}
 map.on('zoomend',renderGroupLabels);
 function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
