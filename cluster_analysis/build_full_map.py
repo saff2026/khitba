@@ -195,15 +195,19 @@ HTML = """<!DOCTYPE html>
  .cl .cbx{float:right;width:auto;margin:2px 0 0 7px;cursor:pointer;transform:scale(1.1)}
  .cl .ct{color:#aac4e0;font-size:11px;margin-top:4px;line-height:1.55}
  .lbl{font-size:11px;color:#111;font-weight:700;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
- .glblbox{background:rgba(10,61,98,.9);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;
+ .glbl,.leaflet-div-icon.glbl{background:transparent!important;border:0!important}
+ .glblbox{background:rgba(10,61,98,.92);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;
    border-radius:11px;white-space:nowrap;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.5);
-   border:1px solid #ffd166}
+   border:1px solid #ffd166;display:inline-block}
+ .leaflet-tooltip.lbl{background:transparent!important;border:0!important;box-shadow:none!important;padding:0}
+ .leaflet-tooltip.lbl:before{display:none!important}
  .leg{background:#13294a;font-size:11.5px;line-height:1.9}
  small{color:#9fb6d0;font-size:11.5px;line-height:1.6;display:block}
  hr{border:0;border-top:1px solid #1c3a5e;margin:11px 0}
  label{font-size:13px;cursor:pointer;display:inline-block;margin-bottom:4px}
  input[type=checkbox]{width:auto;margin:0 0 0 7px;vertical-align:-2px;cursor:pointer}
 </style></head><body>
+<div id="errbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b00020;color:#fff;padding:8px 12px;font-size:13px;font-family:Tajawal"></div>
 <div id="wrap">
  <div id="side">
   <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة __BUILD__</span></div>
@@ -279,6 +283,8 @@ HTML = """<!DOCTYPE html>
  <div id="map"></div>
 </div>
 <script>
+window.onerror=function(m,s,l){var b=document.getElementById('errbar');
+  if(b){b.style.display='block';b.textContent='⚠ خطأ: '+m+'  (سطر '+l+')';}return false;};
 const DATA = __DATA__;
 const map = L.map('map').setView([24.2,45.5],6);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -415,9 +421,13 @@ function autoRename(id){if(!CL[id]||CL[id].manual)return id;
   let want=nameFor(CL[id].cities);if(want===id)return id;
   if(CL[want])want=uniqueName(want);return renameKey(id,want);}
 function optimize(){const os=document.getElementById('optstat');
-  const cities=Object.values(CL).flatMap(c=>c.cities);if(!cities.length)return;
-  const el=document.getElementById('optmins');const T=parseInt(el?el.value:'');
-  if(!T||T<=0){if(os){os.textContent='⚠ أدخل عدد دقائق صحيح';os.style.color='#ffb4b4';}return;}
+ try{
+  const cities=Object.values(CL).flatMap(c=>c.cities);
+  if(!cities.length){if(os){os.textContent='⚠ لا توجد مدن في هذا الخيار';os.style.color='#ffb4b4';}return;}
+  const el=document.getElementById('optmins');
+  const raw=(el?el.value:'90').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9]/g,'');
+  const T=parseInt(raw);
+  if(!T||T<=0){if(os){os.textContent='⚠ اكتب عدد دقائق صحيح في الحقل';os.style.color='#ffb4b4';}return;}
   const sorted=[...cities].sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
   const groups=[];
   sorted.forEach(city=>{let placed=false;
@@ -428,7 +438,8 @@ function optimize(){const os=document.getElementById('optstat');
     CL[id]={region:byName[g[0]].region,color:PALETTE[i%PALETTE.length],cities:g,manual:false};
     g.forEach(c=>ptCl[c]=id);});
   hidden=new Set();saveState();refreshSelectors();renderAll();
-  if(os){os.textContent='✓ أفضل تقسيمة: '+groups.length+' مجموعة (أقصى زمن داخلي ≤ '+T+' دقيقة)';os.style.color='#9fdca0';}}
+  if(os){os.textContent='✓ أفضل تقسيمة: '+groups.length+' مجموعة (أقصى زمن داخلي ≤ '+T+' دقيقة)';os.style.color='#9fdca0';}
+ }catch(e){if(os){os.textContent='⚠ خطأ: '+e.message;os.style.color='#ffb4b4';}}}
 
 // النقاط
 function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
