@@ -229,8 +229,8 @@ HTML = """<!DOCTYPE html>
   <div class="sec">
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label><br>
-   <label><input type="checkbox" id="dragm" onchange="setDragMode(this.checked)" style="width:auto"> 🔗 وضع الربط بالسحب (اسحب من مدينة لأخرى لضمّهما)</label>
+   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
+   <div style="font-size:11px;color:#9fb6d0;margin-top:6px">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
   </div>
 
   <div class="sec"><h3>📋 المجموعات — العدد: <span id="clcount">0</span></h3>
@@ -260,7 +260,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 const byName={}; DATA.points.forEach(p=>byName[p.n]=p);
 const markers={};
-let dragMode=false, connectFrom=null, rubber=null;
+let connectFrom=null, rubber=null;
 const VC=DATA.vcolor;
 const PALETTE=['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#16b2c4','#f032e6','#bf40bf',
  '#1f9e89','#d2691e','#2e8b57','#c71585','#1e90ff','#b8860b','#8b008b','#ff4500','#556b2f',
@@ -411,9 +411,7 @@ function popupHtml(n){const p=byName[n],id=ptCl[n];const d=document.createElemen
 DATA.points.forEach(p=>{const m=L.circleMarker([p.lat,p.lon],{radius:p.cat==='مقر'?8:5.5,
    color:'#222',weight:1,fillColor:colorOf(p.n),fillOpacity:0.95});
   m.bindPopup(()=>popupHtml(p.n)); m.bindTooltip(p.n,{direction:'top'}); m.addTo(map); markers[p.n]=m;
-  m.on('click',()=>{if(dragMode)return;ec.value=p.n; ec.dispatchEvent(new Event('change'));
-    document.getElementById('estat').innerHTML='📍 اخترت <b>'+p.n+'</b> — حدّد مجموعة الوجهة واضغط نقل';});
-  m.on('mousedown',e=>{if(!dragMode)return;connectFrom=p.n;map.dragging.disable();L.DomEvent.stop(e);});});
+  m.on('mousedown',e=>{connectFrom=p.n;map.dragging.disable();L.DomEvent.stop(e);});});
 map.on('mousemove',e=>{if(!connectFrom)return;const a=byName[connectFrom];
   if(rubber)map.removeLayer(rubber);
   rubber=L.polyline([[a.lat,a.lon],[e.latlng.lat,e.latlng.lng]],{color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);});
@@ -422,8 +420,8 @@ map.on('mouseup',e=>{if(!connectFrom)return;const src=connectFrom;connectFrom=nu
   if(rubber){map.removeLayer(rubber);rubber=null;}
   const pt=map.latLngToContainerPoint(e.latlng);let best=null,bd=1e9;
   DATA.points.forEach(p=>{const q=map.latLngToContainerPoint([p.lat,p.lon]);const d=pt.distanceTo(q);if(d<bd){bd=d;best=p.n;}});
-  if(best&&best!==src&&bd<30)connectDrop(src,best);});
-function setDragMode(on){dragMode=on;map.getContainer().style.cursor=on?'crosshair':'';}
+  if(best&&bd<30){if(best===src){markers[src].openPopup();ec.value=src;ec.dispatchEvent(new Event('change'));}
+    else connectDrop(src,best);}});
 function renderMarkers(){DATA.points.forEach(p=>{const m=markers[p.n];m.setStyle({fillColor:colorOf(p.n)});
   if(isVisible(p.n)){if(!map.hasLayer(m))m.addTo(map);}else if(map.hasLayer(m))map.removeLayer(m);});}
 
