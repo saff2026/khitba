@@ -64,8 +64,13 @@
   </div>
 
   <div class="sec">
-   <button class="gmaps" onclick="optimize()">🪄 احسب أفضل تقسيمة (أقل عدد مجموعات)</button>
-   <div class="hint">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات حسب أقصى زمن قيادة تختاره.</div>
+   <div class="lab">أقصى زمن قيادة داخل المجموعة (دقيقة) — كل ما زاد قلّ العدد:</div>
+   <div class="row">
+    <input type="text" id="optmins" value="90" style="flex:0 0 72px;text-align:center" inputmode="numeric">
+    <button class="gmaps" onclick="optimize()">🪄 احسب أفضل تقسيمة</button>
+   </div>
+   <div id="optstat" class="hint"></div>
+   <div class="hint">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات.</div>
   </div>
 
   <div class="sec">
@@ -91,7 +96,7 @@
    <div class="note">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
    <div id="savestat" style="font-size:11px;margin:0 0 6px;min-height:14px"></div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
-   <button class="danger" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
+   <button id="resetbtn" class="danger" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
 
   <div class="sec">
@@ -178,7 +183,11 @@ function applyStateObj(o){if(!o||!o.store)return false;
 function loadLocal(){try{const r=localStorage.getItem(LSKEY);return r?applyStateObj(JSON.parse(r)):false;}catch(e){return false;}}
 function defaultInit(){Object.keys(DS).forEach(k=>store[k]=buildLive(k));
   curKey=Object.keys(DS)[0];hideNone=false;const s=store[curKey];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;}
-function resetAll(){if(!confirm('استرجاع التقسيمة الأصلية وحذف كل تعديلاتك (من السحابة أيضًا)؟'))return;
+let _resetArm=0;
+function resetAll(){const b=document.getElementById('resetbtn');const now=Date.now();
+  if(now-_resetArm>4000){_resetArm=now;if(b)b.textContent='⚠ اضغط مرة أخرى للتأكيد';
+    setTimeout(()=>{if(b&&Date.now()-_resetArm>=4000)b.textContent='♻️ استرجاع التقسيمة الأصلية';},4100);return;}
+  _resetArm=0;if(b)b.textContent='♻️ استرجاع التقسيمة الأصلية';
   try{localStorage.removeItem(LSKEY);}catch(e){}
   if(STATE_REF){try{STATE_REF.remove();}catch(e){}}
   for(const k in store)delete store[k];defaultInit();
@@ -203,7 +212,6 @@ function updateDsUI(){
       b.className='dsbtn'+(key===curKey?' on':'');b.textContent=optOf(key);b.onclick=()=>switchDataset(key);ot.appendChild(b);});}
   const cf=document.getElementById('copyfirst');if(cf)cf.style.display=(curKey===firstKeyOfAge(ageOf(curKey)))?'none':'block';}
 function copyFromFirst(){const first=firstKeyOfAge(ageOf(curKey));if(curKey===first)return;
-  if(!confirm('نسخ تجميع «'+dsLabel(ageOf(first))+' — '+optOf(first)+'» فوق هذا الخيار؟'))return;
   const base=store[first]||buildLive(first);
   CL={};Object.keys(base.CL).forEach(id=>CL[id]={region:base.CL[id].region,color:base.CL[id].color,
     cities:base.CL[id].cities.slice(),manual:base.CL[id].manual});
@@ -244,9 +252,10 @@ function renameKey(oldId,newId){if(oldId===newId||CL[newId])return oldId;
 function autoRename(id){if(!CL[id]||CL[id].manual)return id;
   let want=nameFor(CL[id].cities);if(want===id)return id;
   if(CL[want])want=uniqueName(want);return renameKey(id,want);}
-function optimize(){const cities=Object.values(CL).flatMap(c=>c.cities);if(!cities.length)return;
-  const inp=prompt('أقصى زمن قيادة مسموح داخل المجموعة (بالدقائق)؟\nكل ما زاد الرقم قلّ عدد المجموعات.',90);
-  if(inp===null)return;const T=parseInt(inp);if(!T||T<=0){alert('أدخل رقمًا صحيحًا');return;}
+function optimize(){const os=document.getElementById('optstat');
+  const cities=Object.values(CL).flatMap(c=>c.cities);if(!cities.length)return;
+  const el=document.getElementById('optmins');const T=parseInt(el?el.value:'');
+  if(!T||T<=0){if(os){os.textContent='⚠ أدخل عدد دقائق صحيح';os.style.color='#ffb4b4';}return;}
   const sorted=[...cities].sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
   const groups=[];
   sorted.forEach(city=>{let placed=false;
@@ -257,7 +266,7 @@ function optimize(){const cities=Object.values(CL).flatMap(c=>c.cities);if(!citi
     CL[id]={region:byName[g[0]].region,color:PALETTE[i%PALETTE.length],cities:g,manual:false};
     g.forEach(c=>ptCl[c]=id);});
   hidden=new Set();saveState();refreshSelectors();renderAll();
-  alert('أفضل تقسيمة تقريبية: '+groups.length+' مجموعة، بأقصى زمن قيادة داخلي ≤ '+T+' دقيقة.');}
+  if(os){os.textContent='✓ أفضل تقسيمة: '+groups.length+' مجموعة (أقصى زمن داخلي ≤ '+T+' دقيقة)';os.style.color='#9fdca0';}}
 
 // النقاط
 function colorOf(n){const id=ptCl[n];return id&&CL[id]?CL[id].color:'#9aa7b4';}
@@ -383,7 +392,7 @@ function calc(){const a=byName[pa.value],b=byName[pb.value],res=document.getElem
   measureLine=L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:'#e63946',weight:3,dashArray:'6,6'}).addTo(map);
   map.fitBounds([[a.lat,a.lon],[b.lat,b.lon]],{padding:[80,80]});}
 pa.onchange=calc;pb.onchange=calc;
-function openGmaps(){const a=byName[pa.value],b=byName[pb.value];if(!a||!b){alert('اختر مدينتين أولاً');return;}
+function openGmaps(){const a=byName[pa.value],b=byName[pb.value];if(!a||!b){document.getElementById('dres').innerHTML='اختر مدينتين أولاً';return;}
   window.open('https://www.google.com/maps/dir/?api=1&origin='+a.lat+','+a.lon+'&destination='+b.lat+','+b.lon+'&travelmode=driving','_blank');}
 
 // تعديل المجموعات
@@ -398,9 +407,10 @@ function refreshRcl(){const cur=rcl.value;rcl.innerHTML=Object.keys(CL).sort((a,
 function refreshSelectors(){refreshCity();refreshTarget();refreshRcl();}
 ec.onchange=function(){const c=ec.value;if(c&&ptCl[c]&&CL[ptCl[c]])et.value=ptCl[c];};
 function renameCluster(){const old=rcl.value,nn=document.getElementById('rname').value.trim();
-  if(!old){alert('اختر مجموعة');return;} if(!nn){alert('اكتب الاسم الجديد');return;}
+  const st=document.getElementById('estat');
+  if(!old){st.innerHTML='اختر مجموعة';return;} if(!nn){st.innerHTML='اكتب الاسم الجديد';return;}
   if(nn===old){document.getElementById('rname').value='';return;}
-  if(CL[nn]){alert('الاسم مستخدم بالفعل');return;}
+  if(CL[nn]){st.innerHTML='⚠ الاسم مستخدم بالفعل';return;}
   // أعد بناء CL مع الحفاظ على الترتيب وتغيير المفتاح القديم للجديد
   const entries=Object.keys(CL).map(k=>k===old?[nn,CL[old]]:[k,CL[k]]);
   CL={};entries.forEach(([k,v])=>CL[k]=v);
@@ -420,7 +430,7 @@ function applyMove(city,tgt){
   if(old&&CL[old])autoRename(old);
   if(tgt!=='__none__'&&CL[tgt])tgt=autoRename(tgt);
   saveState();renderAll();refreshSelectors();return tgt;}
-function moveCity(){const city=ec.value;if(!city){alert('اختر مدينة أولاً');return;}
+function moveCity(){const city=ec.value;if(!city){document.getElementById('estat').innerHTML='اختر مدينة أولاً';return;}
   const tgt=applyMove(city,et.value);
   document.getElementById('estat').innerHTML='✓ نُقلت <b>'+city+'</b> إلى <b>'+(tgt==='__none__'?'بدون مجموعة':tgt)+'</b> (محفوظ)';}
 // السحب على الخريطة: اربط مدينتين في نفس المجموعة
