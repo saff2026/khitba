@@ -195,10 +195,9 @@ HTML = """<!DOCTYPE html>
  .cl .cbx{float:right;width:auto;margin:2px 0 0 7px;cursor:pointer;transform:scale(1.1)}
  .cl .ct{color:#aac4e0;font-size:11px;margin-top:4px;line-height:1.55}
  .lbl{font-size:11px;color:#111;font-weight:700;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
- .glbl,.leaflet-div-icon.glbl{background:transparent!important;border:0!important}
- .glblbox{background:rgba(10,61,98,.92);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;
-   border-radius:11px;white-space:nowrap;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.5);
-   border:1px solid #ffd166;display:inline-block}
+ .leaflet-tooltip.glbl{background:rgba(10,61,98,.92);color:#fff;font-weight:700;border:1px solid #ffd166;
+   border-radius:11px;box-shadow:0 1px 4px rgba(0,0,0,.5);padding:2px 8px;white-space:nowrap;font-family:'Tajawal',sans-serif}
+ .leaflet-tooltip.glbl:before{display:none!important}
  .leaflet-tooltip.lbl{background:transparent!important;border:0!important;box-shadow:none!important;padding:0}
  .leaflet-tooltip.lbl:before{display:none!important}
  .leg{background:#13294a;font-size:11.5px;line-height:1.9}
@@ -554,13 +553,11 @@ function renderGroupLabels(){glabels.clearLayers();
   const cb=document.getElementById('gnames');if(!cb||!cb.checked)return;
   const z=map.getZoom();
   const fs=z<=5?7:z<=6?8:z<=7?10:z<=8?11:z<=9?12:13;
-  const pad=z<=6?'1px 5px':z<=8?'1px 6px':'2px 8px';
   Object.keys(CL).forEach(id=>{if(hidden.has(id))return;const cs=CL[id].cities;
     let la=0,lo=0,n=0;cs.forEach(c=>{const p=byName[c];if(p){la+=p.lat;lo+=p.lon;n++;}});if(!n)return;
-    L.marker([la/n,lo/n],{interactive:true,
-      icon:L.divIcon({className:'glbl',iconSize:[0,0],
-        html:'<div class="glblbox" style="font-size:'+fs+'px;padding:'+pad+'">'+id+'</div>'})})
-      .on('click',()=>focusCluster(id)).addTo(glabels);});}
+    const t=L.tooltip({permanent:true,direction:'center',className:'glbl',interactive:true})
+      .setLatLng([la/n,lo/n]).setContent('<span style="font-size:'+fs+'px">'+id+'</span>');
+    glabels.addLayer(t);t.on('click',()=>focusCluster(id));});}
 map.on('zoomend',renderGroupLabels);
 function lineColor(min){return min>120?'#d73027':min>=60?'#f5b301':'#1a9850';}
 function renderLines(){lineLayer.clearLayers();
