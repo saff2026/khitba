@@ -60,7 +60,7 @@
 <div id="errbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b00020;color:#fff;padding:8px 12px;font-size:13px;font-family:Tajawal"></div>
 <div id="wrap">
  <div id="side">
-  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:30</span></div>
+  <div class="hd">🗺️ محافظات المملكة — المجموعات وقياس المسافات <span style="font-size:10px;color:#9fb6d0;font-weight:400">نسخة 06-22 12:31</span></div>
 
   <div class="sec"><div class="lab">الفئة العمرية:</div>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
@@ -115,7 +115,8 @@
    <h3>🎛️ خيارات العرض</h3>
    <label><input type="checkbox" id="names" onchange="toggleNames()"> إظهار أسماء كل المدن</label><br>
    <label><input type="checkbox" id="gnames" onchange="renderGroupLabels()"> إظهار أسماء المجموعات على الخريطة</label><br>
-   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label>
+   <label><input type="checkbox" id="lines" checked onchange="toggleLines()"> خطوط المجموعات</label><br>
+   <label><input type="checkbox" id="vnone" checked onchange="toggleNone()"> إظهار المحافظات خارج المجموعات</label>
    <div class="hint">🔗 اسحب من مدينة إلى أخرى على الخريطة لضمّهما في نفس المجموعة (تلقائي دائمًا). والضغط على المدينة يفتح خياراتها.</div>
   </div>
 
@@ -125,7 +126,6 @@
      <button onclick="showAll(true)">إظهار الكل</button>
      <button onclick="showAll(false)">إخفاء الكل</button>
    </div>
-   <label style="font-size:12px;display:block;margin-bottom:6px"><input type="checkbox" id="vnone" checked onchange="toggleNone()" style="width:auto"> إظهار المحافظات خارج المجموعات</label>
    <div id="cllist"></div></div>
 
   <div class="sec leg"><h3>دليل الألوان</h3>
