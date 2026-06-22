@@ -226,7 +226,13 @@ HTML = """<!DOCTYPE html>
     <button class="gmaps" onclick="optimize()">🪄 احسب أفضل تقسيمة</button>
    </div>
    <div id="optstat" class="hint"></div>
-   <div class="hint">يجمع المدن المتقاربة في أقل عدد ممكن من المجموعات.</div>
+   <hr>
+   <div class="lab">أو حدّد عدد المجموعات — ونوزّعها لتقليل أقصى مدة في أسوأ مجموعة:</div>
+   <div class="row">
+    <input type="text" id="optk" value="20" style="flex:0 0 72px;text-align:center" inputmode="numeric">
+    <button class="gmaps" onclick="optimizeK()">🎯 وزّع على هذا العدد</button>
+   </div>
+   <div id="optstat2" class="hint"></div>
   </div>
 
   <div class="sec">
@@ -445,6 +451,42 @@ function optimize(){const os=document.getElementById('optstat');
     g.forEach(c=>ptCl[c]=id);});
   hidden=new Set();saveState();refreshSelectors();renderAll();
   if(os){os.textContent='✓ أفضل تقسيمة: '+groups.length+' مجموعة (أقصى زمن داخلي ≤ '+T+' دقيقة)';os.style.color='#9fdca0';}
+ }catch(e){if(os){os.textContent='⚠ خطأ: '+e.message;os.style.color='#ffb4b4';}}}
+function greedyCover(cities,Tmin){const sorted=[...cities].filter(c=>byName[c]).sort((a,b)=>{const A=byName[a],B=byName[b];return A.lat-B.lat||A.lon-B.lon;});
+  const groups=[];sorted.forEach(city=>{let placed=false;
+    for(const g of groups){if(g.every(o=>gd(city,o).sec/60<=Tmin)){g.push(city);placed=true;break;}}
+    if(!placed)groups.push([city]);});return groups;}
+function clusterDiam(g){let mx=0;for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){const s=gd(g[i],g[j]).sec;if(s>mx)mx=s;}return mx;}
+function optimizeK(){const os=document.getElementById('optstat2');
+ try{
+  const cities=Object.values(CL).flatMap(c=>c.cities).filter(c=>byName[c]);
+  if(!cities.length){if(os){os.textContent='⚠ لا توجد مدن';os.style.color='#ffb4b4';}return;}
+  const el=document.getElementById('optk');
+  let K=parseInt((el?el.value:'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9]/g,''));
+  if(!K||K<1){if(os){os.textContent='⚠ اكتب عدد مجموعات صحيح';os.style.color='#ffb4b4';}return;}
+  if(K>cities.length)K=cities.length;
+  const set=new Set();
+  for(let i=0;i<cities.length;i++)for(let j=i+1;j<cities.length;j++)set.add(Math.ceil(gd(cities[i],cities[j]).sec/60));
+  const cand=[...set].sort((a,b)=>a-b);if(!cand.length)cand.push(0);
+  let lo=0,hi=cand.length-1,best=null;
+  while(lo<=hi){const mid=(lo+hi)>>1;const g=greedyCover(cities,cand[mid]);
+    if(g.length<=K){best=g;hi=mid-1;}else lo=mid+1;}
+  let groups=best||greedyCover(cities,cand[cand.length-1]);
+  let guard=0;
+  while(groups.length<K && guard++<cities.length+2){
+    let gi=-1,gdm=-1;groups.forEach((g,idx)=>{if(g.length>1){const d=clusterDiam(g);if(d>gdm){gdm=d;gi=idx;}}});
+    if(gi<0)break;const g=groups[gi];
+    let pa=0,pb=1,mx=-1;for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){const s=gd(g[i],g[j]).sec;if(s>mx){mx=s;pa=i;pb=j;}}
+    const avg=x=>{let s=0;g.forEach(o=>{if(o!==x)s+=gd(x,o).sec;});return s;};
+    const rem=avg(g[pa])>=avg(g[pb])?g[pa]:g[pb];
+    groups[gi]=g.filter(x=>x!==rem);groups.push([rem]);}
+  CL={};DATA.points.forEach(p=>ptCl[p.n]=null);
+  groups.forEach((g,i)=>{const id=uniqueName(nameFor(g));
+    CL[id]={region:byName[g[0]].region,color:PALETTE[i%PALETTE.length],cities:g,manual:false};
+    g.forEach(c=>ptCl[c]=id);});
+  let worst=0;groups.forEach(g=>{const d=clusterDiam(g);if(d>worst)worst=d;});
+  hidden=new Set();saveState();refreshSelectors();renderAll();
+  if(os){os.textContent='✓ '+groups.length+' مجموعة · أقصى مدة في أسوأ مجموعة ≈ '+fmt(worst/60);os.style.color='#9fdca0';}
  }catch(e){if(os){os.textContent='⚠ خطأ: '+e.message;os.style.color='#ffb4b4';}}}
 
 // النقاط
