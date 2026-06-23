@@ -223,6 +223,7 @@ HTML = """<!DOCTYPE html>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <button onclick="copy1114to59()" style="margin-top:7px;background:#0f7b8a;font-size:12px">📋 اجعل «تحت 5-9» = «تحت 11-14» (لكل الخيارات)</button>
    <button onclick="copyFirstTo23()" style="margin-top:5px;background:#5a3a86;font-size:12px">📋 انسخ «خيار 1» إلى «خيار 2» و«خيار 3» (للفئة الحالية)</button>
+   <button onclick="copyOpt2to3()" style="margin-top:5px;background:#5a3a86;font-size:12px">📋 اجعل «خيار 3» = «خيار 2» (للفئة الحالية)</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -402,6 +403,16 @@ function copyFirstTo23(){const age=ageOf(curKey);const src=age+' — خيار 1'
   const cs=store[curKey];CL=cs.CL;ptCl=cs.ptCl;hidden=cs.hidden;newCount=cs.newCount;excluded=cs.excluded||new Set();
   saveState();updateDsUI();renderAll();refreshSelectors();
   document.getElementById('estat').innerHTML='✓ نُسخ «خيار 1» إلى «خيار 2» و«خيار 3» لفئة '+dsLabel(age);}
+function copyOpt2to3(){const age=ageOf(curKey);const src=age+' — خيار 2',dst=age+' — خيار 3';
+  if(!DS[src]||!DS[dst])return;
+  store[curKey]={CL,ptCl,hidden,newCount,excluded};
+  if(!store[src])store[src]=buildLive(src);const s=store[src];
+  const CLc={};Object.keys(s.CL).forEach(id=>CLc[id]={region:s.CL[id].region,color:s.CL[id].color,cities:s.CL[id].cities.slice(),manual:s.CL[id].manual});
+  const ptc={};DATA.points.forEach(p=>ptc[p.n]=s.ptCl[p.n]||null);
+  store[dst]={CL:CLc,ptCl:ptc,hidden:new Set([...s.hidden]),newCount:s.newCount,excluded:new Set([...(s.excluded||[])])};
+  const cs=store[curKey];CL=cs.CL;ptCl=cs.ptCl;hidden=cs.hidden;newCount=cs.newCount;excluded=cs.excluded||new Set();
+  saveState();updateDsUI();renderAll();refreshSelectors();
+  document.getElementById('estat').innerHTML='✓ صار «خيار 3» مثل «خيار 2» لفئة '+dsLabel(age);}
 function ageOf(k){return k.split(' — ')[0];}
 function optOf(k){return k.split(' — ')[1]||k;}
 function dsLabel(age){return /^[0-9]/.test(age)?'تحت '+age:age;}
