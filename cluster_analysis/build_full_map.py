@@ -132,6 +132,7 @@ DATASETS = {}
 for _age in ["11-14", "5-9"]:
     for _i in (1, 2, 3):
         DATASETS[f"{_age} — خيار {_i}"] = build_dataset(groups_1114)
+    DATASETS[f"{_age} — تجربة"] = build_dataset(groups_1114)
 
 matrix = MX
 print("مصفوفة قوقل محمّلة:", len(matrix), "زوج")
