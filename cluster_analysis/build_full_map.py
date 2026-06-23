@@ -221,6 +221,7 @@ HTML = """<!DOCTYPE html>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div class="lab" style="margin-top:10px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+   <button onclick="copy1114to59()" style="margin-top:7px;background:#0f7b8a;font-size:12px">📋 اجعل «تحت 5-9» = «تحت 11-14» (لكل الخيارات)</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
@@ -378,6 +379,18 @@ function switchDataset(key){if(key===curKey)return;
   if(!store[key])store[key]=buildLive(key);
   const s=store[key];CL=s.CL;ptCl=s.ptCl;hidden=s.hidden;newCount=s.newCount;excluded=s.excluded||new Set();
   saveState();updateDsUI();renderAll();refreshSelectors();}
+function copy1114to59(){
+  store[curKey]={CL,ptCl,hidden,newCount,excluded};
+  ['خيار 1','خيار 2','خيار 3','تجربة'].forEach(o=>{const src='11-14 — '+o,dst='5-9 — '+o;
+    if(!DS[src]||!DS[dst])return;
+    if(!store[src])store[src]=buildLive(src);
+    const s=store[src];const CLc={};
+    Object.keys(s.CL).forEach(id=>CLc[id]={region:s.CL[id].region,color:s.CL[id].color,cities:s.CL[id].cities.slice(),manual:s.CL[id].manual});
+    const ptc={};DATA.points.forEach(p=>ptc[p.n]=s.ptCl[p.n]||null);
+    store[dst]={CL:CLc,ptCl:ptc,hidden:new Set([...s.hidden]),newCount:s.newCount,excluded:new Set([...(s.excluded||[])])};});
+  const cs=store[curKey];CL=cs.CL;ptCl=cs.ptCl;hidden=cs.hidden;newCount=cs.newCount;excluded=cs.excluded||new Set();
+  saveState();updateDsUI();renderAll();refreshSelectors();
+  document.getElementById('estat').innerHTML='✓ صارت كل خيارات «تحت 5-9» مطابقة لنظيرتها في «تحت 11-14»';}
 function ageOf(k){return k.split(' — ')[0];}
 function optOf(k){return k.split(' — ')[1]||k;}
 function dsLabel(age){return /^[0-9]/.test(age)?'تحت '+age:age;}
