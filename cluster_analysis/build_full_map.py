@@ -221,9 +221,6 @@ HTML = """<!DOCTYPE html>
    <div id="agetabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
    <div class="lab" style="margin-top:10px">خيار التجميع:</div>
    <div id="opttabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-   <button onclick="copy1114to59()" style="margin-top:7px;background:#0f7b8a;font-size:12px">📋 اجعل «تحت 5-9» = «تحت 11-14» (لكل الخيارات)</button>
-   <button onclick="copyFirstTo23()" style="margin-top:5px;background:#5a3a86;font-size:12px">📋 انسخ «خيار 1» إلى «خيار 2» و«خيار 3» (للفئة الحالية)</button>
-   <button onclick="copyOpt2to3()" style="margin-top:5px;background:#5a3a86;font-size:12px">📋 اجعل «خيار 3» = «خيار 2» (للفئة الحالية)</button>
    <div id="diffbox" style="margin-top:8px;max-height:160px;overflow-y:auto;font-size:12px"></div>
   </div>
 
