@@ -418,13 +418,17 @@ function optOf(k){return k.split(' — ')[1]||k;}
 function dsLabel(age){return /^[0-9]/.test(age)?'تحت '+age:age;}
 function ages(){const a=[];Object.keys(DS).forEach(k=>{const g=ageOf(k);if(!a.includes(g))a.push(g);});return a;}
 function firstKeyOfAge(age){return Object.keys(DS).find(k=>ageOf(k)===age);}
+function clMapOf(key){if(key===curKey)return CL;if(store[key])return store[key].CL;return buildLive(key).CL;}
+function worstClusterSec(clmap){let w=0;for(const id in clmap){const st=stats(clmap[id].cities);if(st.mx>w)w=st.mx;}return w;}
 function updateDsUI(){
   const at=document.getElementById('agetabs');if(at){at.innerHTML='';
     ages().forEach(age=>{const b=document.createElement('button');b.className='dsbtn'+(ageOf(curKey)===age?' on':'');
       b.textContent=dsLabel(age);b.onclick=()=>{const want=age+' — '+optOf(curKey);switchDataset(DS[want]?want:firstKeyOfAge(age));};at.appendChild(b);});}
   const ot=document.getElementById('opttabs');if(ot){ot.innerHTML='';
     Object.keys(DS).filter(k=>ageOf(k)===ageOf(curKey)).forEach(key=>{const b=document.createElement('button');
-      b.className='dsbtn'+(key===curKey?' on':'');b.textContent=optOf(key);b.onclick=()=>switchDataset(key);ot.appendChild(b);});}
+      b.className='dsbtn'+(key===curKey?' on':'');const w=worstClusterSec(clMapOf(key));
+      b.innerHTML=optOf(key)+'<br><span style="font-size:10px;font-weight:400;opacity:.9">أسوأ: '+(w?fmt(w/60):'—')+'</span>';
+      b.onclick=()=>switchDataset(key);ot.appendChild(b);});}
   const cf=document.getElementById('copyfirst');if(cf)cf.style.display=(curKey===firstKeyOfAge(ageOf(curKey)))?'none':'block';}
 function copyFromFirst(){const first=firstKeyOfAge(ageOf(curKey));if(curKey===first)return;
   const base=store[first]||buildLive(first);
@@ -443,7 +447,7 @@ function gd(a,b){const g=getG(a,b); if(g)return{km:g.km,sec:g.sec,est:false};
   const A=byName[a],B=byName[b]; if(!A||!B)return{km:0,sec:0,est:true};
   const air=haversine(A,B),road=air*1.3,v=road>=150?100:road>=80?90:road>=30?75:50;
   return{km:Math.round(road),sec:road/v*3600,est:true};}
-function fmt(min){const h=Math.floor(min/60),m=Math.round(min%60);return h?h+'س '+m+'د':m+'د';}
+function fmt(min){let h=Math.floor(min/60),m=Math.round(min%60);if(m===60){h++;m=0;}return h?h+'س '+m+'د':m+'د';}
 function haversine(a,b){const R=6371,d=x=>x*Math.PI/180;const dla=d(b.lat-a.lat),dlo=d(b.lon-a.lon);
   const h=Math.sin(dla/2)**2+Math.cos(d(a.lat))*Math.cos(d(b.lat))*Math.sin(dlo/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
 function verdict(min,n){if(n<=1)return['مدينة واحدة',VC['مدينة واحدة']];
