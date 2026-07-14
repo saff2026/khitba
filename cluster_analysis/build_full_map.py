@@ -769,17 +769,15 @@ function exportCsv(){let rows=[['City','Region','Group']];
 function exportAll(){
   store[curKey]={CL,ptCl,hidden,newCount,excluded};
   const keys=Object.keys(DS);keys.forEach(k=>{if(!store[k])store[k]=buildLive(k);});
-  const uni=new Set();Object.values(DS).forEach(ds=>ds.forEach(c=>c.cities.forEach(x=>uni.add(x))));
-  const cities=[...uni].sort((a,b)=>a.localeCompare(b,'ar'));
-  const header=['المدينة','المنطقة'].concat(keys.map(k=>dsLabel(ageOf(k))+' — '+optOf(k)));
-  const rows=[header];
-  cities.forEach(c=>{const p=byName[c];const row=[c,p?p.region:''];
-    keys.forEach(k=>{const s=store[k];
-      row.push((s.excluded&&s.excluded.has(c))?'مستبعدة':(s.ptCl[c]||'بدون مجموعة'));});
-    rows.push(row);});
+  const rows=[['الخيار','المجموعة','عدد المدن','أقصى مدة','المدن']];
+  keys.forEach(k=>{const s=store[k];const label=dsLabel(ageOf(k))+' — '+optOf(k);
+    Object.keys(s.CL).sort((a,b)=>clKey(a)-clKey(b)).forEach(id=>{const cs=s.CL[id].cities;
+      rows.push([label,id,cs.length,cs.length>1?fmt(stats(cs).mx/60):'—',cs.join('، ')]);});
+    if(s.excluded&&s.excluded.size){rows.push([label,'🚫 مستبعدة من التجميع',s.excluded.size,'—',[...s.excluded].join('، ')]);}
+    rows.push(['','','','','']);});
   const csv='﻿'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\\r\\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='all_options_cities.csv';a.click();}
+  a.download='groups_by_option.csv';a.click();}
 
 function finishInit(){const v=document.getElementById('vnone');if(v)v.checked=!hideNone;
   updateDsUI();refreshSelectors();renderAll();}
