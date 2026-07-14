@@ -258,6 +258,7 @@ HTML = """<!DOCTYPE html>
    <div class="note">☁️ تعديلاتك تُحفظ تلقائيًا في السحابة وتظهر على أي جهاز يفتح الرابط.</div>
    <div id="savestat" style="font-size:11px;margin:0 0 6px;min-height:14px"></div>
    <button class="gmaps" onclick="exportCsv()">⬇️ تصدير التقسيمة المعدّلة (CSV)</button>
+   <button class="gmaps" onclick="exportAll()">⬇️ تنزيل كل المدن في كل الخيارات (CSV)</button>
    <button id="resetbtn" class="danger" onclick="resetAll()">♻️ استرجاع التقسيمة الأصلية</button>
   </div>
 
@@ -765,6 +766,20 @@ function exportCsv(){let rows=[['City','Region','Group']];
   const csv='﻿'+rows.map(r=>r.map(x=>'"'+x+'"').join(',')).join('\\r\\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='clusters_edited.csv';a.click();}
+function exportAll(){
+  store[curKey]={CL,ptCl,hidden,newCount,excluded};
+  const keys=Object.keys(DS);keys.forEach(k=>{if(!store[k])store[k]=buildLive(k);});
+  const uni=new Set();Object.values(DS).forEach(ds=>ds.forEach(c=>c.cities.forEach(x=>uni.add(x))));
+  const cities=[...uni].sort((a,b)=>a.localeCompare(b,'ar'));
+  const header=['المدينة','المنطقة'].concat(keys.map(k=>dsLabel(ageOf(k))+' — '+optOf(k)));
+  const rows=[header];
+  cities.forEach(c=>{const p=byName[c];const row=[c,p?p.region:''];
+    keys.forEach(k=>{const s=store[k];
+      row.push((s.excluded&&s.excluded.has(c))?'مستبعدة':(s.ptCl[c]||'بدون مجموعة'));});
+    rows.push(row);});
+  const csv='﻿'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\\r\\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='all_options_cities.csv';a.click();}
 
 function finishInit(){const v=document.getElementById('vnone');if(v)v.checked=!hideNone;
   updateDsUI();refreshSelectors();renderAll();}
